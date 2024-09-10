@@ -7,6 +7,9 @@
     "strict": true,
     "sourceMap": true
   },
-  "include": ["src/**/*.ts"],
+  "include": [
+    "src",
+    "declarations.d.ts"
+  ],
   "exclude": ["node_modules"]
 }
