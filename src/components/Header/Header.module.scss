@@ -1,0 +1,85 @@
+@import '../../styles/all';
+
+.header {
+  // position: fixed;
+  // top: 32px;
+  // left: 0;
+  // right: 0;
+  // z-index: 10;
+  position: absolute;
+  top: 32px;
+  z-index: 10;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 136px;
+  // width: 1520px;
+
+  background: #D9F1FF8C;
+
+  margin-inline: 200px;
+  // margin-top: 32px;
+  border-radius: 1000px;
+
+  padding-inline: 24px;
+
+  @include on-desktop-wide {
+    width: 1520px;
+  }
+}
+
+.containerLeft {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 54px;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 71px;
+}
+
+.navItem {
+  text-decoration: none;
+  color: $color-grey-900;
+
+  @include hover(color, $color-primary);
+  @include hover(text-decoration, underline);
+}
+
+.isActive {
+  color: $color-primary;
+  text-decoration: underline;
+}
+
+.containerRight {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 39px;
+}
+
+.login {
+  color: $color-bg;
+  text-decoration: none;
+  background-color: $color-primary;
+  border: 1px solid $color-primary;
+  border-radius: 100px;
+  padding: 20px 16px;
+
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+}
+
+.registration {
+  color: $color-grey-900;
+  text-decoration: none;
+  background-color: transparent;
+  border: 1px solid $color-primary;
+  border-radius: 100px;
+  padding: 20px 16px;
+
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+}

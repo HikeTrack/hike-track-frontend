@@ -1,0 +1,49 @@
+@import '../../styles/all';
+
+.tourCard {
+  position: relative;
+  
+  height: 421px;
+  border-radius: 16px;
+  background: url('../../../public/img/page-bg/card-ararat.png');
+
+  @include on-desktop-wide {
+    grid-column: span 3;
+  }
+}
+
+.tourDate {
+  position: absolute;
+  top: 24px;
+  left: 24px; 
+
+  text-align: center;
+  height: 50px;
+  width: 50px;
+  border-radius: 16px;
+  background: $color-primary;
+}
+
+.date {
+  @include secondary-web;
+  
+  color: $color-bg;
+}
+
+.tourInfo {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+
+
+}
+
+.tourLocation {
+  color: $color-bg;
+}
+
+.tourTitle {
+  @include main-web-bold;
+
+  color: $color-bg;
+}

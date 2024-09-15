@@ -1,0 +1,64 @@
+@mixin h1-web {
+  font-family: 'Montserrat-Bold', sans-serif;
+  font-size: 64px;
+  line-height: 120%;
+  letter-spacing: 0;
+}
+
+@mixin h2-web-bold {
+  font-family: 'Montserrat-Bold', sans-serif;
+  font-size: 48px;
+  line-height: 150%;
+  letter-spacing: 0;
+}
+
+@mixin h2-web {
+  font-family: 'Montserrat-Regular', sans-serif;
+  font-size: 48px;
+  line-height: 150%;
+  letter-spacing: 0;
+}
+
+@mixin h3-web {
+  font-family: 'Montserrat-Bold', sans-serif;
+  font-size: 32px;
+  line-height: 120%;
+  letter-spacing: 0;
+}
+
+@mixin h4-web {
+  font-family: 'Montserrat-Medium', sans-serif;
+  font-size: 24px;
+  line-height: 36px;
+  letter-spacing: 0;
+}
+
+@mixin main-web {
+  font-family: 'Montserrat-Medium', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0;
+  color: $color-grey-900;
+}
+
+@mixin main-web-bold {
+  font-family: 'Montserrat-Bold', sans-serif;
+  font-size: 16px;
+  line-height: 19.2px;
+  letter-spacing: 0;
+  color: $color-grey-900;
+}
+
+@mixin secondary-web {
+  font-family: 'Montserrat-Regular', sans-serif;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0;
+}
+
+@mixin button-web {
+  font-family: 'Montserrat-Medium', sans-serif;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: 0;
+}

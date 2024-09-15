@@ -1,0 +1,110 @@
+@import '../../styles/all';
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  background-color: $color-grey-50;
+  padding-block: 70px;
+  padding-inline: 200px;
+}
+
+.title {
+  @include h4-web;
+}
+
+.containerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.navItem {
+  text-decoration: none;
+  color: $color-grey-900;
+
+  @include hover(color, $color-primary);
+  @include hover(text-decoration, underline);
+}
+
+.containerCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 494px;
+}
+
+.containerSubscribe {
+  margin-block: 16px 59px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 16px;
+  border: 1px solid $color-primary;
+  border-radius: 1000px;
+}
+
+.input {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+}
+
+.input::placeholder {
+  @include main-web;
+
+  color: $color-grey-700;
+}
+
+.button {
+  padding-block: 16px;
+  padding-inline: 41px;
+  background-color: $color-primary;
+  border: 1px solid $color-primary;
+  border-radius: 1000px;
+  cursor: pointer;
+
+  @include button-web;
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+
+  color: $color-bg;
+}
+
+.containerSocials {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.socials {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.containerRight {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contactTitle:not(:first-of-type) {
+  margin-top: 8px;
+}
+
+.span {
+  color: $color-primary;
+}
+
+.contactDetails {
+  cursor: pointer;
+  text-decoration: none;
+  @include main-web-bold;
+}
+
