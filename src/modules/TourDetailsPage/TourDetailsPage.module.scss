@@ -1,0 +1,348 @@
+@import '../../styles/all';
+
+.tourDetailsPage {
+
+}
+
+.containerTop {
+  height: 697px;
+  background: url('../../../public/img/page-bg/bg-ararat.png');
+  padding-inline: 200px;
+}
+
+.highlightContainer {
+  padding-block: 239px 90px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.highlightText {
+
+}
+
+.highlightWrapper {
+  display: flex;
+  gap: 16px;
+}
+
+.highlightText {
+
+}
+
+.tourRate {
+  display: flex;
+  gap: 8px;
+}
+
+.highlightText {
+  color: $color-bg;
+}
+
+.highlightSpan {
+  @include main-web-bold;
+
+  color: $color-bg;
+}
+
+.tourName {
+  @include h4-web;
+
+  color: $color-bg;
+}
+
+.tourNearest {
+  @include h4-web;
+
+  color: $color-grey-100;
+}
+
+.bookButton {
+  margin-top: 28px;
+  background: $color-primary;
+  border: 1px solid $color-primary;
+  border-radius: 1000px;
+  padding-block: 19px;
+  width: 237px;
+  color: $color-bg;
+
+  @include button-web;
+
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.actionWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.action {
+
+}
+
+.actionTitle {
+  color: $color-bg;
+}
+
+.containerMain {
+  padding: 32px 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  @include on-desktop-wide {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px;
+  }
+}
+
+.infoWrapper {
+  grid-column: 1 / -1;
+
+  @include on-desktop-wide {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px;
+  }
+}
+
+.info {
+  grid-column: 1 / 10;
+
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.infoHighlights {
+  display: flex;
+  gap: 293px;
+}
+
+.infoText {
+  text-align: center;
+}
+
+.infoSpan {
+  @include main-web-bold;
+}
+
+.infoDescription {
+
+}
+
+.infoTags {
+  display: flex;
+  gap: 20px;
+}
+
+.tag {
+  border: 1px solid $color-grey-700;
+  border-radius: 1000px;
+  padding: 16px 25px;
+}
+
+.mapWrapper {
+  grid-column: 11 / -1;
+}
+
+.mapLink {
+  color: $color-grey-700;
+}
+
+.conditionWrapper {
+  grid-column: 1 / -1;
+}
+
+.title {
+  @include h4-web;
+
+  padding-bottom: 24px;
+}
+
+.conditionCards {
+  @include on-desktop-wide {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px;
+  }
+}
+
+.cardOne {
+  grid-column: span 4;
+  height: 293px;
+  border-radius: 16px;
+  background-image: url('../../../public/img/page-bg/conditions-1.png');
+  padding: 109px 24px 108px 24px;
+}
+
+.cardTwo {
+  grid-column: span 4;
+  height: 293px;
+  border-radius: 16px;
+  background-image: url('../../../public/img/page-bg/conditions-2.png');
+  padding: 109px 24px 108px 24px;
+}
+
+.cardThree {
+  grid-column: span 4;
+  height: 293px;
+  border-radius: 16px;
+  background-image: url('../../../public/img/page-bg/conditions-3.png');
+  padding: 109px 24px 108px 24px;
+}
+
+.cardContent {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 16px;
+}
+
+.cardTitle {
+  @include h4-web;
+
+  color: $color-bg;
+}
+
+.cardDescription {
+  color: $color-bg;
+}
+
+.feedbackContainer {
+  grid-column: 1 / 9;
+
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.feedbackTopbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.topbarItem {
+  @include h4-web;
+
+  color: $color-grey-700;
+  text-decoration: none;
+}
+
+.reviewButton {
+  @include button-web;
+  
+  width: 237px;
+  padding-block: 20px;
+  background: transparent;
+  border: 1px solid $color-primary;
+  border-radius: 1000px;
+}
+
+.reviewCard {
+
+}
+
+.reviewTopbar {
+  margin-bottom: 15px;
+}
+
+.user {
+  display: flex;
+  gap: 11px;
+}
+
+.userImage {
+  height: 43px;
+  width: 43px;
+}
+
+.userInfo {
+  @include secondary-web;
+}
+
+.userStatus {
+  @include secondary-web;
+
+  color: $color-grey-500;
+}
+
+.userActions {
+
+}
+
+.rateDetails {
+  display: flex;
+  gap: 8px;
+}
+
+.starWrapper {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.star {
+  height: 16px;
+  width: 16px;
+  background-image: url('../../../public/img/icons/star-yellow.svg');
+}
+
+.rateDate {
+  @include secondary-web;
+
+  color: $color-grey-500;
+}
+
+.reviewText {
+  @include secondary-web;
+
+  margin-bottom: 10px;
+}
+
+.reviewPhotos {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+
+.reviewActions {
+  display: flex;
+  gap: 32px;
+}
+
+.review {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.reviewCount {
+  @include secondary-web;
+
+  color: $color-grey-500;
+  text-align: center;
+}
+
+.tourSuggestions {
+  grid-column: 10 / -1;
+}
+
+.suggestedContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 101px;
+}
+

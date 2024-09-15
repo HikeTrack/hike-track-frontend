@@ -1,0 +1,57 @@
+@import '../../styles/all';
+
+.ourMission {
+
+}
+
+.containerTop {
+  position: relative;
+  height: 890px;
+  text-align: center;
+  background-image: url('../../../public/img/page-bg/our-mission.png');
+}
+
+.topTitle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: $color-bg;
+  
+  @include h2-web;
+}
+
+.span {
+  @include h2-web-bold
+}
+
+.containerBottom {
+  padding-block: 100px;
+  margin-inline: 200px;
+  display: flex;
+  gap: 99px;
+}
+
+.textWrapper {
+
+}
+
+.image {
+  border-radius: 1000px;
+}
+
+.bottomTitle {
+  @include h3-web;
+
+  margin-bottom: 24px;
+}
+
+.text {
+  margin-bottom: 48px;
+}
+
+.listItem:not(:last-child) {
+  padding-bottom: 16px;
+}
+
+

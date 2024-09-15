@@ -1,0 +1,152 @@
+@import '../../styles/all';
+
+.toursPage {
+
+}
+
+.containerTop {
+  height: 449px;
+  background: 
+    linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)),
+    url('../../../public/img/page-bg/search-page.png');
+  background-position: bottom;
+}
+
+.title {
+  @include h1-web;
+
+  color: $color-bg;
+  text-align: center;
+  padding-top: 270px;
+}
+
+.containerMain {
+  position: relative;
+  padding-inline: 200px;
+  padding-block: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.backButton {
+  position: absolute;
+  top: 32px;
+  left: 200px;
+
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  padding: 12px;
+  background: transparent;
+  border: none;
+}
+
+.buttonLabel {
+  @include button-web;
+  
+  color: $color-primary;
+}
+
+.instructionWrapper {
+  @include on-desktop-wide {
+    width: 1006px;
+  }
+}
+
+.instruction {
+  margin-bottom: 32px;
+}
+
+.availability {
+  
+}
+
+.span {
+  @include main-web-bold;
+}
+
+.containerGrid {
+  width: 100%;
+  
+  @include on-desktop-wide {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px;
+  }
+}
+
+.containerDropdowns {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  
+  @include on-desktop-wide {
+    grid-column: 1 / 4;
+  }
+}
+
+.containerSmall {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dropdownTitle {
+  @include h4-web;
+}
+
+.dropdown {
+  height: 56px;
+  border: 1px solid $color-primary;
+  border-radius: 1000px;
+}
+
+.dropdownText {
+  color: $color-grey-700;
+}
+
+.categoryWrapper {
+  display: flex;
+  gap: 20px;
+}
+
+.checkButtonContainer {
+  display: flex;
+  gap: 16px;
+}
+
+.checkButton {
+  height: 24px;
+  width: 24px;
+  color: $color-bg;
+}
+
+.categoryButton {
+  padding: 16px;
+  background-color: transparent;
+  border: 1px solid $color-primary;
+  border-radius: 1000px;
+  color: $color-grey-700;
+}
+
+.calendarButton {
+  width: 100%;
+  display: flex;
+  padding-block: 16px;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid $color-primary;
+  border-radius: 1000px;
+}
+
+.grid {
+  @include on-desktop-wide {
+    grid-column: 4 / -1;
+
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 20px;
+  }
+}
