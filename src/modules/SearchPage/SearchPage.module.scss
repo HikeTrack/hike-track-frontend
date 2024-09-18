@@ -8,12 +8,10 @@
 }
 
 .containerMain {
+  display: flex;
   background-color: $color-bg;
   height: 566px;
   border-radius: 32px;
-  // box-shadow: 1px 1px 15px 0px #01010140;
-
-  display: flex;
 }
 
 .leftPanel {
@@ -24,7 +22,6 @@
   flex-direction: column;
   gap: 30px;
   border-right: 1px solid $color-grey-300;
-  // box-shadow: 1px 1px 15px 0px #01010140;
 }
 
 .title {
@@ -89,7 +86,7 @@
 .searchResults {
   display: flex;
   flex-wrap: wrap;
-  column-gap: 16px;
+  column-gap: 90px;
 }
 
 .alphabetic {

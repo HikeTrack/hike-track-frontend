@@ -1,0 +1,109 @@
+@import '../../styles/all';
+
+.bigCard {
+  height: 416px;
+  width: 493px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardTop {
+  position: relative;
+  height: 201px;
+  background-size: cover;
+  background-position: center;
+  border: 8px solid $color-bg;
+  border-radius: 16px 16px 0 0;
+}
+
+.guidePhoto {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+
+  height: 112px;
+  width: 112px;
+  border: 8px solid $color-bg;
+  border-radius: 50%;
+  background-image: url('../../../public/img/page-bg/guide-photo.png');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.cardBottom {
+  height: 215px;
+  border-radius: 0 0 16px 16px;
+  background-color: $color-bg;
+  padding: 16px 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wrapperTop {
+  display: flex;
+  justify-content: space-between;
+}
+
+.geo {
+  display: flex;
+  gap: 8px;
+}
+
+.region {
+  @include secondary-web;
+
+  color: $color-grey-500;
+}
+
+.level {
+  @include secondary-web;
+}
+
+.cardTitle {
+  @include main-web-bold;
+
+  margin-bottom: 8px;
+}
+
+.wrapperBottom {
+  display: flex;
+  justify-content: space-between;
+  padding-block: 6.5px;
+}
+
+.detailsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1px solid #D9D9D9;
+  padding-inline: 55px;
+
+  &:first-child {
+    padding-left: 0;
+  }
+
+  &:last-child {
+    padding-right: 0;
+    padding-left: 54px;
+    border-right: none;
+  }
+}
+
+.details {
+  display: flex;
+  margin-bottom: 16px;
+
+  @include secondary-web;
+}
+
+.detailsIcon {
+  height: 24px;
+  width: 24px;
+  margin-bottom: 8px;
+}
+
+.detailsCount {
+  @include secondary-web;
+}
