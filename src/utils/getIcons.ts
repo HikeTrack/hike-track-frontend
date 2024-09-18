@@ -13,8 +13,9 @@ export const getDifficultyRedIcon = (): string => getIcons('difficultyRed');
 export const getGeoTagGreyIcon = (): string => getIcons('geoTagGrey');
 export const getGeoTagGreenIcon = (): string => getIcons('geoTagGreen');
 
-export const getDistanceIcon = (): string => getIcons('distance');
-export const getDurationIcon = (): string => getIcons('duration');
+export const getDateIcon = (): string => getIcons('date');
+export const getPriceIcon = (): string => getIcons('price');
+export const getLengthIcon = (): string => getIcons('length');
 
 export const getHeartWhiteIcon = (): string => getIcons('heartWhite');
 
@@ -33,6 +34,13 @@ export const getAsiaIcon = (): string => getIcons('asia');
 export const getSouthAmericaIcon = (): string => getIcons('southAmerica');
 export const getAfricaIcon = (): string => getIcons('africa');
 export const getNorthAmericaIcon = (): string => getIcons('northAmerica');
+
+export const getWorldGreenIcon = (): string => getIcons('worldGreen');
+export const getEuropeGreenIcon = (): string => getIcons('europeGreen');
+export const getAsiaGreenIcon = (): string => getIcons('asiaGreen');
+export const getSouthAmericaGreenIcon = (): string => getIcons('southAmericaGreen');
+export const getAfricaGreenIcon = (): string => getIcons('africaGreen');
+export const getNorthAmericaGreenIcon = (): string => getIcons('northAmericaGreen');
 
 export const getArrowBackIcon = (): string => getIcons('arrowBack');
 export const getCalendarIcon = (): string => getIcons('calendar');
