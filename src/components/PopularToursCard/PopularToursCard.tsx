@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { PopularTour } from "../../types/PopularTour";
 import { 
   getDifficultyGreenIcon, 
@@ -23,14 +23,16 @@ const difficultyIcons: { [key: string]: string } = {
   "Hard": getDifficultyRedIcon(),
 };
 
-export const PopularToursSlider: React.FC<Props> = ({ tour }) => {
+export const PopularToursCard: React.FC<Props> = ({ tour }) => {
   const geoTagGreyIcon = getGeoTagGreyIcon();
   const lengthIcon = getLengthIcon();
   const dateIcon = getDateIcon();
   const priceIcon = getPriceIcon();
-  
+
   return (
-    <div className={styles.bigCard}>
+    <div 
+      className={styles.bigCard}
+    >
       <div 
         className={styles.cardTop}
         style={{ backgroundImage: `url(${tour.mainPhoto})` }}

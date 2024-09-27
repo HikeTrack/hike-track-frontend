@@ -5,35 +5,55 @@
 }
 
 .containerTop {
-  height: 449px;
+  height: 442px;
   background: 
     linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)),
     url('../../../public/img/page-bg/search-page.png');
-  background-position: bottom;
+  background-position: bottom center;
+
+  @include on-desktop {
+    height: 449px;
+    background-position: bottom;
+  }
 }
 
 .title {
-  @include h1-web;
+  @include h1-mobile;
 
   color: $color-bg;
   text-align: center;
-  padding-top: 270px;
+  padding-top: 196px;
+
+  @include on-desktop {
+    @include h1-web;
+
+    padding-top: 270px;
+  }
 }
 
 .containerMain {
   position: relative;
-  padding-inline: 200px;
   padding-block: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 32px;
+
+  padding-inline: 16px;
+
+  @include on-desktop {
+    padding-inline: 32px;
+  }
+
+  @include on-desktop-wide {
+    padding-inline: 200px;
+  }
 }
 
 .backButton {
   position: absolute;
-  top: 32px;
-  left: 200px;
+  top: 16px;
+  left: 0;
 
   display: flex;
   gap: 4px;
@@ -41,6 +61,16 @@
   padding: 12px;
   background: transparent;
   border: none;
+  cursor: pointer;
+
+  @include on-desktop {
+    top: 32px;
+    left: 32px;
+  }
+
+  @include on-desktop-wide {
+    left: 200px;
+  }
 }
 
 .buttonLabel {
@@ -67,20 +97,81 @@
   @include main-web-bold;
 }
 
+.filterOpenButton {
+  @include button-web;
+  
+  width: 100%;
+  display: flex;
+  padding-block: 16px;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid $color-primary;
+  border-radius: 1000px;
+  color: $color-bg;
+  background-color: $color-primary;
+  cursor: pointer;
+  margin-bottom: 32px;
+
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+
+  @include on-desktop {
+    display: none;
+  }
+}
+
+.filterCloseButton {
+  @include button-web;
+  
+  width: 100%;
+  display: flex;
+  padding-block: 16px;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid $color-primary;
+  border-radius: 1000px;
+  color: $color-bg;
+  background-color: $color-primary;
+  cursor: pointer;
+  margin-bottom: 32px;
+
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+
+  @include on-desktop {
+    display: none;
+  }
+}
+
 .containerGrid {
   width: 100%;
+
   
-  @include on-desktop-wide {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 20px;
+  @include on-desktop {
+    @include grid;
+
+    grid-column: 1 / -1;
   }
+}
+
+.filtersNotVisible {
+
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
 }
 
 .containerDropdowns {
   display: flex;
   flex-direction: column;
   gap: 32px;
+
+  max-height: auto;
+  opacity: 1;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+
+  @include on-desktop {
+    grid-column: 1 / 4;
+  }
   
   @include on-desktop-wide {
     grid-column: 1 / 4;
@@ -91,20 +182,6 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.dropdownTitle {
-  @include h4-web;
-}
-
-.dropdown {
-  height: 56px;
-  border: 1px solid $color-primary;
-  border-radius: 1000px;
-}
-
-.dropdownText {
-  color: $color-grey-700;
 }
 
 .categoryWrapper {
@@ -131,7 +208,20 @@
   color: $color-grey-700;
 }
 
-.calendarButton {
+.calendarButton {  
+  width: 100%;
+  display: flex;
+  padding-block: 16px;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid $color-primary;
+  
+  border-radius: 1000px;
+}
+
+.resetButton {
+  @include button-web;
+  
   width: 100%;
   display: flex;
   padding-block: 16px;
@@ -139,14 +229,39 @@
   gap: 8px;
   border: 1px solid $color-primary;
   border-radius: 1000px;
+  color: $color-bg;
+  background-color: $color-primary;
+  cursor: pointer;
+
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
 }
 
 .grid {
-  @include on-desktop-wide {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  @include on-desktop {
     grid-column: 4 / -1;
 
     display: grid;
     grid-template-columns: repeat(9, 1fr);
+    gap: 32px;
+  }
+
+  @include on-desktop-wide {
+    grid-column: 4 / -1;
+
+    // display: grid;
+    // grid-template-columns: repeat(9, 1fr);
     gap: 20px;
+  }
+}
+
+.gridText {
+  @include on-desktop {
+    @include h4-web;
+    
+    grid-column: 1 / 6;
   }
 }

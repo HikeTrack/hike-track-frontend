@@ -62,3 +62,68 @@
   line-height: 150%;
   letter-spacing: 0;
 }
+
+@mixin h1-mobile {
+  font-family: 'Montserrat-Bold', sans-serif;
+  font-size: 24px;
+  line-height: 120%;
+  letter-spacing: 0;
+}
+
+@mixin h1-mobile-medium {
+  font-family: 'Montserrat-Medium', sans-serif;
+  font-size: 24px;
+  line-height: 150%;
+  letter-spacing: 0;
+}
+
+@mixin main-mobile {
+  font-family: 'Montserrat-Regular', sans-serif;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: 0;
+}
+
+@mixin main-mobile-medium {
+  font-family: 'Montserrat-Medium', sans-serif;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: 0;
+}
+
+@mixin main-mobile-bold {
+  font-family: 'Montserrat-Bold', sans-serif;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: 0;
+}
+
+@mixin secondary-mobile {
+  font-family: 'Montserrat-Regular', sans-serif;
+  font-size: 14px;
+  line-height: 150%;
+  letter-spacing: 0;
+  color: $color-grey-900;
+}
+
+@mixin secondary-mobile-medium {
+  font-family: 'Montserrat-Medium', sans-serif;
+  font-size: 14px;
+  line-height: 150%;
+  letter-spacing: 0;
+  color: $color-grey-900;
+}
+
+@mixin secondary-mobile-bold {
+  font-family: 'Montserrat-Bold', sans-serif;
+  font-size: 14px;
+  line-height: 150%;
+  letter-spacing: 0;
+}
+
+@mixin button-mobile {
+  font-family: 'Montserrat-SemiBold', sans-serif;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: 0;
+}

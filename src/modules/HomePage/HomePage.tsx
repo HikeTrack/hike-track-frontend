@@ -42,8 +42,6 @@ export const HomePage = () => {
         <h2 className={styles.sectionTitle}>Travel & stories</h2>
 
         <TravelStories />
-
-        <a className={styles.storiesButton} href="#">All stories</a>
       </div>
     </div>
   )

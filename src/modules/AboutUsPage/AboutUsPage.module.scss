@@ -5,82 +5,198 @@
 }
 
 .containerTop {
-  position: relative;
-  
-  height: 992px;
+  height: 885px;
   width: 100%;
   background-image: url('../../../public/img/page-bg/about-us.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  padding-inline: 16px;
+
+  @include on-desktop {
+    height: 992px;
+    padding-inline: auto;
+  }
 }
 
 .contentWrapper {
   position: absolute;
   right: 50%;
   transform: translateX(50%);
-  top: 457px; 
+  top: 257px; 
   
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 32px;
-  width: 819px;
+  width: 343px;
+
+  @include on-desktop {
+    top: 457px; 
+    width: 819px;
+  }
 }
 
 .title {
-  @include h1-web;
+  @include h1-mobile;
 
   color: $color-bg;
+
+  @include on-desktop {
+    @include h1-web;
+  }
 }
 
 .introduction {
-  @include h4-web;
-
   color: $color-bg;
+
+  @include on-desktop {
+    @include h4-web;
+  }
 }
 
 .containerMain {
-  margin-inline: 200px;
   padding-block: 32px 70px;
+  margin-inline: 16px;
+
+  @include on-desktop {
+    margin-inline: 32px;
+  }
+
+  @include on-desktop-wide {
+    margin-inline: 200px;
+  }
 }
 
 .titleSmall {
-  @include h3-web;
+  @include h1-mobile-medium;
 
-  padding-bottom: 32px;
+  padding-bottom: 16px;
 
   &:last-of-type {
     margin-top: 32px;
   }
+
+  @include on-desktop {
+    @include h3-web;
+
+    padding-bottom: 32px;
+
+    &:last-of-type {
+      margin-top: 64px;
+    }
+  }
 }
 
 .teamGrid {
-  @include on-desktop-wide {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 20px;
+  overflow: hidden;
+  padding-bottom: 32px;
+  
+  @include grid;
+
+  @include on-desktop {
+    // text-align: left;
     row-gap: 32px;
+    padding-bottom: auto;
     margin-bottom: 32px;
   }
 }
 
-.teamCard {
-  padding: 16px;
+.cardSliderMobile {
+  position: relative;
+  grid-column: 1 / -1;
+
+  @include grid;
+
+  @include on-desktop {
+    display: none;
+  }
+}
+
+.sliderContainer {
+  grid-column: 1 / -1;
+  width: 343px;
+  display: flex;
+  gap: 16px;
+  overflow: hidden;
+}
+
+.sliderWrapper {
+  transition: transform 0.3s ease;
+  will-change: transform;
+}
+
+.teamCardMobile {
+  width: 343px;
+  gap: 16px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  align-items: center;
+}
 
-  @include on-desktop-wide {
+.teamPhoto {
+  height: 300px;
+  width: 300px;
+}
+
+.buttonsWrapper {  
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 10px;
+}
+
+.button {
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background-color: transparent;
+}
+
+.buttonIcon {
+  height: 32px;
+}
+
+.teamCard {
+  display: none;
+
+  @include on-desktop {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     grid-column: span 4;
   }
 }
 
+.teamName {
+  @include h1-mobile-medium;
+
+  @include on-desktop {
+    @include h3-web;
+
+    &:last-of-type {
+      margin-top: 32px;
+    }
+  }
+}
+
 .teamPosition {
-  @include main-web-bold;
+  @include main-mobile-bold;
+
+  @include on-desktop {
+    @include main-web-bold;
+  }
 }
 
 .teamAbout {
   @include secondary-web;
 
   margin-top: 8px;
+  text-align: center;
+
+  @include on-desktop {
+    text-align: left;
+  }
 }
 
 .historyGrid {
@@ -94,6 +210,8 @@
 }
 
 .history {
+  padding-bottom: 32px;
+
   @include on-desktop-wide {
     grid-column: 1 / 10;
   }
@@ -106,7 +224,7 @@
 }
 
 .list {
-
+  padding-left: 16px;
 }
 
 .listItem {
@@ -122,18 +240,34 @@
 }
 
 .containerBottom {
-  height: 308px;
   background-color: $color-primary;
-  border-radius: 100px;
+  border-radius: 32px;
   margin-bottom: 70px;
+  padding: 32px 16px;
+
+  @include on-desktop {
+    padding: 32px 0;
+    height: 308px;
+    border-radius: 100px;
+  }
 }
 
 .wrapper {
-  padding-inline: 200px;
-  padding-top: 32px;
   display: flex;
-  justify-content: space-between;
-  gap: 285px;
+  flex-direction: column;
+  gap: 16px;
+  
+  @include on-desktop {
+    padding-inline: 64px;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 100px;
+  }
+
+  @include on-desktop-wide {
+    padding-inline: 200px;
+    gap: 285px;
+  }
 }
 
 .green {

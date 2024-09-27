@@ -1,33 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSwipeable } from "react-swipeable";
 import { TravelStories } from "../../components/TravelStories/TravelStories";
-import { getNoTraceIcon, getOnePercentIcon, getTreeIcon } from "../../utils/getIcons";
-import { 
-  getTeamImg1, 
-  getTeamImg2, 
-  getTeamImg3, 
-  getTeamImg4, 
-  getTeamImg5, 
-  getTeamImg6, 
-  getTeamImg7, 
-  getTeamImg8, 
-  getTeamImg9 
-} from "../../utils/getImages";
+import { getArrowLeftActiveGreenIcon, getArrowLeftActiveIcon, getArrowLeftDisabledGreenIcon, getArrowLeftDisabledIcon, getArrowRightActiveGreenIcon, getArrowRightActiveIcon, getArrowRightDisabledIcon, getNoTraceIcon, getOnePercentIcon, getTreeIcon } from "../../utils/getIcons";
+import { teamMembers } from "../../utils/teamMembers";
 import styles from './AboutUsPage.module.scss';
 
 export const AboutUsPage = () => {
+  const [cardIndex, setCardIndex] = useState(0);
+
+  const handleRightClick = () => {
+    setCardIndex(prevIndex => {
+      if (prevIndex === teamMembers.length - 1) {
+        return 0;
+      }
+      
+      return Math.min(prevIndex + 1, teamMembers.length - 1);
+    });
+  };
+
+  const handleLeftClick = () => {
+    setCardIndex(currIndex => {
+      if (currIndex === 0) {
+        return teamMembers.length - 1;
+      }
+      return Math.max(currIndex - 1, 0);
+    });
+  };
+
+  const isLeftDisabled = cardIndex === 0;
+  const isRightDisabled = cardIndex === teamMembers.length - 1;
+
+  const handlers = useSwipeable({
+    onSwipedLeft: () => handleRightClick(),
+    onSwipedRight: () => handleLeftClick(),
+  });
+  
+  const arrowLeftActiveGreenIcon = getArrowLeftActiveGreenIcon();
+  const arrowLeftDisabledGreenIcon = getArrowLeftDisabledGreenIcon();
+  const arrowRightActiveGreenIcon = getArrowRightActiveGreenIcon();
+  const arrowRightDisabledGreenIcon = getArrowRightActiveGreenIcon();
+  
   const onePercentIcon = getOnePercentIcon();
   const treeIcon = getTreeIcon();
   const noTraceIcon = getNoTraceIcon();
-
-  const teamImg1 = getTeamImg1();
-  const teamImg2 = getTeamImg2();
-  const teamImg3 = getTeamImg3();
-  const teamImg4 = getTeamImg4();
-  const teamImg5 = getTeamImg5();
-  const teamImg6 = getTeamImg6();
-  const teamImg7 = getTeamImg7();
-  const teamImg8 = getTeamImg8();
-  const teamImg9 = getTeamImg9();
   
   return (
     <div className={styles.AboutUsPage}>
@@ -49,128 +64,86 @@ export const AboutUsPage = () => {
         <h3 className={styles.titleSmall}>Out team</h3>
 
         <div className={styles.teamGrid}>
-          <div className={styles.teamCard}>
-            <img src={teamImg1} alt="Team member photo" />
+          <div className={styles.cardSliderMobile} {...handlers}>
+            <div className={styles.sliderContainer}>
+              {teamMembers.map(member => (
+                <div 
+                  className={styles.sliderWrapper}
+                  key={member.id}
+                  style={{ transform: `translateX(-${cardIndex * 358}px` }}
+                >
+                  <div className={styles.teamCardMobile}>
+                    <img 
+                      src={member.image} 
+                      alt="Team member" 
+                      className={styles.teamPhoto}
+                    />
 
-            <h3 className={styles.titleSmall}>Dmytro Karp</h3>
+                    <h3 className={styles.teamName}>{member.name}</h3>
 
-            <p className={styles.teamPosition}>Head, founder of travel.ua</p>
+                    <p className={styles.teamPosition}>{member.position}</p>
 
-            <p className={styles.teamAbout}>
-              Dmytro is an entrepreneur, a person who lives in the rhythm of a full life. 
-              Any adrenaline venture causes him admiration not only in words, but also 
-              in deed
-            </p>
+                    <p className={styles.teamAbout}>{member.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className={styles.buttonsWrapper}>
+              <button
+                className={styles.button}
+                onClick={handleLeftClick}
+                disabled={isLeftDisabled}
+              >
+                {isLeftDisabled ? (
+                  <img 
+                    src={arrowLeftDisabledGreenIcon} 
+                    alt="arrow-left-disabled"
+                    className={styles.buttonIcon}
+                  />
+                ) : (
+                  <img 
+                    src={arrowLeftActiveGreenIcon} 
+                    alt="arrow-left-active" 
+                    className={styles.buttonIcon}
+                  />
+                )}
+              </button>
+
+              <button
+                className={styles.button}
+                onClick={handleRightClick}
+                disabled={isRightDisabled}
+              >
+                {isRightDisabled ? (
+                  <img 
+                    src={arrowRightDisabledGreenIcon} 
+                    alt="arrowrightdisabled" 
+                    className={styles.buttonIcon}
+                  />
+                ) : (
+                  <img 
+                    src={arrowRightActiveGreenIcon} 
+                    alt="arrowactiveactive" 
+                    className={styles.buttonIcon}
+                  />
+                )}
+              </button>
+            </div>
           </div>
+          
+          
+          {teamMembers.map(member => (
+            <div className={styles.teamCard} key={member.id}>
+            <img src={member.image} alt="Team member" />
 
-          <div className={styles.teamCard}>
-            <img src={teamImg2} alt="Team member photo" />
+            <h3 className={styles.teamName}>{member.name}</h3>
 
-            <h3 className={styles.titleSmall}>Volodymyr Zaylo</h3>
+            <p className={styles.teamPosition}>{member.position}</p>
 
-            <p className={styles.teamPosition}>Manager, co-owner of travel.ua</p>
-
-            <p className={styles.teamAbout}>
-              Volodymyr - If this person is called Volodymyr Feodosiyovych, then most of the 
-              team will ask "Who is this?", because for everyone he is Uncle Vova. 
-              He knows everything!
-            </p>
+            <p className={styles.teamAbout}>{member.description}</p>
           </div>
-
-          <div className={styles.teamCard}>
-            <img src={teamImg3} alt="Team member photo" />
-
-            <h3 className={styles.titleSmall}>Vitaly Pyrig</h3>
-
-            <p className={styles.teamPosition}>Head of the certificate department</p>
-
-            <p className={styles.teamAbout}>
-              Vitaly is the biggest calculator in the office. Not a single certificate or 
-              extra hryvnia will pass by her, as she keeps records of finances.
-            </p>
-          </div>
-
-          <div className={styles.teamCard}>
-            <img src={teamImg4} alt="Team member photo" />
-
-            <h3 className={styles.titleSmall}>Anton Vasylkiv</h3>
-
-            <p className={styles.teamPosition}>Head of the Cooperation Department (Western and Central regions)</p>
-
-            <p className={styles.teamAbout}>
-            Anton is Sherlock Holmes in the world of interesting services. It is she who 
-            discovers cool new experiences, negotiates with partners, signs contracts 
-            and does a lot of work.
-            </p>
-          </div>
-
-          <div className={styles.teamCard}>
-            <img src={teamImg5} alt="Team member photo" />
-
-            <h3 className={styles.titleSmall}>Valentina Ushakova</h3>
-
-            <p className={styles.teamPosition}>Marketer</p>
-
-            <p className={styles.teamAbout}>
-              Because of this person, instead of sitting quietly at home, 
-              you wanted to go/swim/jump/fly/climb - as she is engaged in all 
-              social networks.
-            </p>
-          </div>
-
-          <div className={styles.teamCard}>
-            <img src={teamImg6} alt="Team member photo" />
-
-            <h3 className={styles.titleSmall}>Karina Andronova</h3>
-
-            <p className={styles.teamPosition}>Senior customer service manager</p>
-
-            <p className={styles.teamAbout}>
-              Karina herself answers your calls and messages, and makes 
-              sure that the managers do it right.
-            </p>
-          </div>
-
-          <div className={styles.teamCard}>
-            <img src={teamImg7} alt="Team member photo" />
-
-            <h3 className={styles.titleSmall}>Vasyl Karpenko</h3>
-
-            <p className={styles.teamPosition}>Organizer of excursions to Uman</p>
-
-            <p className={styles.teamAbout}>
-              Will develop excursion programs for any taste, organizes the use of various types 
-              of transport for the transportation of tourists during excursion service.
-            </p>
-          </div>
-
-          <div className={styles.teamCard}>
-            <img src={teamImg8} alt="Team member photo" />
-
-            <h3 className={styles.titleSmall}>Andriy Shevchenko</h3>
-
-            <p className={styles.teamPosition}>Organizer</p>
-
-            <p className={styles.teamAbout}>
-              Andriy is an active, positive, cheerful member of our team of extremes! 
-              The organizer of Rope Jumping, as well as a professional 
-              videographer and photographer
-            </p>
-          </div>
-
-          <div className={styles.teamCard}>
-            <img src={teamImg9} alt="Team member photo" />
-
-            <h3 className={styles.titleSmall}>Sofia Brydun</h3>
-
-            <p className={styles.teamPosition}>Head of the corporate department, as well as excursions to Chernobyl, Mafia games</p>
-
-            <p className={styles.teamAbout}>
-              A responsible, cheerful, fragile and positive girl, and also a mother. 
-              If you want to visit an extreme place with a great and valuable history 
-              for Ukraine - contact me.
-            </p>
-          </div>
+          ))}
         </div>
 
         <h3 className={styles.titleSmall}>Our history</h3>

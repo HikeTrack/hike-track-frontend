@@ -1,3 +1,13 @@
+export type Details = {
+  id: number,
+  additionalPhotos: string,
+  elevationGain: string,
+  routeType: string,
+  duration: number,
+  map: string,
+  activity: string,
+} | null;
+
 export type Tour = {
   id: number,
   name: string,
@@ -6,6 +16,6 @@ export type Tour = {
   date: string,
   difficulty: 'Easy' | 'Medium' | 'Hard',
   countryId: number,
-  details: null,
+  details: Details,
   mainPhoto: string,
 }

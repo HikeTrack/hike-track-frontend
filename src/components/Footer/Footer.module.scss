@@ -2,14 +2,52 @@
 
 .footer {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  
   background-color: $color-grey-50;
-  padding-block: 70px;
-  padding-inline: 200px;
+  padding-block: 32px;
+  padding-inline: 16px;
+
+  @include on-desktop {
+    flex-direction: row;
+    justify-content: space-between;
+    padding-block: 70px;
+    padding-inline: 32px;
+  }
+
+  @include on-desktop-wide {
+    padding-inline: 200px;
+  }
+
+  width: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+
+  @media (min-width: 1280px) and (max-width: 1919px) {
+    width: 1280px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 1920px) {
+    width: 1920px;
+    margin: 0 auto;
+  }
+}
+
+.containerTopMobile {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  
+  @include on-desktop {
+    display: none;
+  }
 }
 
 .title {
-  @include h4-web;
+  @include on-desktop {
+    @include h4-web;
+  }
 }
 
 .containerLeft {
@@ -33,53 +71,78 @@
 }
 
 .containerCenter {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: none;
 
-  width: 494px;
+  @include on-desktop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  
+    width: 494px;
+  }
 }
 
 .containerSubscribe {
-  margin-block: 16px 59px;
+  margin-block: 16px 24px;
   width: 100%;
   display: flex;
   justify-content: space-between;
   padding-left: 16px;
   border: 1px solid $color-primary;
   border-radius: 1000px;
+
+  @include on-desktop {
+    margin-block: 16px 59px;
+  }
 }
 
 .input {
   border: none;
   background-color: transparent;
   width: 100%;
-}
 
-.input::placeholder {
-  @include main-web;
+  &::placeholder {
+    @include main-mobile;
+    color: $color-grey-700;
 
-  color: $color-grey-700;
+    @include on-desktop {
+      @include main-web;
+    }
+  }
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .button {
   padding-block: 16px;
-  padding-inline: 41px;
+  padding-inline: 19px;
   background-color: $color-primary;
   border: 1px solid $color-primary;
   border-radius: 1000px;
   cursor: pointer;
 
-  @include button-web;
+  @include button-mobile;
   @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
 
   color: $color-bg;
+
+  @include on-desktop {
+    @include button-web;
+
+    padding-inline: 41px;
+  }
 }
 
 .containerSocials {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  display: none;
+  
+  @include on-desktop {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
 }
 
 .socials {
@@ -89,6 +152,8 @@
 }
 
 .containerRight {
+  padding-block: 24px;
+  
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -106,5 +171,28 @@
   cursor: pointer;
   text-decoration: none;
   @include main-web-bold;
+}
+
+.containerSocialsMobile {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+  
+  @include on-desktop {
+    display: none;
+  }
+}
+
+.titleBig {
+  @include h1-mobile-medium;
+
+  margin-top: 24px;
+}
+
+.socialsMobile {
+  display: flex;
+  gap: 32px;
 }
 

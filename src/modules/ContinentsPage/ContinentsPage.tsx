@@ -19,7 +19,7 @@ import {
   getWorldGreenIcon, 
   getWorldIcon 
 } from "../../utils/getIcons";
-import styles from './SearchPage.module.scss';
+import styles from './ContinentsPage.module.scss';
 
 const continentIcons: { [key in Continent]: string } = {
   [Continent.AllCountries]: getWorldIcon(),
@@ -39,7 +39,7 @@ const continentIconsSelected: { [key in Continent]: string } = {
   [Continent.SouthAmerica]: getSouthAmericaGreenIcon(),
 }
 
-export const SearchPage: React.FC = () => {
+export const ContinentsPage: React.FC = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedContinent, setSelectedContinent] = useState(Continent.AllCountries);
@@ -125,7 +125,7 @@ export const SearchPage: React.FC = () => {
           <h4 className={styles.titleGreen}>Country</h4>
 
           <div className={styles.searchBar}>
-            <img src={searchIcon} alt="Search icon" />
+            <img src={searchIcon} alt="Search" />
             <input 
               id="search"
               type="search"
@@ -133,7 +133,7 @@ export const SearchPage: React.FC = () => {
               className={styles.searchInput}
               onChange={handleQueryChange}
             />
-          </div>
+          </div> 
           
           <div className={styles.searchResults}>
             {isLoading ? <Loader /> :
@@ -144,7 +144,7 @@ export const SearchPage: React.FC = () => {
 
                   <ul className={styles.resultList}>
                     {groupedCountries[letter].map((country) => (
-                      <li className={styles.listItem}>
+                      <li className={styles.listItem} key={country.id}>
                         <Link to={`/toursByCountry/${country.id}`} className={styles.resultLink}>{country.name}</Link>
                       </li>
                     ))}

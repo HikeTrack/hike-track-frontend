@@ -1,8 +1,9 @@
 import { Country } from "../types/Country";
 import { PopularTour } from "../types/PopularTour";
 import { Tour } from "../types/Tour";
+import { TourDetails } from "../types/TourDetails";
 
-export const BASE_URL = 'http://localhost:8081';
+export const BASE_URL = 'http://hiketrack.eu-central-1.elasticbeanstalk.com';
 
 export function getData<T>(url: string): Promise<T> {
   return fetch(BASE_URL + url).then(response => {
@@ -26,11 +27,13 @@ export const getTours = (): Promise<Tour[]> => {
   return getData<Tour[]>('/tours');
 };
 
-export const getToursByCountry = async (countryId: number) => {
-  return getTours().then(tours => 
-    tours.filter(tour => tour.countryId === countryId),
-  );
+export const getToursByCountry = async (countryName: string) => {
+  return getData<Tour[]>(`/tours/search?country=${countryName}`);
 };
+
+export const getTourById = async (tourId: number) => {
+  return getData<TourDetails>(`/tours/${tourId}`);
+}
 
 // export const getSuggestedTours = () => {
 //   return getToursByCountry(countryId).then(tours => )

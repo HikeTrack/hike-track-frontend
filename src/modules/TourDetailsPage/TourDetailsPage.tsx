@@ -1,10 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { TourCard } from "../../components/TourCard/TourCard";
-import { getArrowNextIcon, getBookmarkIcon, getCameraIcon, getCarIcon, getPrinterIcon, getShareIcon, getShareSocialsIcon, getStarIcon, getThumbsUpIcon } from "../../utils/getIcons";
+import { Countries } from "../../enums/Countries";
+import { TourDetails } from "../../types/TourDetails";
+import { getTourById } from "../../utils/fetchData";
+import { formatDate, formatDistance } from "../../utils/formatFunctions";
+import { getArrowBackIcon, getArrowNextIcon, getBookmarkIcon, getCameraIcon, getCarIcon, getPrinterIcon, getShareIcon, getShareSocialsIcon, getStarIcon, getThumbsUpIcon } from "../../utils/getIcons";
 import { getMapImg, getUserContent1, getUserContent2, getUserContent3, getUserImg } from "../../utils/getImages";
 import styles from './TourDetailsPage.module.scss';
 
 export const TourDetailsPage: React.FC = () => {
+  const { tourId } = useParams<{ tourId: string }>();
+  const navigate = useNavigate();
+  const [tourDetails, setTourDetails] = useState<TourDetails>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => { 
+    if (tourId) {
+      const id = Number(tourId);
+      
+      const fetchTours = async () => {
+        try {
+          const tourDetailsData = await getTourById(id);
+
+          setTourDetails(tourDetailsData);
+        } catch (error) {
+          setError('Failed to load tours. Please try again later.')
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchTours()
+    }
+  }, [tourId]);
+
+  if (!tourDetails) {
+    return <h2>This tour isn't available.</h2>
+  }
+  
+  const arrowBackIcon = getArrowBackIcon();
   const starIcon = getStarIcon();
   const bookmarkIcon = getBookmarkIcon();
   const cameraIcon = getCameraIcon();
@@ -24,12 +60,17 @@ export const TourDetailsPage: React.FC = () => {
   return ( 
     <div className={styles.tourDetailsPage}>
       <div className={styles.containerTop}>
+        <button className={styles.backButton}>
+          <img src={arrowBackIcon} alt="Arrow back"/>
+          <p className={styles.buttonLabel} onClick={() => navigate(-1)}>Go back</p>
+        </button>
+        
         <div className={styles.highlightContainer}>
           <div className={styles.highlights}>
-            <p className={styles.highlightText}>Turkey | 5137 m.</p>
+            <p className={styles.highlightText}>{`${Countries[tourDetails.countryId]} | ${tourDetails.details?.elevationGain} m`}</p>
 
             <div className={styles.highlightWrapper}>
-              <p className={styles.highlightText}>Difficulty <span className={styles.highlightSpan}>Medium</span></p>
+              <p className={styles.highlightText}>Difficulty <span className={styles.highlightSpan}>{tourDetails.difficulty}</span></p>
 
               <div className={styles.tourRate}>
                 <img src={starIcon} alt="star" />
@@ -38,20 +79,28 @@ export const TourDetailsPage: React.FC = () => {
               </div>
             </div>
 
-            <h4 className={styles.tourName}>Climbing Ararat</h4>
+            <h4 className={styles.tourName}>{tourDetails.name}</h4>
 
-            <h4 className={styles.tourNearest}>The nearest tour on 25.08.2024</h4>
+            <h4 className={styles.tourNearest}>{`The nearest tour on ${formatDate(tourDetails.date)}`}</h4>
 
             <button className={styles.bookButton}>Book a tour</button>
           </div>
 
-          <img src={bookmarkIcon} alt="Bookmark icon" />
+          <img 
+            src={bookmarkIcon} 
+            alt="Bookmark icon" 
+            className={styles.icon}
+          />
         </div>
 
         <div className={styles.actionButtons}>
           <div className={styles.actionWrapper}>
             <a className={styles.action} href="#">
-              <img src={cameraIcon} alt="Camera icon" />
+              <img 
+                src={cameraIcon} 
+                alt="Camera icon" 
+                className={styles.icon}
+              />
             </a>
 
             <p className={styles.actionTitle}>Photos</p>
@@ -59,7 +108,11 @@ export const TourDetailsPage: React.FC = () => {
           
           <div className={styles.actionWrapper}>
             <a className={styles.action} href="#">
-              <img src={carIcon} alt="Car icon" />
+              <img 
+                src={carIcon} 
+                alt="Car icon" 
+                className={styles.icon}
+              />
             </a>
 
             <p className={styles.actionTitle}>Details</p>
@@ -67,7 +120,11 @@ export const TourDetailsPage: React.FC = () => {
 
           <div className={styles.actionWrapper}>
             <a className={styles.action} href="#">
-              <img src={printerIcon} alt="Printer icon" />
+              <img 
+                src={printerIcon} 
+                alt="Printer icon" 
+                className={styles.icon}
+              />
             </a>
 
             <p className={styles.actionTitle}>Print/PDF map</p>
@@ -75,7 +132,11 @@ export const TourDetailsPage: React.FC = () => {
 
           <div className={styles.actionWrapper}>
             <a className={styles.action} href="#">
-              <img src={shareIcon} alt="Share icon" />
+              <img 
+                src={shareIcon} 
+                alt="Share icon" 
+                className={styles.icon}
+              />
             </a>
 
             <p className={styles.actionTitle}>Share</p>
@@ -90,19 +151,19 @@ export const TourDetailsPage: React.FC = () => {
               <p className={styles.infoText}>
                 Length
                 <br />
-                <span className={styles.infoSpan}>5.1 km</span>
+                <span className={styles.infoSpan}>{formatDistance(tourDetails.length)}</span>
               </p>
 
               <p className={styles.infoText}>
                 Elevation gain
                 <br />
-                <span className={styles.infoSpan}>5.137 m.</span>
+                <span className={styles.infoSpan}>{`${tourDetails.details?.elevationGain} m.`}</span>
               </p>
 
               <p className={styles.infoText}>
                 Route type
                 <br />
-                <span className={styles.infoSpan}>Point to point</span>
+                <span className={styles.infoSpan}>{tourDetails.details?.routeType}</span>
               </p>
             </div>
 
@@ -119,15 +180,7 @@ export const TourDetailsPage: React.FC = () => {
 
             <div className={styles.infoTags}>
               <div className={styles.tag}>
-                Hiking
-              </div>
-
-              <div className={styles.tag}>
-                Biking
-              </div>
-
-              <div className={styles.tag}>
-                Climbing
+                {tourDetails.details?.activity}
               </div>
             </div>
           </div>
@@ -246,7 +299,7 @@ export const TourDetailsPage: React.FC = () => {
           <h4 className={styles.title}>Other tours in Turkey</h4>
 
           <div className={styles.suggestedContainer}>
-            <TourCard />
+            {/* <TourCard /> */}
           </div>
         </div>
       </div>

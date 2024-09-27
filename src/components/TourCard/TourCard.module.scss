@@ -3,12 +3,22 @@
 .tourCard {
   position: relative;
   
+  width: 100%;
   height: 421px;
   border-radius: 16px;
-  background: url('../../../public/img/page-bg/card-ararat.png');
+  overflow: hidden;
+  cursor: pointer;
+
+  @include on-desktop {
+    grid-column: span 3;
+  }
 
   @include on-desktop-wide {
     grid-column: span 3;
+  }
+
+  &:hover .tourDetails {
+    bottom: 0;
   }
 }
 
@@ -28,14 +38,13 @@
   @include secondary-web;
   
   color: $color-bg;
+  text-transform: uppercase;
 }
 
 .tourInfo {
   position: absolute;
   bottom: 24px;
   left: 24px;
-
-
 }
 
 .tourLocation {
@@ -46,4 +55,65 @@
   @include main-web-bold;
 
   color: $color-bg;
+}
+
+.tourDetails {
+  position: absolute;
+  bottom: -219px;
+
+  width: 100%;
+  height: 219px;
+  padding: 16px 26px;
+  background-color: $color-bg;
+  border-radius: 16px;
+  // display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: bottom 0.3s ease-in-out;
+}
+
+.tourDetailsWrapper {
+  display: flex;
+  gap: 11px;
+}
+
+.tourTextWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.tourText {
+  @include secondary-web;
+}
+
+.tourHighlighted {
+  font-weight: 600;
+}
+
+.tourLink {
+  position: absolute;
+  bottom: 26px;
+  left: 86.5px;
+
+  @include button-web;
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+  
+  width: 173px;
+  text-decoration: none;
+  background-color: $color-primary;
+  padding-block: 13px;
+  border-radius: 1000px;
+  color: $color-bg;
+  text-align: center;
+  cursor: pointer;
+
+  @include on-desktop {
+    bottom: 26px;
+    left: 55px;
+  }
+
+  @include on-desktop-wide {
+    bottom: 26px;
+    left: 86.5px;
+  }
 }

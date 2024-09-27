@@ -18,15 +18,28 @@
   }
 }
 
-@mixin padding-inline {
-  @include on-desktop {
-    padding-inline: 200px;
-  }
-}
-
 @mixin hover($_property, $_toValue) {
   transition: #{$_property} 0.3s;
   &:hover {
     #{$_property}: $_toValue;
   }
 }
+
+@mixin grid {
+  display: grid;
+
+  --columns: 4;
+
+  gap: 12px;
+  grid-template-columns: repeat(var(--columns), 1fr);
+
+  @include on-desktop {
+    --columns: 12;
+    gap: 32px;
+  }
+
+  @include on-desktop-wide {
+    gap: 20px;
+  }
+}
+

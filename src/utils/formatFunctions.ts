@@ -10,5 +10,5 @@ export const formatDate = (fullDate: string): string => {
 export const formatDistance = (metres: number): string => {
   const kilometres = metres / 1000;
 
-  return `${(kilometres / 10).toFixed(1)} km`;
+  return `${parseFloat(kilometres.toFixed(1))} km`;
 }
