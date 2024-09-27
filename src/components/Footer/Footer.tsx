@@ -10,15 +10,28 @@ export const Footer = () => {
   
   return (
     <footer className={styles.footer}>
+      <div className={styles.containerTopMobile}>
+        <h4 className={styles.title}>Subscribe to the newsletter and be the first to know about everything</h4>
+ 
+        <div className={styles.containerSubscribe}>
+          <input 
+            type="email" 
+            placeholder="Your email address" 
+            className={styles.input}
+          />
+          <button className={styles.button}>Subscribe</button>
+        </div>
+      </div>
+      
       <div className={styles.containerLeft}>
-        <h4 className={styles.title}>Menu</h4>
+        <h4 className={styles.titleBig}>Menu</h4>
 
         <nav className={styles.nav}>
           <NavLink to="/" className={styles.navItem}>
             Home
           </NavLink>
 
-          <NavLink to="/tours" className={styles.navItem}>
+          <NavLink to="/continents" className={styles.navItem}>
             Tours
           </NavLink>
 
@@ -30,7 +43,7 @@ export const Footer = () => {
 
       <div className={styles.containerCenter}>
         <h4 className={styles.title}>Subscribe to the newsletter and be the first to know about everything</h4>
-
+ 
         <div className={styles.containerSubscribe}>
           <input 
             type="email" 
@@ -84,6 +97,24 @@ export const Footer = () => {
             HikeTrack24@gmail.com
           </a>
       </div>
+
+      <div className={styles.containerSocialsMobile}>
+          <h4 className={styles.titleBig}>Connect with us</h4>
+
+          <div className={styles.socialsMobile}>
+            <Link to="#" className={styles.logoLink}>
+              <img src={instagramIcon} alt="instagram" />
+            </Link>
+
+            <Link to="#" className={styles.logoLink}>
+              <img src={facebookIcon} alt="facebook" />
+            </Link>
+
+            <Link to="#" className={styles.logoLink}>
+              <img src={youtubeIcon} alt="youtube" />
+            </Link>
+          </div>
+        </div>
     </footer>
   )
 };

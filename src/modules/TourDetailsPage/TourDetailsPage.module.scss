@@ -5,15 +5,60 @@
 }
 
 .containerTop {
-  height: 697px;
+  position: relative;
+
+  height: 585px;
+  padding-inline: 16px;
   background: url('../../../public/img/page-bg/bg-ararat.png');
-  padding-inline: 200px;
+  background-repeat: no-repeat;
+
+  @include on-desktop {
+    height: 697px;
+    padding-inline: 32px;
+  }
+
+  @include on-desktop-wide {
+    padding-inline: 200px;
+  }
+}
+
+.backButton {
+  position: absolute;
+  top: 120px;
+  left: 0;
+
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  @include on-desktop {
+    top: 190px;
+    left: 18px;
+  }
+
+  @include on-desktop-wide {
+    left: 200px;
+  }
+}
+
+.buttonLabel {
+  @include button-web;
+  
+  color: $color-primary;
 }
 
 .highlightContainer {
-  padding-block: 239px 90px;
+  padding-block: 177px 48px;
   display: flex;
   justify-content: space-between;
+
+  @include on-desktop {
+    padding-block: 259px 90px;
+  }
 }
 
 .highlights {
@@ -67,29 +112,55 @@
   background: $color-primary;
   border: 1px solid $color-primary;
   border-radius: 1000px;
-  padding-block: 19px;
-  width: 237px;
+  padding-block: 16px;
+  width: 166px;
   color: $color-bg;
 
   @include button-web;
 
   @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+
+  @include on-desktop {
+    width: 237px;
+    padding-block: 19px;
+  }
 }
 
 .actionButtons {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  left: 16px;
+  
   display: flex;
   justify-content: space-between;
+
+  @include on-desktop {
+    position: static;
+  }
 }
 
 .actionWrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 5px;
+
+  @include on-desktop {
+    gap: 12px;
+  }
 }
 
 .action {
 
+}
+
+.icon {
+  height: 32px;
+
+  @include on-desktop {
+    height: 64px;
+  }
 }
 
 .actionTitle {
@@ -97,26 +168,27 @@
 }
 
 .containerMain {
-  padding: 32px 200px;
+  padding-block: 32px;;
   display: flex;
   flex-direction: column;
   gap: 32px;
+  padding-inline: 16px;
+
+  @include on-desktop {
+    @include grid;
+    
+    padding-inline: 32px;
+  }
 
   @include on-desktop-wide {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 20px;
+    padding-inline: 200px;
   }
 }
 
 .infoWrapper {
   grid-column: 1 / -1;
 
-  @include on-desktop-wide {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 20px;
-  }
+  @include grid;
 }
 
 .info {
@@ -129,7 +201,7 @@
 
 .infoHighlights {
   display: flex;
-  gap: 293px;
+  justify-content: space-between;
 }
 
 .infoText {
@@ -156,7 +228,16 @@
 }
 
 .mapWrapper {
-  grid-column: 11 / -1;
+  display: flex;
+  flex-direction: column;
+
+  @include on-desktop {
+    grid-column: 10 / -1;
+  }
+
+  @include on-desktop-wide {
+    grid-column: 11 / -1;
+  }
 }
 
 .mapLink {
@@ -174,10 +255,11 @@
 }
 
 .conditionCards {
-  @include on-desktop-wide {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 20px;
+  // display: flex;
+  // flex-direction: column;
+  
+  @include on-desktop {
+    @include grid;
   }
 }
 
@@ -186,7 +268,9 @@
   height: 293px;
   border-radius: 16px;
   background-image: url('../../../public/img/page-bg/conditions-1.png');
+  background-repeat: no-repeat;
   padding: 109px 24px 108px 24px;
+  cursor: pointer;
 }
 
 .cardTwo {
@@ -194,7 +278,9 @@
   height: 293px;
   border-radius: 16px;
   background-image: url('../../../public/img/page-bg/conditions-2.png');
+  background-repeat: no-repeat;
   padding: 109px 24px 108px 24px;
+  cursor: pointer;
 }
 
 .cardThree {
@@ -202,7 +288,9 @@
   height: 293px;
   border-radius: 16px;
   background-image: url('../../../public/img/page-bg/conditions-3.png');
+  background-repeat: no-repeat;
   padding: 109px 24px 108px 24px;
+  cursor: pointer;
 }
 
 .cardContent {
@@ -222,23 +310,35 @@
 }
 
 .feedbackContainer {
-  grid-column: 1 / 9;
-
   display: flex;
   flex-direction: column;
   gap: 32px;
+
+  @include on-desktop {
+    grid-column: 1 / 9;
+  }
 }
 
 .feedbackTopbar {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  @include on-desktop {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
 }
 
 .topbarItem {
-  @include h4-web;
+  @include main-mobile;
 
   color: $color-grey-700;
   text-decoration: none;
+
+  @include on-desktop {
+    @include h4-web;
+  }
 }
 
 .reviewButton {
@@ -249,6 +349,9 @@
   background: transparent;
   border: 1px solid $color-primary;
   border-radius: 1000px;
+  cursor: pointer;
+
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
 }
 
 .reviewCard {
@@ -262,6 +365,7 @@
 .user {
   display: flex;
   gap: 11px;
+  cursor: pointer
 }
 
 .userImage {
@@ -314,6 +418,7 @@
 
 .reviewPhotos {
   display: flex;
+  flex-wrap: wrap;
   gap: 4px;
   margin-bottom: 24px;
 }

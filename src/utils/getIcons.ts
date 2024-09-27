@@ -5,6 +5,10 @@ const getIcons = (name: string): string => {
 };
 
 export const getLogoIcon = (): string => getIcons('logo');
+export const getMenuIcon = (isMenuOpen: boolean): string => {
+  return getIcons(isMenuOpen ? 'close' : 'burgerMenu');
+};
+export const getCloseIcon = (): string => getIcons('close');
 
 export const getDifficultyGreenIcon = (): string => getIcons('difficultyGreen');
 export const getDifficultyYellowIcon = (): string => getIcons('difficultyYellow');
@@ -54,3 +58,13 @@ export const getShareIcon = (): string => getIcons('share');
 export const getArrowNextIcon = (): string => getIcons('arrowNext');
 export const getThumbsUpIcon = (): string => getIcons('thumbsUp');
 export const getShareSocialsIcon = (): string => getIcons('shareSocials');
+
+export const getArrowLeftActiveIcon = (): string => getIcons('arrowLeftActive');
+export const getArrowRightActiveIcon = (): string => getIcons('arrowRightActive');
+export const getArrowLeftDisabledIcon = (): string => getIcons('arrowLeftDisabled');
+export const getArrowRightDisabledIcon = (): string => getIcons('arrowRightDisabled');
+
+export const getArrowLeftActiveGreenIcon = (): string => getIcons('arrowLeftActive-green');
+export const getArrowRightActiveGreenIcon = (): string => getIcons('arrowRightActive-green');
+export const getArrowLeftDisabledGreenIcon = (): string => getIcons('arrowLeftDisabled-green');
+export const getArrowRightDisabledGreenIcon = (): string => getIcons('arrowRightDisabled-green');

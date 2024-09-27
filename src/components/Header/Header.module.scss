@@ -1,32 +1,78 @@
 @import '../../styles/all';
 
-.header {
-  // position: fixed;
-  // top: 32px;
-  // left: 0;
-  // right: 0;
-  // z-index: 10;
+.headerMobile {
   position: absolute;
-  top: 32px;
-  z-index: 10;
-
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  right: 0;
+  z-index: 1000;
+  height: 94px;
+  width: 100%;
+  padding: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 136px;
-  // width: 1520px;
+  margin: 0;
+  background: transparent;
 
+  @include on-desktop {
+    display: none;
+  }
+}
+
+.menuOpen {
+  background: #FFFF;
+}
+
+.header {
+  display: none;
+
+  position: absolute;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  right: 0;
+  z-index: 10;
+
+  // display: flex;
+  // justify-content: space-between;
+  // align-items: center;
+  // height: 136px;
+  // max-width: 100%;
+  margin: 0 auto;
   background: #D9F1FF8C;
 
-  margin-inline: 200px;
+  
   // margin-top: 32px;
   border-radius: 1000px;
 
   padding-inline: 24px;
 
+  @include on-desktop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 136px;
+    width: 1216px;
+  }
+
   @include on-desktop-wide {
     width: 1520px;
   }
+}
+
+.logoIcon {
+  height: 62px;
+
+  @include on-desktop {
+    height: 108px;
+  }
+}
+
+.menuButton {
+  border: none;
+  background-color: transparent;
 }
 
 .containerLeft {

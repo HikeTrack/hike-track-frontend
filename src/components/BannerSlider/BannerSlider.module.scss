@@ -2,48 +2,73 @@
 
 .bannerSlider {
   position: relative;
-  height: 1080px;
+  height: 550px;
   width: 100%;
   overflow: hidden;
 
+  @include on-desktop {
+    @include grid;
+
+    height: 832px;
+  }
+
   @include on-desktop-wide {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 20px;
+    height: 1080px;
   }
 }
 
 .bannerTitleWrapper {
   position: absolute;
-  top: 425px;
-  left: 200px;
+  top: 200px;
+  left: 16px;
+  gap: 32px;
 
   z-index: 10;
   display: flex;
   flex-direction: column;
-  gap: 64px;
+
+  @include on-desktop {
+    grid-column: 1 / -1;
+
+    top: 339px;
+    left: 32px;
+    gap: 30px;
+  }
 
   @include on-desktop-wide {
     grid-column: 1 / 7;
+
+    top: 425px;
+    left: 200px;
+    gap: 64px;
   }
 }
 
 .bannerTitle {
-  @include h1-web;
-
   color: $color-bg;
+
+  @include h1-mobile;
+  
+  @include on-desktop {
+    @include h1-web;
+  }
 }
 
 .bannerButton {
-  width: 237px;
+  width: 166px;
   text-align: center;
-  padding-block: 20px;
+  padding-block: 16px;
   background-color: $color-primary;
   color: $color-bg;
   text-decoration: none;
   border-radius: 1000px;
 
   @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+
+  @include on-desktop {
+    width: 237px;  
+    padding-block: 20px;
+  }
 }
 
 .slide {
@@ -61,26 +86,4 @@
 
 .activeSlide {
   opacity: 1;
-}
-
-.sliderDots {
-  position: absolute;
-  bottom: 164px;
-  left: 50%;
-
-  z-index: 10;
-  display: flex;
-  gap: 12.5px;
-}
-
-.dot {
-  height: 15px;
-  width: 15px;
-  border-radius: 50%;
-  border: 1px solid $color-grey-300;
-  background-color: $color-grey-300;
-}
-
-.activeDot {
-  background-color: $color-primary;
 }

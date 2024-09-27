@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getBannerImage1, getBannerImage2, getBannerImage3 } from '../../utils/getBannerImages';
 import styles from './BannerSlider.module.scss';
 
@@ -20,16 +21,12 @@ export const BannerSlider: React.FC = () => {
 
     return () => clearInterval(slideInterval);
   }, [totalSlides]);
-
-  const handleDotClick = (index: number) => {
-    setCurrentSlide(index);
-  };
   
   return (
     <div className={styles.bannerSlider}>
       <div className={styles.bannerTitleWrapper}>
         <h1 className={styles.bannerTitle}>Find Your Path: The Best Tours for True Explorers</h1>
-        <a className={styles.bannerButton} href="#">Book now</a>
+        <Link className={styles.bannerButton} to={'/continents'}>Book now</Link>
       </div>
       
       {bannerImages.map((image, index) => (
@@ -39,16 +36,6 @@ export const BannerSlider: React.FC = () => {
           style={{ backgroundImage: `url(${image})` }}
         ></div>
       ))}
-
-      <div className={styles.sliderDots}>
-        {bannerImages.map((_, index) => (
-          <div
-            key={index}
-            className={`${styles.dot} ${currentSlide === index ? styles.activeDot : ''}`}
-            onClick={() => handleDotClick(index)}
-          ></div>
-        ))}
-      </div>
     </div>
   );
 };

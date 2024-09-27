@@ -1,12 +1,64 @@
+import classNames from "classnames";
 import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { getLogoIcon } from '../../utils/getIcons';
+import { getMenuIcon, getLogoIcon } from '../../utils/getIcons';
+import { AsideMenu } from "../AsideMenu/AsideMenu";
 import styles from './Header.module.scss';
 
 export const Header: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const logoIcon = getLogoIcon();
+  const burgerMenuIcon = getMenuIcon(isMenuOpen);
+
+  const handleMenuVisibility = () => {
+    setIsMenuOpen((prev: boolean) => !prev);
+  };
+
+  const menuOverflowStatus = (menuVisibility: boolean) => {
+    if (menuVisibility) {
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.documentElement.style.overflow = 'auto';
+    }
+  };
+
+  useEffect(() => {
+    menuOverflowStatus(isMenuOpen);
+  }, [isMenuOpen]);
   
   return (
+    <>
+    <header className={classNames( styles.headerMobile, {
+      [styles.menuOpen]: isMenuOpen,
+    })}>
+      <Link to="/" className={styles.logoLink}>
+        <img 
+          src={logoIcon} 
+          alt="logo" 
+          className={styles.logoIcon}
+        />
+      </Link>
+
+      <button
+        type="button"
+        className={styles.menuButton}
+        onClick={handleMenuVisibility}
+        aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+      >
+        <img
+          src={burgerMenuIcon}
+          alt={isMenuOpen ? 'Close menu' : 'Menu'}
+          className={styles}
+        />
+      </button>
+
+      <AsideMenu 
+        isMenuOpen={isMenuOpen}
+        handleMenuVisibility={handleMenuVisibility}
+      />
+    </header>
+    
     <header className={styles.header}>
       <Link to="/" className={styles.logoLink}>
        <img src={logoIcon} alt="logo" />
@@ -17,7 +69,7 @@ export const Header: React.FC = () => {
           Home
         </NavLink>
 
-        <NavLink to="/search" className={styles.navItem}>
+        <NavLink to="/continents" className={styles.navItem}>
           Tours
         </NavLink>
 
@@ -36,6 +88,7 @@ export const Header: React.FC = () => {
         </Link>
       </div>
     </header>
+    </>
   )
 };
 

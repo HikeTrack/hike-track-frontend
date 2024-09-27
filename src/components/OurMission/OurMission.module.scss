@@ -6,9 +6,20 @@
 
 .containerTop {
   position: relative;
-  height: 890px;
   text-align: center;
-  background-image: url('../../../public/img/page-bg/our-mission.png');
+  background-image: url('../../../public/img/page-bg/our-mission-mobile.png');
+  background-repeat: no-repeat;
+  height: 266px;
+
+  @include on-desktop {
+    height: 832px;
+    background-image: url('../../../public/img/page-bg/our-mission.png');
+    background-position: center;
+  }
+
+  @include on-desktop-wide {
+    height: 890px;
+  }
 }
 
 .topTitle {
@@ -18,18 +29,39 @@
   transform: translate(-50%, -50%);
   color: $color-bg;
   
-  @include h2-web;
+  @include main-mobile;
+  
+  @include on-desktop {
+    @include h2-web;
+  }
 }
 
 .span {
-  @include h2-web-bold
+  @include h1-mobile;
+  
+  margin-bottom: 32px;
+
+  @include on-desktop {
+    @include h2-web-bold;
+
+    margin-bottom: 0;
+  }
 }
 
 .containerBottom {
-  padding-block: 100px;
-  margin-inline: 200px;
+  margin-inline: 16px;
+  padding-block: 32px;
   display: flex;
   gap: 99px;
+
+  @include on-desktop {
+    margin-inline: 32px;
+    padding-block: 100px;
+  }
+
+  @include on-desktop-wide {
+    margin-inline: 200px;
+  }
 }
 
 .textWrapper {
@@ -37,17 +69,30 @@
 }
 
 .image {
-  border-radius: 1000px;
+  display: none;
+  
+  @include on-desktop {
+    display: block;
+    border-radius: 1000px;
+  }
 }
 
 .bottomTitle {
-  @include h3-web;
-
+  @include h1-mobile;
+  
   margin-bottom: 24px;
+
+  @include on-desktop {
+    @include h3-web;
+  }
 }
 
 .text {
   margin-bottom: 48px;
+}
+
+.list {
+  padding-left: 16px;
 }
 
 .listItem:not(:last-child) {

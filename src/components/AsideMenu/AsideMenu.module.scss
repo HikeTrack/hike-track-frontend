@@ -1,0 +1,63 @@
+@import '../../styles/all';
+
+.asideMenu {
+  display: none;
+  position: fixed;
+  top: 94px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh;
+  z-index: 10;
+  background-color: $color-bg;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.menuOpen {
+  display: flex;
+  flex-direction: column;
+
+  @include on-desktop {
+    display: none;
+  }
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-block: 16px 32px;
+}
+
+.navItem {
+  text-decoration: none;
+  color: $color-grey-900;
+}
+
+.isActive {
+  color: $color-primary;
+  text-decoration: underline;
+}
+
+.authorisationWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.button {
+  padding-block: 12px;
+  background-color: $color-grey-50;
+  width: 100%;
+  border-radius: 1000px;
+  text-decoration: none;
+  color: $color-grey-900;
+  text-align: center;
+
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+}
+
