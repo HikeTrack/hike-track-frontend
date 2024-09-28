@@ -59,7 +59,7 @@ export const ContinentsPage: React.FC = () => {
     };
 
     fetchCountries();
-  }, []);
+  }, []); 
 
   useEffect(() => {
     if (selectedContinent === Continent.AllCountries) {
@@ -136,7 +136,11 @@ export const ContinentsPage: React.FC = () => {
           </div> 
           
           <div className={styles.searchResults}>
-            {isLoading ? <Loader /> :
+            {isLoading ? 
+              <div className={styles.loaderWrapper}>
+                <Loader />
+              </div>
+            :
             Object.keys(groupedCountries).length > 0 ? (
               Object.keys(groupedCountries).sort().map((letter) => (
                 <div className={styles.alphabetic} key={letter}>

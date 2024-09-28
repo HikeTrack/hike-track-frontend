@@ -1,4 +1,4 @@
-const BANNER_IMAGE_BASE_PATH = './img/banner';
+const BANNER_IMAGE_BASE_PATH = '/hike-track-frontend/img/banner';
 
 const getBannerImages = (name: string): string => {
   return `${BANNER_IMAGE_BASE_PATH}/${name}.png`;

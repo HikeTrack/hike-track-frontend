@@ -6,6 +6,8 @@ import { HomePage } from './modules/HomePage/HomePage';
 import { ContinentsPage } from './modules/ContinentsPage/ContinentsPage';
 import { TourDetailsPage } from './modules/TourDetailsPage/TourDetailsPage';
 import { ToursPage } from './modules/ToursPage/ToursPage';
+import { RegistrationPage } from './modules/RegistrationPage/RegistrationPage';
+import { LoginPage } from './modules/LoginPage/LoginPage';
 
 export const Root = () => (
   <Router>
@@ -14,6 +16,8 @@ export const Root = () => (
         <Route index element={<HomePage />} />
         <Route path="continents" element={<ContinentsPage />} />
         <Route path="about" element={<AboutUsPage />} />
+        <Route path="register" element={<RegistrationPage />} />
+        <Route path="login" element={<LoginPage />} />
 
         <Route 
           path="/toursByCountry/:countryId"

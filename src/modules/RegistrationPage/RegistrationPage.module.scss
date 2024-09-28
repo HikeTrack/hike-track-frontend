@@ -1,3 +1,97 @@
 @import '../../styles/all';
 
+.registrationPage {
+  z-index: 1000;
+  background-image: url('../../../public/img/page-bg/authorisation.png');
+}
 
+.container {
+  background: $color-bg;
+  padding: 90px 16px;
+  height: 100vh;
+  
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+
+  @include on-desktop {
+    
+  }
+}
+
+.logoLink {
+
+}
+
+.logoIcon {
+
+}
+
+.title {
+  @include h1-mobile-medium;
+}
+
+.socialsWrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding-inline: 16px;
+}
+
+.socials {
+  margin-top: 32px;
+}
+
+.socialsIcon {
+
+}
+
+.middleContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  align-items: center;
+  width: 100%;
+}
+
+.line {
+  height: 2px;
+  background-color: $color-grey-300;
+  width: 100%;
+}
+
+.text {
+  @include secondary-web;
+
+  text-align: center
+}
+
+.button {
+  @include button-mobile;
+  
+  width: 100%;
+  padding-block: 16px;
+  color: $color-bg;
+  border: 1px solid $color-primary;
+  border-radius: 1000px;
+  background-color: $color-primary;
+  cursor: pointer;
+
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+}
+
+.titleSmall {
+  @include main-mobile-medium;
+}
+
+.loginLink {
+  color: $color-primary;
+}
+
+.textLink {
+  @include secondary-mobile-bold;
+
+  color: $color-grey-900;
+  text-decoration: none;
+}

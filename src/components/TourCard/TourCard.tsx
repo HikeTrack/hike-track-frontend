@@ -24,7 +24,7 @@ export const TourCard: React.FC<Props> = ({ tour }) => {
   return (
     <div className={styles.tourCard}>
       <img
-        src={tour.mainPhoto}
+        src={`/hike-track-frontend/${tour.mainPhoto}`}
       />
 
       <div className={styles.tourDate}>

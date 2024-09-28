@@ -35,7 +35,7 @@ export const PopularToursCard: React.FC<Props> = ({ tour }) => {
     >
       <div 
         className={styles.cardTop}
-        style={{ backgroundImage: `url(${tour.mainPhoto})` }}
+        style={{ backgroundImage: `url(/hike-track-frontend/${tour.mainPhoto})` }}
       >
         <div className={styles.guidePhoto}></div>
       </div>
