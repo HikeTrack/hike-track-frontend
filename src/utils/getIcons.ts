@@ -1,4 +1,4 @@
-const ICONS_BASE_PATH = './img/icons';
+const ICONS_BASE_PATH = '/hike-track-frontend/img/icons';
 
 const getIcons = (name: string): string => {
   return `${ICONS_BASE_PATH}/${name}.svg`;
@@ -9,6 +9,10 @@ export const getMenuIcon = (isMenuOpen: boolean): string => {
   return getIcons(isMenuOpen ? 'close' : 'burgerMenu');
 };
 export const getCloseIcon = (): string => getIcons('close');
+
+export const getRegistrationGoogleIcon = (): string => getIcons('registrationGoogle');
+export const getRegistrationFacebookIcon = (): string => getIcons('registrationFacebook');
+export const getRegistrationAppleIcon = (): string => getIcons('registrationApple');
 
 export const getDifficultyGreenIcon = (): string => getIcons('difficultyGreen');
 export const getDifficultyYellowIcon = (): string => getIcons('difficultyYellow');

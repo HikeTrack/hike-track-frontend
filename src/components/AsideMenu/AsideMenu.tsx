@@ -50,11 +50,19 @@ export const AsideMenu: React.FC<Props> = ({ isMenuOpen, handleMenuVisibility })
       </nav>
 
       <div className={styles.authorisationWrapper}>
-        <Link to="/login" className={styles.button}>
+        <Link 
+          to="/login" 
+          className={styles.button}
+          onClick={handleMenuVisibility}
+        >
           Log in
         </Link>
 
-        <Link to="/register" className={styles.button}>
+        <Link 
+          to="/register" 
+          className={styles.button}
+          onClick={handleMenuVisibility}
+        >
           Registration
         </Link>
       </div>

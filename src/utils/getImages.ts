@@ -1,4 +1,4 @@
-const IMAGE_BASE_PATH = './img/page-images';
+const IMAGE_BASE_PATH = '/hike-track-frontend/img/page-images';
 
 const getImages = (name: string): string => {
   return `${IMAGE_BASE_PATH}/${name}.png`;
@@ -17,7 +17,7 @@ export const getUserContent1 = (): string => getImages('user-content-1');
 export const getUserContent2 = (): string => getImages('user-content-2');
 export const getUserContent3 = (): string => getImages('user-content-3');
 
-const TEAM_IMAGE_BASE_PATH = './img/team/';
+const TEAM_IMAGE_BASE_PATH = '/hike-track-frontend/img/team/';
 
 const getTeamImages = (code: string): string => {
   return `${TEAM_IMAGE_BASE_PATH}/team-${code}.png`;

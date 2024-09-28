@@ -32,7 +32,11 @@ export const Header: React.FC = () => {
     <header className={classNames( styles.headerMobile, {
       [styles.menuOpen]: isMenuOpen,
     })}>
-      <Link to="/" className={styles.logoLink}>
+      <Link 
+        to="/" 
+        className={styles.logoLink}
+        onClick={handleMenuVisibility}
+      >
         <img 
           src={logoIcon} 
           alt="logo" 

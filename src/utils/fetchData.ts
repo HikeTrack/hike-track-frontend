@@ -3,7 +3,8 @@ import { PopularTour } from "../types/PopularTour";
 import { Tour } from "../types/Tour";
 import { TourDetails } from "../types/TourDetails";
 
-export const BASE_URL = 'http://hiketrack.eu-central-1.elasticbeanstalk.com';
+// export const BASE_URL = 'http://hiketrack.eu-central-1.elasticbeanstalk.com';
+export const BASE_URL = 'http://localhost:8081';
 
 export function getData<T>(url: string): Promise<T> {
   return fetch(BASE_URL + url).then(response => {

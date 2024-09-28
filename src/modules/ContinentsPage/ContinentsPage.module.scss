@@ -134,6 +134,8 @@
 }
 
 .searchResults {
+  position: relative;
+
   background-color: $color-bg;
   width: 343px;
   padding: 16px;
@@ -175,4 +177,9 @@
   color: $color-grey-900;
 }
 
-
+.loaderWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

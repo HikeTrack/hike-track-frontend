@@ -121,7 +121,7 @@ export const PopularTours: React.FC<Props> = ({ tours }) => {
             <div className={styles.smallCard} key={countryCard.id}>
               <Link to={"/toursByCountry/:countryId"}>
                 <img 
-                  src={countryCard.mainPhoto} 
+                  src={`/hike-track-frontend/${countryCard.mainPhoto}`} 
                   alt="Nature scenery" 
                   className={styles.cardImage}
                 />
@@ -142,7 +142,7 @@ export const PopularTours: React.FC<Props> = ({ tours }) => {
               >
                 <Link to={"/toursByCountry/:countryId"}>
                   <img 
-                    src={countryCard.mainPhoto} 
+                    src={`/hike-track-frontend/${countryCard.mainPhoto}`} 
                     alt="Nature scenery" 
                     className={styles.cardImageSmall}
                   />

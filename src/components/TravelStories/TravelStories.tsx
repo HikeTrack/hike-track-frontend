@@ -114,7 +114,7 @@ export const TravelStories = () => {
       </div>
       
       {storyCards.map(card => (
-        <div className={styles.storyCard}>
+        <div className={styles.storyCard} key={card.id}>
           <div className={styles.imgWrapper}>
             <img 
               src={card.image}
