@@ -1,0 +1,50 @@
+@import '../../styles/all';
+
+.page {
+  background-color: $color-grey-50;
+  height: 100vh;
+  padding: 16px;
+}
+
+.userCard {
+  margin-top: 150px;
+  padding: 16px;
+  border-radius: 32px;
+  width: 100%;
+  background-color: $color-bg;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.topContainer {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.title {
+  @include h4-web;
+}
+
+.text {
+
+}
+
+.bottomContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bookmarkWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.userContent {
+
+}
+
+
+

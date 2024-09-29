@@ -7,12 +7,13 @@
 .containerTop {
   height: 885px;
   width: 100%;
-  background-image: url('../../../public/img/page-bg/about-us.png');
-  background-position: center;
+  background-image: url('../../../public/img/page-bg/about-us-mobile.png');
+  // background-position: center;
   background-repeat: no-repeat;
   padding-inline: 16px;
 
   @include on-desktop {
+    background-image: url('../../../public/img/page-bg/about-us.png');
     height: 992px;
     padding-inline: auto;
   }

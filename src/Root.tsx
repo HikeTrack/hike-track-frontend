@@ -8,6 +8,7 @@ import { TourDetailsPage } from './modules/TourDetailsPage/TourDetailsPage';
 import { ToursPage } from './modules/ToursPage/ToursPage';
 import { RegistrationPage } from './modules/RegistrationPage/RegistrationPage';
 import { LoginPage } from './modules/LoginPage/LoginPage';
+import { UserAccountPage } from './modules/UserAccountPage/UserAccountPage';
 
 export const Root = () => (
   <Router>
@@ -18,6 +19,7 @@ export const Root = () => (
         <Route path="about" element={<AboutUsPage />} />
         <Route path="register" element={<RegistrationPage />} />
         <Route path="login" element={<LoginPage />} />
+        <Route path="profile" element={<UserAccountPage />}></Route>
 
         <Route 
           path="/toursByCountry/:countryId"
