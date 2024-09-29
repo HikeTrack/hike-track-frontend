@@ -1,11 +1,20 @@
 @import '../../styles/all';
 
-.registrationPage {
+.page {
   z-index: 1000;
   background-image: url('../../../public/img/page-bg/authorisation.png');
+
+  @include on-desktop {
+    position: relative;
+    height: 932px;
+  }
+
+  @include on-desktop-wide {
+    height: 1080px;
+  }
 }
 
-.container {
+.containerFirst {
   background: $color-bg;
   padding: 90px 16px;
   height: 100vh;
@@ -16,7 +25,19 @@
   align-items: center;
 
   @include on-desktop {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     
+    height: 700px;
+    width: 670px;
+    border-radius: 32px;
+    padding-block: 67px;
+  }
+
+  @include on-desktop-wide {
+    height: 800px;
   }
 }
 
@@ -30,6 +51,14 @@
 
 .title {
   @include h1-mobile-medium;
+
+  text-align: center;
+
+  @include on-desktop {
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 43.2px;
+  }
 }
 
 .socialsWrapper {
@@ -37,10 +66,17 @@
   justify-content: space-between;
   width: 100%;
   padding-inline: 16px;
+  margin-top: 32px;
+
+  @include on-desktop {
+    margin-top: 0;
+    width: 400px;
+    justify-content: space-around;
+  }
 }
 
 .socials {
-  margin-top: 32px;
+
 }
 
 .socialsIcon {
@@ -53,6 +89,10 @@
   gap: 32px;
   align-items: center;
   width: 100%;
+
+  @include on-desktop {
+    width: 400px;
+  }
 }
 
 .line {
@@ -79,6 +119,12 @@
   cursor: pointer;
 
   @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+
+  @include on-desktop {
+    @include button-web;
+    
+    width: 400px;
+  }
 }
 
 .titleSmall {
@@ -87,6 +133,8 @@
 
 .loginLink {
   color: $color-primary;
+
+  text-decoration: none;
 }
 
 .textLink {
@@ -94,4 +142,80 @@
 
   color: $color-grey-900;
   text-decoration: none;
+}
+
+.containerSecond {
+  background: $color-bg;
+  padding: 32px 16px;
+  height: 100vh;
+  
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+
+  @include on-desktop {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    height: 760px;
+    width: 670px;
+    border-radius: 32px;
+  }
+
+  @include on-desktop-wide {
+    height: 800px;
+    padding: 64px 32px;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.inputWrapper {
+  border: 1px solid $color-grey-50;
+  background-color: $color-grey-50;
+  padding: 16px;
+  border-radius: 1000px;
+  width: 100%;
+
+  &:focus-within {
+    background-color: $color-bg;
+    border-color: $color-grey-700;
+  }
+
+  @include on-desktop {
+    width: 400px;
+  }
+}
+
+.input {
+  border: none;
+  background-color: transparent;
+
+  &::placeholder {
+    @include main-mobile;
+    color: $color-grey-700;
+
+    @include on-desktop {
+      @include main-web;
+    }
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.errorMessage {
+  @include secondary-web;
+
+  color: $color-grey-500;
 }

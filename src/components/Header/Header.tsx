@@ -7,9 +7,15 @@ import styles from './Header.module.scss';
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAuthorised, setIsAuthorised] = useState(!!localStorage.getItem('user_access_token'));
 
   const logoIcon = getLogoIcon();
   const burgerMenuIcon = getMenuIcon(isMenuOpen);
+
+  const handleLogOut = () => {
+    localStorage.removeItem('user_access_token');
+    setIsAuthorised(false);
+  }
 
   const handleMenuVisibility = () => {
     setIsMenuOpen((prev: boolean) => !prev);
@@ -83,17 +89,27 @@ export const Header: React.FC = () => {
       </nav>
 
       <div className={styles.containerRight}>
-        <Link to="/login" className={styles.login}>
-          Log in
-        </Link>
+        {isAuthorised ? (
+          <>
+          <Link to="/profile">
+            Name
+          </Link>
 
-        <Link to="/register" className={styles.registration}>
-          Registration
-        </Link>
+          <button className={styles.login} onClick={handleLogOut}>Log out</button>
+          </>
+        ) : (
+          <>
+          <Link to="/login" className={styles.login}>
+            Log in
+          </Link>
+
+          <Link to="/register" className={styles.registration}>
+            Registration
+          </Link>
+          </>
+        )}
       </div>
     </header>
     </>
   )
 };
-
-export default Header;
