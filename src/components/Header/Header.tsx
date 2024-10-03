@@ -1,20 +1,21 @@
 import classNames from "classnames";
 import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { getMenuIcon, getLogoIcon } from '../../utils/getIcons';
+import { useAuth } from "../../context/AuthContext";
+import { getMenuIcon, getLogoIcon, getDefaultAvatarIcon } from '../../utils/getIcons';
 import { AsideMenu } from "../AsideMenu/AsideMenu";
 import styles from './Header.module.scss';
 
 export const Header: React.FC = () => {
+  const { user, logoutUser } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAuthorised, setIsAuthorised] = useState(!!localStorage.getItem('user_access_token'));
 
   const logoIcon = getLogoIcon();
   const burgerMenuIcon = getMenuIcon(isMenuOpen);
+  const defaultAvatarIcon = getDefaultAvatarIcon();
 
   const handleLogOut = () => {
-    localStorage.removeItem('user_access_token');
-    setIsAuthorised(false);
+    logoutUser();
   }
 
   const handleMenuVisibility = () => {
@@ -65,7 +66,9 @@ export const Header: React.FC = () => {
 
       <AsideMenu 
         isMenuOpen={isMenuOpen}
+        user={!!user}
         handleMenuVisibility={handleMenuVisibility}
+        handleLogOut={handleLogOut}
       />
     </header>
     
@@ -89,11 +92,19 @@ export const Header: React.FC = () => {
       </nav>
 
       <div className={styles.containerRight}>
-        {isAuthorised ? (
+        {user ? (
           <>
-          <Link to="/profile">
-            Name
-          </Link>
+          <div className={styles.profileContainer}>
+            <Link to="/profile" className={styles.profileLink}>
+              {user.firstName}
+            </Link>
+
+            <img 
+              src={defaultAvatarIcon} 
+              alt="Avatar" 
+              className={styles.profileAvatar}
+            />
+          </div>
 
           <button className={styles.login} onClick={handleLogOut}>Log out</button>
           </>
@@ -102,6 +113,7 @@ export const Header: React.FC = () => {
           <Link to="/login" className={styles.login}>
             Log in
           </Link>
+
 
           <Link to="/register" className={styles.registration}>
             Registration

@@ -2,19 +2,65 @@
 
 .page {
   background-color: $color-grey-50;
-  height: 100vh;
+  // height: 100vh;
   padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @include on-desktop {
+    padding-inline: 32px;
+
+    @include grid;
+  }
+
+  @include on-desktop-wide {
+    padding-inline: 200px;
+  }
+}
+
+.profileSectionsMobile {
+  margin-top: 90px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+
+  @include on-desktop {
+    display: none;
+  }
+}
+
+.section {
+
+}
+
+.sectionContent {
+  padding: 32px 16px;
+  border-radius: 32px;
+  width: 100%;
+  background-color: $color-bg;
+
+  @include on-desktop {
+    margin-top: 186px;
+    padding-block: 32px;
+    grid-column: 4 / -1;
+  }
 }
 
 .userCard {
-  margin-top: 150px;
-  padding: 16px;
+  padding: 32px 16px;
   border-radius: 32px;
   width: 100%;
   background-color: $color-bg;
   display: flex;
   flex-direction: column;
   gap: 32px;
+
+  @include on-desktop {
+    margin-top: 186px;
+    padding-block: 32px;
+    grid-column: 1 / 4;
+  }
 }
 
 .topContainer {
@@ -31,6 +77,19 @@
 
 }
 
+.profileSmallText {
+  @include secondary-mobile;
+
+  color: $color-grey-700;
+}
+
+.contentSmallText {
+  @include secondary-mobile;
+
+  color: $color-grey-700;
+  text-align: center;
+}
+
 .bottomContainer {
   display: flex;
   justify-content: space-between;
@@ -42,9 +101,53 @@
   align-items: center;
 }
 
-.userContent {
+.button {
+  padding-block: 16px;
+  padding-inline: 19px;
+  color: $color-bg;
+  background-color: $color-primary;
+  border: 1px solid $color-primary;
+  border-radius: 1000px;
+  cursor: pointer;
+  text-decoration: none;
 
+  @include button-mobile;
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
 }
 
+.noContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
 
+  @include on-desktop {
+    margin-top: 70px;
+  }
+}
 
+.profileSections {
+  display: none;
+  
+  @include on-desktop {
+    display: flex;
+    justify-content: space-around;
+    gap: 16px;
+  }
+}
+
+.isActive {
+  color: $color-primary;
+  text-decoration: underline;
+}
+
+.profileEditor {
+  padding: 32px 16px;
+  border-radius: 32px;
+  width: 100%;
+  background-color: $color-bg;
+
+  @include on-desktop {
+    grid-column: 1 / -1;
+  }
+}

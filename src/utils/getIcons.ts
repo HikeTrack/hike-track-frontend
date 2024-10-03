@@ -11,7 +11,8 @@ export const getMenuIcon = (isMenuOpen: boolean): string => {
 export const getCloseIcon = (): string => getIcons('close');
 
 export const getDefaultAvatarIcon = (): string => getIcons('defaultAvatar');
-export const getPencilIcon = (): string => getIcons('pencil'); 
+export const getPencilIcon = (): string => getIcons('pencil');
+export const getGoNextIcon = (): string => getIcons('goNext');
 
 export const getRegistrationGoogleIcon = (): string => getIcons('registrationGoogle');
 export const getRegistrationFacebookIcon = (): string => getIcons('registrationFacebook');

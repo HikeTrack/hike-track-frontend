@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getLogoIcon, getRegistrationAppleIcon, getRegistrationFacebookIcon, getRegistrationGoogleIcon } from "../../utils/getIcons";
-import { BASE_URL, ACCESS_TOKEN } from "../../utils/constants";
 import styles from './RegistrationPage.module.scss';
-import { validateEmail, validatePassword } from "../../utils/authorisationFunctions";
-import axios, { AxiosError } from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 const logoIcon = getLogoIcon();
 const googleIcon = getRegistrationGoogleIcon();
@@ -13,9 +11,8 @@ const appleIcon = getRegistrationAppleIcon();
 
 export const RegistrationPage: React.FC = () => {
   const navigate = useNavigate();
+  const { registerUser, setUser, error, isLoading } = useAuth();
   const [isCreateAccountClicked, setIsCreateAccountClicked] = useState(false);
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [state, setState] = useState({
     firstName: '',
     lastName: '',
@@ -28,89 +25,37 @@ export const RegistrationPage: React.FC = () => {
     setIsCreateAccountClicked(true);
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setState(prevState => ({
       ...prevState,
       [id]: value,
     }))
-  }
-
-  const sendDataToServer = async () => {
-    if (state.firstName.trim()
-      && state.lastName.trim()
-      && validateEmail(state.email) 
-    ) {
-      setIsLoading(true);
-
-      const passwordValidation = validatePassword(state.password);
-
-      if (!passwordValidation.isValid) {
-        setError(passwordValidation.message);
-        setIsLoading(false);
-        return;
-      }
-
-      if (state.password !== state.repeatPassword) {
-        setError('Passwords do not match');
-        setIsLoading(false);
-        return;
-      }
-      
-      const payload = {
-        'firstName': state.firstName,
-        'lastName': state.lastName,
-        'email': state.email,
-        'password': state.password,
-        'repeatPassword': state.repeatPassword
-      };
-
-      console.log('Sending payload to server:', payload);
-
-      try {
-        const response = await axios.post(BASE_URL + '/auth/registration', payload);
-      
-        if (response.status === 200) {
-          localStorage.setItem(ACCESS_TOKEN, response.data.token);
-
-          navigate('/profile', {
-            state: {
-              firstName: state.firstName,
-              lastName: state.lastName,
-            }
-          });
-
-          setState({
-            firstName: '',
-            lastName: '',
-            email: '',
-            password: '',
-            repeatPassword: '',
-          });
-
-          setError('');
-        } else {
-          setError('Some error occurred');
-        } 
-      } catch (error) {
-        const axiosError = error as AxiosError;
-
-        if (axiosError.response && axiosError.response.status === 409) {
-          setError('This email is already registered. Please use a different email.');
-        } else {
-          setError('Registration failed. Please try again');
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    } else {
-      setError('Please fill in all fields correctly')
-    }
   };
 
-  const handleSubmitClick = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitClick = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    sendDataToServer();
+
+    if (!state.firstName 
+      || !state.lastName
+      || !state.email
+      || !state.password
+      || !state.repeatPassword
+    ) {
+      return;
+    }
+    
+    const isSuccess = await registerUser(
+      state.firstName,
+      state.lastName,
+      state.email,
+      state.password,
+      state.repeatPassword
+    );
+    
+    if (isSuccess) {
+      navigate('/profile');
+    }
   }
   
   return (
@@ -188,7 +133,7 @@ export const RegistrationPage: React.FC = () => {
                 type="text" 
                 id="firstName"
                 value={state.firstName}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 placeholder="First name"
                 aria-invalid={error ? 'true' : 'false'}
                 aria-describedby="firstNameError"
@@ -202,7 +147,7 @@ export const RegistrationPage: React.FC = () => {
                 type="text" 
                 id="lastName"
                 value={state.lastName}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 placeholder="Last name"
                 aria-invalid={error ? 'true' : 'false'}
                 aria-describedby="lastNameError"
@@ -216,10 +161,10 @@ export const RegistrationPage: React.FC = () => {
                 type="email" 
                 id="email"
                 value={state.email}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 placeholder="Email address"
                 aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="emailNameError"
+                aria-describedby="emailError"
               />
             </div>
             {error && <span id="emailError" className={styles.errorMessage}>{error}</span>}
@@ -230,7 +175,7 @@ export const RegistrationPage: React.FC = () => {
                 type="password" 
                 id="password"
                 value={state.password}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 placeholder="Password"
                 aria-invalid={error ? 'true' : 'false'}
                 aria-describedby="passwordError"
@@ -244,7 +189,7 @@ export const RegistrationPage: React.FC = () => {
                 type="password" 
                 id="repeatPassword"
                 value={state.repeatPassword}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 placeholder="Repeat password"
                 aria-invalid={error ? 'true' : 'false'}
                 aria-describedby="repeatPasswordError"
@@ -271,3 +216,5 @@ export const RegistrationPage: React.FC = () => {
     </div>
   )
 }
+
+export default RegistrationPage;
