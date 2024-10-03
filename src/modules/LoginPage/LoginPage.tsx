@@ -1,11 +1,13 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ACCESS_TOKEN, BASE_URL } from '../../utils/constants';
+import { useAuth } from '../../context/AuthContext';
+import { BASE_URL } from '../../utils/constants';
 import { getLogoIcon, getRegistrationAppleIcon, getRegistrationFacebookIcon, getRegistrationGoogleIcon } from '../../utils/getIcons';
 import styles from './LoginPage.module.scss';
 
 export const LoginPage: React.FC = () => {
+  const { loginUser, setUser } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,7 +19,7 @@ export const LoginPage: React.FC = () => {
   const facebookIcon = getRegistrationFacebookIcon();
   const appleIcon = getRegistrationAppleIcon();
   
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
 
     if (id === 'email') {
@@ -27,36 +29,20 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitClick = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const payload = {
-      email,
-      password,
-    };
-
     try {
-      const response = await axios.post(BASE_URL + '/auth/login', payload);
+      const isSuccess = await loginUser(email, password);
 
-      if (response.status === 200) {
-        localStorage.setItem(ACCESS_TOKEN, response.data.token);
-
+      if (isSuccess) {
         navigate('/profile');
-
-        setEmail('');
-        setPassword('');
-      } else {
-        setError('Invalid login credentials. Please try again');
-      }
-    } catch (error) {
-      const axiosError = error as AxiosError;
-
-      if (axiosError.response && axiosError.response.status === 401) {
-        setError('Incorrect email or password.');
       } else {
         setError('Login failed. Please try again');
       }
+    } catch (error) {
+      setError('Login failed. Please try again');
     } finally {
       setIsLoading(false);
     }
@@ -78,7 +64,7 @@ export const LoginPage: React.FC = () => {
           Log in and start exploring
         </h1>
 
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} onSubmit={handleSubmitClick}>
           <div className={styles.inputWrapper}>
             <input 
               className={styles.input}
@@ -86,7 +72,7 @@ export const LoginPage: React.FC = () => {
               id="email"
               placeholder="Email address"
               value={email}
-              onChange={handleChange}
+              onChange={handleInputChange}
               required
             />
           </div>
@@ -99,7 +85,7 @@ export const LoginPage: React.FC = () => {
               name="password"
               placeholder="Password"
               value={password}
-              onChange={handleChange}
+              onChange={handleInputChange}
               required
             />
           </div>
@@ -154,3 +140,5 @@ export const LoginPage: React.FC = () => {
     </div>
   )
 }
+
+export default LoginPage;

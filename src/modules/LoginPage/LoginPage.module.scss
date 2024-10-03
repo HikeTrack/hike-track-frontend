@@ -93,11 +93,11 @@
 .input {
   border: none;
   background-color: transparent;
+  width: 100%;
 
   &::placeholder {
     @include main-mobile;
     color: $color-grey-700;
-    width: 100%;
 
     @include on-desktop {
       @include main-web;

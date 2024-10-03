@@ -199,6 +199,7 @@
 .input {
   border: none;
   background-color: transparent;
+  width: 100%;
 
   &::placeholder {
     @include main-mobile;
