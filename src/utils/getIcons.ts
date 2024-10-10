@@ -76,3 +76,6 @@ export const getArrowLeftActiveGreenIcon = (): string => getIcons('arrowLeftActi
 export const getArrowRightActiveGreenIcon = (): string => getIcons('arrowRightActive-green');
 export const getArrowLeftDisabledGreenIcon = (): string => getIcons('arrowLeftDisabled-green');
 export const getArrowRightDisabledGreenIcon = (): string => getIcons('arrowRightDisabled-green');
+
+export const getPrevMonthArrow = (): string => getIcons('prevMonthArrow');
+export const getNextMonthArrow = (): string => getIcons('nextMonthArrow');

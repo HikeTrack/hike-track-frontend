@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { CalendarFilter } from "../../components/CalendarFilter/CalendarFilter";
 import { FilterDropdown } from "../../components/FilterDropdown/FilterDropdown";
 import { Loader } from "../../components/Loader/Loader";
 import { TourCard } from "../../components/TourCard/TourCard";
@@ -302,6 +303,8 @@ export const ToursPage: React.FC = () => {
               <img src={calendarIcon} alt="Calendar" />
               <p className={styles.dropdownText}>Take date</p>
             </div>
+
+            <div className={styles.calendar}><CalendarFilter /></div>
 
             <div className={styles.checkButtonContainer}>
               <button className={styles.checkButton}></button>

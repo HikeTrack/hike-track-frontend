@@ -30,9 +30,9 @@ export const UserAccountPage = () => {
 
         <h4 className={styles.title}>{`${user?.firstName} ${user?.lastName}`}</h4>
 
-        <p className={styles.text}>City, Country</p>
+        <p className={styles.text}>{`${user?.city}, Country`}</p>
 
-        <p className={styles.profileSmallText}>Member since MONTH YEAR</p>
+        <p className={styles.profileSmallText}>{`Member since ${user?.registrationDate}`}</p>
 
         <div className={styles.bottomContainer}>
           <div className={styles.bookmarkWrapper}>
