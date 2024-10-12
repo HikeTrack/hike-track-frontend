@@ -39,7 +39,7 @@ export const LoginPage: React.FC = () => {
       if (isSuccess) {
         navigate('/profile');
       } else {
-        setError('Login failed. Please try again');
+        setError('Login failed. Please try again'); 
       }
     } catch (error) {
       setError('Login failed. Please try again');

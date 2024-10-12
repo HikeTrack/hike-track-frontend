@@ -9,8 +9,13 @@ type Props = {
 };
 
 export type User = {
+  userId: number;
   firstName: string;
   lastName: string;
+  userPhoto: string | null;
+  // country: string | null;
+  city: string | null;
+  registrationDate: string;
 }
 
 type AuthContextType = {
@@ -19,7 +24,7 @@ type AuthContextType = {
   isLoading: boolean;
   error: string;
   registerUser: (firstName: string, lastName: string, email: string, password: string, repeatPassword: string) => Promise<boolean>;
-  loginUser: (firstName: string, lastName: string) => Promise<boolean>;
+  loginUser: (email: string, password: string) => Promise<boolean>;
   logoutUser: () => void;
   setUser: (user: User | null) => void;
 };
@@ -76,10 +81,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         const response = await axios.post(`${BASE_URL}/auth/registration`, payload);
       
         if (response.status === 200) {
-          const token = response.data.token;
-          localStorage.setItem(ACCESS_TOKEN, token);
-
-          setUser({ firstName, lastName });
           setError('');
           return true;
         } else {
@@ -104,7 +105,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       setIsLoading(false);
       return false;
     }
-  }, [setUser]);
+  }, [setError, setIsLoading]);
 
   const loginUser = useCallback(async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
@@ -115,11 +116,21 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     try {
       const response = await axios.post(`${BASE_URL}/auth/login`, payload);
 
-      if (response.status === 200) {
-        const token = response.data.token;
+      console.log('Profile response data:', response.data);
 
+      if (response.status === 200) {
+        const token = response.data.Token;
         localStorage.setItem(ACCESS_TOKEN, token);
+
+        console.log('Stored token:', localStorage.getItem(ACCESS_TOKEN));
+
         setToken(token);
+
+        // console.log(token);
+
+        console.log('Using token for profile request:', token);
+
+        console.log('Fetching profile...');
 
         const profileResponse = await axios.get(`${BASE_URL}/profile`, {
           headers: {
@@ -127,11 +138,36 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           },
         });
 
-        if (profileResponse.status === 200) {
-          const { firstName, lastName } = profileResponse.data;
-          setUser({ firstName, lastName });
+        console.log('Profile response data:', profileResponse);
 
-          return true;
+        if (profileResponse.status === 200) {
+          const { userId, city, userPhoto, registrationDate } = profileResponse.data;
+
+          console.log(profileResponse.data);
+         
+          const userResponse = await axios.get(`${BASE_URL}/users/${userId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (userResponse.status === 200) {
+            const { firstName, lastName } = userResponse.data;
+
+            setUser({
+              userId,
+              firstName,
+              lastName,
+              city,
+              userPhoto,
+              registrationDate,
+            });
+
+            return true;
+          } else {
+            setError('Failed to fetch user details');
+            return false;
+          }
         } else {
           setError('Failed to fetch user profile');
           return false;
@@ -143,6 +179,8 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     } catch (error) {
       const axiosError = error as AxiosError;
 
+      console.error('Error details:', axiosError.response?.data); 
+
       if (axiosError.response && axiosError.response.status === 401) {
         setError('Incorrect email or password.');
       } else {
@@ -153,7 +191,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [setToken, setUser]);
+  }, [setToken, setUser, setError, setIsLoading]);
 
   const logoutUser = useCallback(() => {
     setUser(null);

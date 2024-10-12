@@ -12,6 +12,7 @@ import {
 import { Countries } from "../../enums/Countries";
 import styles from './PopularToursCard.module.scss';
 import { formatDate, formatDistance } from "../../utils/formatFunctions";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   tour: PopularTour;
@@ -24,14 +25,20 @@ const difficultyIcons: { [key: string]: string } = {
 };
 
 export const PopularToursCard: React.FC<Props> = ({ tour }) => {
+  const navigate = useNavigate();
   const geoTagGreyIcon = getGeoTagGreyIcon();
   const lengthIcon = getLengthIcon();
   const dateIcon = getDateIcon();
   const priceIcon = getPriceIcon();
 
+  const handleCardClick = () => {
+    navigate(`/toursByCountry/${tour.countryId}/${tour.id}`);
+  }
+
   return (
     <div 
       className={styles.bigCard}
+      onClick={handleCardClick}
     >
       <div 
         className={styles.cardTop}

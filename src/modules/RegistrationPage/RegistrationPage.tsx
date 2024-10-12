@@ -54,7 +54,7 @@ export const RegistrationPage: React.FC = () => {
     );
     
     if (isSuccess) {
-      navigate('/profile');
+      navigate('/login');
     }
   }
   

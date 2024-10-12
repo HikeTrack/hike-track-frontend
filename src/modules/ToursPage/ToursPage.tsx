@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { CalendarFilter } from "../../components/CalendarFilter/CalendarFilter";
 import { FilterDropdown } from "../../components/FilterDropdown/FilterDropdown";
 import { Loader } from "../../components/Loader/Loader";
 import { TourCard } from "../../components/TourCard/TourCard";
@@ -26,6 +27,7 @@ export const ToursPage: React.FC = () => {
   const [selectedCountry, setSelectedCountry] = useState<Countries>(initialCountryId);
   const [filteredTours, setFilteredTours] = useState<Tour[]>(tours);
   const [filtersVisible, setFiltersVisible] = useState(false);
+  const [calendarVisible, setCalendarVisible] = useState(false);
 
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   // const [activity, setActivity] = useState<Activity | null>(null);
@@ -35,6 +37,9 @@ export const ToursPage: React.FC = () => {
 
   const [price, setPrice] = useState<Price | null>(null);
   const [priceRange, setPriceRange] = useState<{ min: number, max: number } | null>(null);
+
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
   useEffect(() => {
     if (countryId) {
@@ -128,6 +133,14 @@ export const ToursPage: React.FC = () => {
   useEffect(() => {
     let filtered = tours;
 
+    if (startDate && endDate) {
+      filtered = filtered.filter(tour => {
+        const tourDate = new Date(tour.date);
+        
+        return tourDate >= startDate && tourDate <= endDate;
+      });
+    }
+
     if (difficulty) {
       filtered = filtered.filter(tour => tour.difficulty === difficulty);
     }
@@ -147,7 +160,7 @@ export const ToursPage: React.FC = () => {
     }
     
     setFilteredTours(filtered);
-  }, [tours, difficulty, length, price]);
+  }, [tours, startDate, endDate, difficulty, length, price]);
 
   const handleCountryChange = (value: string | number) => {
     if (typeof value === 'number') {
@@ -161,6 +174,8 @@ export const ToursPage: React.FC = () => {
     setLengthRange(null);
     setPrice(null);
     setPriceRange(null);
+    setStartDate(null);
+    setEndDate(null);
 
     // const params = new URLSearchParams(location.search);
     // params.set('countryId', value.toString());
@@ -239,8 +254,17 @@ export const ToursPage: React.FC = () => {
     label: price,
   }));
 
+  const handleDateChange = (start: Date | null, end: Date | null) => {
+    setStartDate(start);
+    setEndDate(end);
+  }
+
   const toggleFiltersVisibility = () => {
     setFiltersVisible(prev => !prev);
+  }
+
+  const toggleCalendarVisibility = () => {
+    setCalendarVisible(prev => !prev);
   }
 
   const handleFilterReset = () => {
@@ -250,6 +274,8 @@ export const ToursPage: React.FC = () => {
     setLengthRange(null);
     setPrice(null);
     setPriceRange(null);
+    setStartDate(null);
+    setEndDate(null);
 
     const params = new URLSearchParams();
 
@@ -298,14 +324,20 @@ export const ToursPage: React.FC = () => {
           </button>
           
           <div className={`${filtersVisible ? styles.containerDropdowns : styles.filtersNotVisible }`}>
-            <div className={styles.calendarButton}>
+            <button 
+              className={styles.calendarButton}
+              onClick={toggleCalendarVisibility}
+            >
               <img src={calendarIcon} alt="Calendar" />
-              <p className={styles.dropdownText}>Take date</p>
-            </div>
+              <p className={styles.dropdownText}>Choose date</p>
+            </button>
 
-            <div className={styles.checkButtonContainer}>
-              <button className={styles.checkButton}></button>
-              <p>Knowledge of English is necessary</p>
+            <div className={`${calendarVisible ? styles.calendar : styles.calendarNotVisible }`}>
+              <CalendarFilter 
+                startDate={startDate}
+                endDate={endDate}
+                handleDateChange={handleDateChange}
+              />
             </div>
 
             <div className={styles.containerSmall}>
@@ -369,7 +401,6 @@ export const ToursPage: React.FC = () => {
               ) : (
                 <p className={styles.gridText}>No tours available for this country.</p>
               )}
-              
           </div>
         </div>
       </div>
