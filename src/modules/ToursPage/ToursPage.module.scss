@@ -213,10 +213,18 @@
   display: flex;
   padding-block: 16px;
   justify-content: center;
+  align-items: center;
   gap: 8px;
   border: 1px solid $color-primary;
-  
   border-radius: 1000px;
+  background-color: $color-bg;
+  cursor: pointer;
+
+  @include button-web;
+}
+
+.calendarNotVisible {
+  display: none
 }
 
 .resetButton {

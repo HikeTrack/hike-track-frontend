@@ -442,12 +442,13 @@
 }
 
 .tourSuggestions {
-  grid-column: 10 / -1;
-}
-
-.suggestedContainer {
   display: flex;
   flex-direction: column;
-  gap: 101px;
+  gap: 32px;
+
+  @include on-desktop {
+    grid-column: 10 / -1;
+  }
 }
+
 

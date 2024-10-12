@@ -3,6 +3,7 @@ import { PopularTour } from "../types/PopularTour";
 import { Tour } from "../types/Tour";
 import { TourDetails } from "../types/TourDetails";
 import { BASE_URL } from "./constants";
+import { getRandomTours } from "./getRandomTours";
 
 export function getData<T>(url: string): Promise<T> {
   return fetch(BASE_URL + url).then(response => {
@@ -34,6 +35,8 @@ export const getTourById = async (tourId: number) => {
   return getData<TourDetails>(`/tours/${tourId}`);
 }
 
-// export const getSuggestedTours = () => {
-//   return getToursByCountry(countryId).then(tours => )
-// }
+export const getRandomToursByCountry = async (countryName: string) => {
+  const tours = await getToursByCountry(countryName);
+
+  return getRandomTours(tours);
+}

@@ -116,10 +116,21 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     try {
       const response = await axios.post(`${BASE_URL}/auth/login`, payload);
 
+      console.log('Profile response data:', response.data);
+
       if (response.status === 200) {
         const token = response.data.Token;
         localStorage.setItem(ACCESS_TOKEN, token);
+
+        console.log('Stored token:', localStorage.getItem(ACCESS_TOKEN));
+
         setToken(token);
+
+        // console.log(token);
+
+        console.log('Using token for profile request:', token);
+
+        console.log('Fetching profile...');
 
         const profileResponse = await axios.get(`${BASE_URL}/profile`, {
           headers: {
@@ -127,8 +138,12 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           },
         });
 
+        console.log('Profile response data:', profileResponse);
+
         if (profileResponse.status === 200) {
           const { userId, city, userPhoto, registrationDate } = profileResponse.data;
+
+          console.log(profileResponse.data);
          
           const userResponse = await axios.get(`${BASE_URL}/users/${userId}`, {
             headers: {
@@ -163,6 +178,8 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       }
     } catch (error) {
       const axiosError = error as AxiosError;
+
+      console.error('Error details:', axiosError.response?.data); 
 
       if (axiosError.response && axiosError.response.status === 401) {
         setError('Incorrect email or password.');

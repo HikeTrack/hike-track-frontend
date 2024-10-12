@@ -24,10 +24,10 @@ services:
       interval: 30s
       timeout: 30s
       retries: 3
-  frontend:
-    build: .
-    ports:
-      - "3000:3000"
+  # frontend:
+  #   build: .
+  #   ports:
+  #     - "3000:3000"
 
   app:
     depends_on:

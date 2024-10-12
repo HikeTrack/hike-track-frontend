@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Loader } from "../../components/Loader/Loader";
 import { TourCard } from "../../components/TourCard/TourCard";
 import { Countries } from "../../enums/Countries";
+import { Tour } from "../../types/Tour";
 import { TourDetails } from "../../types/TourDetails";
-import { getTourById } from "../../utils/fetchData";
+import { getRandomToursByCountry, getTourById } from "../../utils/fetchData";
 import { formatDate, formatDistance } from "../../utils/formatFunctions";
 import { getArrowBackIcon, getArrowNextIcon, getBookmarkIcon, getCameraIcon, getCarIcon, getPrinterIcon, getShareIcon, getShareSocialsIcon, getStarIcon, getThumbsUpIcon } from "../../utils/getIcons";
 import { getMapImg, getUserContent1, getUserContent2, getUserContent3, getUserImg } from "../../utils/getImages";
@@ -13,28 +15,40 @@ export const TourDetailsPage: React.FC = () => {
   const { tourId } = useParams<{ tourId: string }>();
   const navigate = useNavigate();
   const [tourDetails, setTourDetails] = useState<TourDetails>();
+  const [suggestedTours, setSuggestedTours] = useState<Tour[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  useEffect(() => { 
+  useEffect(() => {
     if (tourId) {
       const id = Number(tourId);
-      
-      const fetchTours = async () => {
+  
+      const fetchTourDetailsAndSuggestedTours = async () => {
+        setIsLoading(true);
+  
         try {
           const tourDetailsData = await getTourById(id);
-
           setTourDetails(tourDetailsData);
+  
+          if (tourDetailsData && tourDetailsData.countryId) {
+            const coutryName = Countries[tourDetailsData.countryId];
+
+            if (coutryName) {
+              const randomTours = await getRandomToursByCountry(coutryName);
+              const filteredTours = randomTours.filter(tour => tour.id !== id);
+              setSuggestedTours(filteredTours);
+            }
+          }
         } catch (error) {
-          setError('Failed to load tours. Please try again later.')
+          setError('Failed to load tours. Please try again later.');
         } finally {
           setIsLoading(false);
         }
       };
-
-      fetchTours()
+  
+      fetchTourDetailsAndSuggestedTours();
     }
-  }, [tourId]);
+  }, [tourId]);  
 
   if (!tourDetails) {
     return <h2>This tour isn't available.</h2>
@@ -296,11 +310,21 @@ export const TourDetailsPage: React.FC = () => {
         </div>
 
         <div className={styles.tourSuggestions}>
-          <h4 className={styles.title}>Other tours in Turkey</h4>
+          <h4 className={styles.title}>{`Other tours in ${Countries[tourDetails.countryId]}`}</h4>
 
-          <div className={styles.suggestedContainer}>
-            {/* <TourCard /> */}
-          </div>
+          {isLoading ? (
+            <div className={styles.loaderWrapper}>
+              <Loader />
+            </div>
+          ) : error ? (
+            <p>{error}</p>
+          ) : suggestedTours.length > 0 ? (
+            suggestedTours.map((tour) => (
+              <TourCard tour={tour} key={tour.id}/>
+            ))
+          ) : (
+            <p className={styles.gridText}>No tours available for this country.</p>
+          )}
         </div>
       </div>
     </div>

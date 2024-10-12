@@ -12,8 +12,6 @@ type Props = {
 }
 
 export const TourCard: React.FC<Props> = ({ tour }) => {
-  console.log("Tour data:", tour);
-  
   const preparedDate = format(new Date(tour.date), 'dd');
   const preparedMonth = format(new Date(tour.date), 'MMM');
   const preparedDistance = formatDistance(tour.length);

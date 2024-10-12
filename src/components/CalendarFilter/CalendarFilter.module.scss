@@ -16,6 +16,11 @@
     width: 280px;
     height: 300px;
   }
+
+  @include on-desktop-wide {
+    width: 360px;
+    height: 370px;
+  }
 }
 
 .calendarTop {
@@ -82,4 +87,23 @@
     height: 38px;
     width: 38px;
   }
+
+  @include on-desktop-wide {
+    height: 48px;
+    width: 48px;
+  }
+
+  &:hover {
+    color: $color-bg;
+    background-color: $color-primary-hovered;
+  }
+}
+
+.isSelected {
+  color: $color-bg;
+  background-color: $color-primary;
+}
+
+.isInRange {
+  background-color: $color-primary-disabled;
 }

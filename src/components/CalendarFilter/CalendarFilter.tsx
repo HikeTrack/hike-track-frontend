@@ -2,7 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import { getNextMonthArrow, getPrevMonthArrow } from "../../utils/getIcons";
 import styles from './CalendarFilter.module.scss';
 
-export const CalendarFilter: React.FC = () => {
+type Props = {
+  startDate: Date | null;
+  endDate: Date | null;
+  handleDateChange: (start: Date | null, end: Date | null) => void;
+}
+
+export const CalendarFilter: React.FC<Props> = ({
+  startDate,
+  endDate,
+  handleDateChange
+}) => {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   
@@ -19,7 +29,7 @@ export const CalendarFilter: React.FC = () => {
 
   useEffect(() => {
     createCalendar();
-  }, [currentMonth, currentYear]);
+  }, [currentMonth, currentYear, startDate, endDate]);
 
   const createCalendar = (): void => {
     const monthsAll: string[] = [
@@ -45,28 +55,82 @@ export const CalendarFilter: React.FC = () => {
       for (let day = 1; day <= daysInMonth; day++) {
         const dayDiv: HTMLDivElement = document.createElement('div');
         dayDiv.textContent = day.toString();
-        dayDiv.className = styles.day;
+
+        const isSelected = isDaySelected(day);
+        const isInRange = isDayInRange(day);
+
+        dayDiv.className = `${styles.day} ${isSelected ? styles.isSelected : ''} ${isInRange ? styles.isInRange : ''}`;
         
+        dayDiv.addEventListener('click', () => handleDayClick(day));
+
         daysRef.current.appendChild(dayDiv);
       }
     }
   };
 
   const handlePrevMonth = () => {
-    setCurrentMonth((prev) => (prev === 0 ? 11 : prev - 1));
+    setCurrentMonth((prev) => {
+      if (prev === 0) {
+        setCurrentYear((prevYear) => prevYear - 1);
+        return 11;
+      }
 
-    if (currentMonth === 0) {
-      setCurrentYear(currentYear - 1);
-    }
+      return prev - 1;
+    });
   };
 
   const handleNextMonth = () => {
-    setCurrentMonth((prev) => (prev === 11 ? 0 : prev + 1));
+    setCurrentMonth((prev) => {
+      if (prev === 11) {
+        setCurrentYear((prevYear) => prevYear + 1);
+        return 0;
+      }
 
-    if (currentMonth === 11) {
-      setCurrentYear(currentYear + 1);
-    }
+      return prev + 1;
+    });
   };
+
+  const isDaySelected = (day: number): boolean => {
+    const isStartDateSelected = !!(startDate
+      && startDate.getFullYear() === currentYear 
+      && startDate.getMonth() === currentMonth
+      && startDate.getDate() === day);
+
+    const isEndDateSelected = !!(endDate
+      && endDate.getFullYear() === currentYear 
+      && endDate.getMonth() === currentMonth
+      && endDate.getDate() === day);
+
+    return isStartDateSelected || isEndDateSelected;
+  };
+
+  const isDayInRange = (day: number): boolean => {
+    if (startDate && endDate) {
+      const currentDate = new Date(currentYear, currentMonth, day);
+
+      return currentDate > startDate && currentDate < endDate;
+    }
+
+    return false;
+  }
+
+  const handleDayClick = (day: number) => {
+    const selectedDate = new Date(currentYear, currentMonth, day);
+
+    if (!startDate) {
+      handleDateChange(selectedDate, null);
+    } else if (startDate && !endDate) {
+      if (selectedDate >= startDate) {
+        handleDateChange(startDate, selectedDate);
+      } else {
+        handleDateChange(selectedDate, null);
+      }
+    } else {
+      handleDateChange(selectedDate, null);
+    }
+  }
+
+  console.log(startDate, endDate);
 
   return (
     <div className={styles.calendar}>
