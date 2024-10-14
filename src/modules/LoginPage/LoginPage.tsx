@@ -12,7 +12,7 @@ export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const logoIcon = getLogoIcon();
   const googleIcon = getRegistrationGoogleIcon();
@@ -49,7 +49,7 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className={styles.loginPage}>
+    <div className={styles.page}>
       <div className={styles.container}>
         <Link to="/" className={styles.logoLink}>
           <img 
@@ -94,7 +94,7 @@ export const LoginPage: React.FC = () => {
 
           <button type="submit" className={styles.button}>Log in</button>
 
-          <Link to="/" className={styles.link}>Forgot your password?</Link>
+          <Link to="/forgotpass" className={styles.link}>Forgot your password?</Link>
         </form>
 
 

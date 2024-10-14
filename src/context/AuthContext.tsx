@@ -27,6 +27,7 @@ type AuthContextType = {
   loginUser: (email: string, password: string) => Promise<boolean>;
   logoutUser: () => void;
   setUser: (user: User | null) => void;
+  recoverPassword: (email: string) => Promise<boolean>;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -38,6 +39,7 @@ const AuthContext = createContext<AuthContextType>({
   loginUser: async () => false,
   logoutUser: () => {},
   setUser: () => {},
+  recoverPassword: async () => false,
 });
 
 export const useAuth = () => {
@@ -145,7 +147,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
 
           console.log(profileResponse.data);
          
-          const userResponse = await axios.get(`${BASE_URL}/users/${userId}`, {
+          const userResponse = await axios.get(`${BASE_URL}/user/${userId}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -199,6 +201,38 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     localStorage.removeItem(ACCESS_TOKEN);
   }, [setToken, setUser]);
 
+  const recoverPassword = useCallback(async (email: string): Promise<boolean> => {
+    setIsLoading(true);
+    setError('');
+
+    const payload = { email };
+
+    try {
+      const response = await axios.post(`${BASE_URL}/forgot-password`, payload);
+      
+      if (response.status === 200) {
+        console.log('Success: email has been sent');
+        setIsLoading(false);
+        return true;
+      } else {
+        setError('Failed to send recovery email');
+        return false;
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError;
+
+      if (axiosError.response && axiosError.response.status === 404) {
+        setError('This email is not registered');
+      } else {
+        setError('An error occurred while attempting password recovery')
+      }
+
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -209,7 +243,8 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         registerUser,
         loginUser,
         logoutUser,
-        setUser
+        setUser,
+        recoverPassword
       }}
     >
       {children}
