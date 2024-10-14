@@ -1,8 +1,6 @@
 @import '../../styles/all';
 
 .searchPage {
-  width: 100vh;
-
   background: 
     linear-gradient(rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.35)),
     url('../../../public/img/page-bg/search-page.png');
@@ -104,7 +102,7 @@
   border: 1px solid $color-grey-50;
   border-radius: 1000px;
   background: $color-grey-50;
-  width: 343px;
+  width: 100%;
   padding: 16px;
 
   @include on-desktop {
@@ -118,6 +116,7 @@
 }
 
 .searchInput {
+  width: 100%;
   border: none;
   padding-left: 8px;
   background-color: transparent;
@@ -137,7 +136,7 @@
   position: relative;
 
   background-color: $color-bg;
-  width: 343px;
+  width: 100%;
   padding: 16px;
   border-radius: 16px;
 

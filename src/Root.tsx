@@ -9,6 +9,7 @@ import { ToursPage } from './modules/ToursPage/ToursPage';
 import { RegistrationPage } from './modules/RegistrationPage/RegistrationPage';
 import { LoginPage } from './modules/LoginPage/LoginPage';
 import { UserAccountPage } from './modules/UserAccountPage/UserAccountPage';
+import { ForgotPasswordPage } from './modules/ForgotPasswordPage/ForgotPasswordPage'
 import { AuthProvider } from './context/AuthContext';
 
 export const Root = () => (
@@ -22,6 +23,7 @@ export const Root = () => (
           <Route path="register" element={<RegistrationPage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="profile" element={<UserAccountPage />}></Route>
+          <Route path="forgotpass" element={<ForgotPasswordPage />}></Route>
 
           <Route 
             path="/toursByCountry/:countryId"
