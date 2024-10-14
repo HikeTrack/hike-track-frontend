@@ -9,13 +9,19 @@ type Props = {
 };
 
 export type User = {
-  userId: number;
+  id: number;
+  email: string;
   firstName: string;
   lastName: string;
-  userPhoto: string | null;
-  // country: string | null;
-  city: string | null;
-  registrationDate: string;
+  userProfileRespondDto: {
+    id: number;
+    country: string | null;
+    city: string | null;
+    phoneNumber: string | null;
+    aboutMe: string | null;
+    registrationDate: string;
+    userPhoto: string | null;
+  }
 }
 
 type AuthContextType = {
@@ -125,38 +131,32 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         localStorage.setItem(ACCESS_TOKEN, token);
         setToken(token);
 
-        const profileResponse = await axios.get(`${BASE_URL}/profile`, {
+        const userResponse = await axios.get(`${BASE_URL}/user/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        if (profileResponse.status === 200) {
-          const { userId, city, userPhoto, registrationDate } = profileResponse.data;
-         
-          const userResponse = await axios.get(`${BASE_URL}/user/${userId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        if (userResponse.status === 200) {
+          console.log(userResponse.data)
+          
+          const { 
+            id, 
+            email,
+            firstName, 
+            lastName, 
+            userProfileRespondDto,
+
+          } = userResponse.data;
+
+          setUser({
+            id,
+            email,
+            firstName,
+            lastName,
+            userProfileRespondDto
           });
-
-          if (userResponse.status === 200) {
-            const { firstName, lastName } = userResponse.data;
-
-            setUser({
-              userId,
-              firstName,
-              lastName,
-              city,
-              userPhoto,
-              registrationDate,
-            });
-
-            return true;
-          } else {
-            setError('Failed to fetch user details');
-            return false;
-          }
+          return true;
         } else {
           setError('Failed to fetch user profile');
           return false;
@@ -180,11 +180,36 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     }
   }, [setToken, setUser, setError, setIsLoading]);
 
-  const logoutUser = useCallback(() => {
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem(ACCESS_TOKEN);
-  }, [setToken, setUser]);
+  const logoutUser = useCallback(async () => {
+    setIsLoading(true);
+
+    try {
+      const token = localStorage.getItem(ACCESS_TOKEN);
+
+      if (!token) {
+        setError('No token found');
+        return;
+      }
+
+      const response = await axios.post(`${BASE_URL}/user/logout`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        setUser(null);
+        setToken(null);
+        localStorage.removeItem(ACCESS_TOKEN);
+      } else {
+        setError('Something went wrong');
+      }
+    } catch (error) {
+      setError('Failed to log out. Pllease try again.')
+    } finally {
+      setIsLoading(false);
+    }
+  }, [setToken, setUser, setError]);
 
   const sendEmailForNewPassword = useCallback(async (email: string): Promise<boolean> => {
     setIsLoading(true);

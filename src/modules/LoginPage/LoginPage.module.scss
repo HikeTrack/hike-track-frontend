@@ -94,6 +94,8 @@
   background-color: transparent;
   width: 100%;
 
+  @include main-web;
+
   &::placeholder {
     @include main-mobile;
     color: $color-grey-700;

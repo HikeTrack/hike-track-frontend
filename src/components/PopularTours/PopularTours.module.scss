@@ -62,6 +62,7 @@
 
   grid-column: 1 / -1;
 
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
   @include button-mobile;
 
   @include on-desktop {
@@ -233,6 +234,7 @@
   border-radius: 50%;
   border: none;
   background-color: transparent;
+  cursor: pointer;
 }
 
 .sliderContainer {
