@@ -243,11 +243,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     const payload = { password, repeatPassword };
 
     try {
-      const response = await axios.post(`${BASE_URL}/auth/reset-password`, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.post(`${BASE_URL}/auth/reset-password?token=${token}`, payload);
       
       if (response.status === 200) {
         return true;
