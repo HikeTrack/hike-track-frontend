@@ -27,7 +27,8 @@ type AuthContextType = {
   loginUser: (email: string, password: string) => Promise<boolean>;
   logoutUser: () => void;
   setUser: (user: User | null) => void;
-  recoverPassword: (email: string) => Promise<boolean>;
+  sendEmailForNewPassword: (email: string) => Promise<boolean>;
+  resetPassword: (password: string, repeatPassword: string, token: string) => Promise<boolean>;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -39,7 +40,8 @@ const AuthContext = createContext<AuthContextType>({
   loginUser: async () => false,
   logoutUser: () => {},
   setUser: () => {},
-  recoverPassword: async () => false,
+  sendEmailForNewPassword: async () => false,
+  resetPassword: async () => false,
 });
 
 export const useAuth = () => {
@@ -118,21 +120,10 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     try {
       const response = await axios.post(`${BASE_URL}/auth/login`, payload);
 
-      console.log('Profile response data:', response.data);
-
       if (response.status === 200) {
         const token = response.data.Token;
         localStorage.setItem(ACCESS_TOKEN, token);
-
-        console.log('Stored token:', localStorage.getItem(ACCESS_TOKEN));
-
         setToken(token);
-
-        // console.log(token);
-
-        console.log('Using token for profile request:', token);
-
-        console.log('Fetching profile...');
 
         const profileResponse = await axios.get(`${BASE_URL}/profile`, {
           headers: {
@@ -140,12 +131,8 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           },
         });
 
-        console.log('Profile response data:', profileResponse);
-
         if (profileResponse.status === 200) {
           const { userId, city, userPhoto, registrationDate } = profileResponse.data;
-
-          console.log(profileResponse.data);
          
           const userResponse = await axios.get(`${BASE_URL}/user/${userId}`, {
             headers: {
@@ -181,8 +168,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     } catch (error) {
       const axiosError = error as AxiosError;
 
-      console.error('Error details:', axiosError.response?.data); 
-
       if (axiosError.response && axiosError.response.status === 401) {
         setError('Incorrect email or password.');
       } else {
@@ -201,14 +186,14 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     localStorage.removeItem(ACCESS_TOKEN);
   }, [setToken, setUser]);
 
-  const recoverPassword = useCallback(async (email: string): Promise<boolean> => {
+  const sendEmailForNewPassword = useCallback(async (email: string): Promise<boolean> => {
     setIsLoading(true);
     setError('');
 
     const payload = { email };
 
     try {
-      const response = await axios.post(`${BASE_URL}/forgot-password`, payload);
+      const response = await axios.post(`${BASE_URL}/auth/forgot-password`, payload);
       
       if (response.status === 200) {
         console.log('Success: email has been sent');
@@ -233,6 +218,56 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     }
   }, []);
 
+  const resetPassword = useCallback(async (
+    password: string,
+    repeatPassword: string,
+    token: string,
+  ): Promise<boolean> => {
+    setIsLoading(true);
+    setError('');
+
+    const passwordValidation = validatePassword(password);
+
+    if (!passwordValidation.isValid) {
+      setError(passwordValidation.message);
+      setIsLoading(false);
+      return false;
+    }
+
+    if (password !== repeatPassword) {
+      setError('Passwords do not match');
+      setIsLoading(false);
+      return false;
+    }
+      
+    const payload = { password, repeatPassword };
+
+    try {
+      const response = await axios.post(`${BASE_URL}/auth/reset-password`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      if (response.status === 200) {
+        return true;
+      } else {
+        setError('Some error occurred');
+        return false;
+      } 
+    } catch (error) {
+      const axiosError = error as AxiosError;
+
+      if (axiosError.response && axiosError.response.status === 401) {
+        setError('Something went wrong. Try again later');
+      }
+
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [setError, setIsLoading]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -244,7 +279,8 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         loginUser,
         logoutUser,
         setUser,
-        recoverPassword
+        sendEmailForNewPassword,
+        resetPassword
       }}
     >
       {children}

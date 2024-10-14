@@ -94,7 +94,7 @@ export const LoginPage: React.FC = () => {
 
           <button type="submit" className={styles.button}>Log in</button>
 
-          <Link to="/forgotpass" className={styles.link}>Forgot your password?</Link>
+          <Link to="/auth/forgot-password" className={styles.link}>Forgot your password?</Link>
         </form>
 
 

@@ -11,6 +11,7 @@ import { LoginPage } from './modules/LoginPage/LoginPage';
 import { UserAccountPage } from './modules/UserAccountPage/UserAccountPage';
 import { ForgotPasswordPage } from './modules/ForgotPasswordPage/ForgotPasswordPage'
 import { AuthProvider } from './context/AuthContext';
+import { ResetPasswordPage } from './modules/ResetPasswordPage/ResetPasswordPage';
 
 export const Root = () => (
   <AuthProvider>
@@ -23,7 +24,8 @@ export const Root = () => (
           <Route path="register" element={<RegistrationPage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="profile" element={<UserAccountPage />}></Route>
-          <Route path="forgotpass" element={<ForgotPasswordPage />}></Route>
+          <Route path="auth/forgot-password" element={<ForgotPasswordPage />}></Route>
+          <Route path="auth/reset-password" element={<ResetPasswordPage />}></Route>
 
           <Route 
             path="/toursByCountry/:countryId"
