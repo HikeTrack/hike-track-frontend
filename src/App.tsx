@@ -6,7 +6,12 @@ import styles from './App.module.scss';
 
 export const App: React.FC = () => {
   const location = useLocation();
-  const hideHeaderAndFooterRoutes = ['/register', '/login', '/forgotpass'];
+  const hideHeaderAndFooterRoutes = [
+    '/register', 
+    '/login', 
+    '/auth/forgot-password', 
+    '/auth/reset-password'
+  ];
   const shouldHideHeaderAndFooter = hideHeaderAndFooterRoutes.includes(location.pathname);
   
   return (

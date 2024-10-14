@@ -5,7 +5,7 @@ import { getLogoIcon } from "../../utils/getIcons";
 import styles from './ForgotPasswordPage.module.scss';
 
 export const ForgotPasswordPage: React.FC = () => {
-  const { recoverPassword } = useAuth();
+  const { sendEmailForNewPassword } = useAuth();
   const [email, setEmail] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [error, setError] = useState('');
@@ -24,7 +24,7 @@ export const ForgotPasswordPage: React.FC = () => {
     setSuccessMessage('');
 
     try {
-      const isSuccess = await recoverPassword(email);
+      const isSuccess = await sendEmailForNewPassword(email);
 
       if (isSuccess) {
         setSuccessMessage('Recovery email has been successfully sent to your email. Please check your inbox');
@@ -70,7 +70,7 @@ export const ForgotPasswordPage: React.FC = () => {
 
           <button type="submit" className={styles.button}>Send email</button>
 
-          <Link to="/" className={styles.link}>Back to sign in</Link>
+          <Link to="/login" className={styles.link}>Back to sign in</Link>
         </form>
 
         <div className={styles.titleSmall}>
