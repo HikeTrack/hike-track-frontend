@@ -1,12 +1,13 @@
 import classNames from "classnames";
 import React, { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { getMenuIcon, getLogoIcon, getDefaultAvatarIcon } from '../../utils/getIcons';
 import { AsideMenu } from "../AsideMenu/AsideMenu";
 import styles from './Header.module.scss';
 
 export const Header: React.FC = () => {
+  const navigate = useNavigate();
   const { user, logoutUser } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -16,6 +17,7 @@ export const Header: React.FC = () => {
 
   const handleLogOut = () => {
     logoutUser();
+    navigate('/');
   }
 
   const handleMenuVisibility = () => {
