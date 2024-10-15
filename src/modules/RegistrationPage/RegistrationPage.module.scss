@@ -16,7 +16,7 @@
 
 .containerFirst {
   background: $color-bg;
-  padding: 90px 16px;
+  padding: 32px 16px;
   
   display: flex;
   flex-direction: column;
@@ -29,23 +29,23 @@
     left: 50%;
     transform: translate(-50%, -50%);
     
-    height: 700px;
+    // height: 700px;
     width: 670px;
     border-radius: 32px;
     padding-block: 67px;
   }
 
   @include on-desktop-wide {
-    height: 800px;
+    // height: 800px;
   }
 }
 
 .logoLink {
-
+ @include logo-link;
 }
 
 .logoIcon {
-
+ @include logo-size;
 }
 
 .title {
@@ -146,7 +146,7 @@
 .containerSecond {
   background: $color-bg;
   padding: 32px 16px;
-  height: 100vh;
+  // height: 100vh;
   
   display: flex;
   flex-direction: column;
@@ -159,13 +159,13 @@
     left: 50%;
     transform: translate(-50%, -50%);
     
-    height: 760px;
+    // height: 760px;
     width: 670px;
     border-radius: 32px;
   }
 
   @include on-desktop-wide {
-    height: 800px;
+    // height: 800px;
     padding: 64px 32px;
   }
 }
@@ -199,6 +199,8 @@
   border: none;
   background-color: transparent;
   width: 100%;
+
+  @include main-web;
 
   &::placeholder {
     @include main-mobile;

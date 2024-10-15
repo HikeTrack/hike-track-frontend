@@ -1,11 +1,12 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
-import { getFacebookIcon, getInstagramIcon, getYoutubeIcon } from "../../utils/getIcons";
+import { getFacebookIcon, getGithubIcon, getInstagramIcon, getYoutubeIcon } from "../../utils/getIcons";
 import styles from './Footer.module.scss';
 
 export const Footer = () => {
   const instagramIcon = getInstagramIcon();
   const facebookIcon = getFacebookIcon();
+  const githubIcon = getGithubIcon();
   const youtubeIcon = getYoutubeIcon();
   
   return (
@@ -66,6 +67,10 @@ export const Footer = () => {
             </Link>
 
             <Link to="#" className={styles.logoLink}>
+              <img src={githubIcon} alt="github" />
+            </Link>
+
+            <Link to="#" className={styles.logoLink}>
               <img src={youtubeIcon} alt="youtube" />
             </Link>
           </div>
@@ -108,6 +113,10 @@ export const Footer = () => {
 
             <Link to="#" className={styles.logoLink}>
               <img src={facebookIcon} alt="facebook" />
+            </Link>
+
+            <Link to="#" className={styles.logoLink}>
+              <img src={githubIcon} alt="github" />
             </Link>
 
             <Link to="#" className={styles.logoLink}>

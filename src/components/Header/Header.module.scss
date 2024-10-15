@@ -58,17 +58,20 @@
   padding: 0;  
   margin: 0;    
   line-height: 0; 
+  cursor: pointer;
+  
   
   @include hover(box-shadow, 0 4px 12px rgba(0, 0, 0, 0.4));
 }
 
 .logoIcon {
-  height: 62px;
-  width: 62px;
   display: block;
+  height: 42px;
+  width: 42px;
 
   @include on-desktop {
-    height: 108px;
+    height: 80px;
+    width: 80px;
   }
 }
 

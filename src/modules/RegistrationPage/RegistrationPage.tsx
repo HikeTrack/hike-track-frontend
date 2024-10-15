@@ -122,6 +122,14 @@ export const RegistrationPage: React.FC = () => {
 
       {isCreateAccountClicked && (
         <div className={styles.containerSecond}>
+          <Link to="/" className={styles.logoLink}>
+            <img 
+              src={logoIcon} 
+              alt="logo" 
+              className={styles.logoIcon}
+            />
+          </Link>
+          
           <h1 className={styles.title}>
             Sign up today to start planning your next adventure
           </h1>
