@@ -34,20 +34,10 @@
   transform: translateX(-50%);
   right: 0;
   z-index: 10;
-
-  // display: flex;
-  // justify-content: space-between;
-  // align-items: center;
-  // height: 136px;
-  // max-width: 100%;
   margin: 0 auto;
   background: #d9f1ffb4;
-
-  
-  // margin-top: 32px;
   border-radius: 1000px;
-
-  padding-inline: 24px;
+  padding-inline: 77px;
 
   @include on-desktop {
     display: flex;
@@ -62,8 +52,20 @@
   }
 }
 
+.logoLink {
+  display: inline-block;
+  border-radius: 50%;
+  padding: 0;  
+  margin: 0;    
+  line-height: 0; 
+  
+  @include hover(box-shadow, 0 4px 12px rgba(0, 0, 0, 0.4));
+}
+
 .logoIcon {
   height: 62px;
+  width: 62px;
+  display: block;
 
   @include on-desktop {
     height: 108px;
