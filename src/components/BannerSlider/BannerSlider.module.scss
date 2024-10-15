@@ -63,7 +63,7 @@
   text-decoration: none;
   border-radius: 1000px;
 
-  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+  @include hover(box-shadow, 0 4px 12px rgba(0, 0, 0, 0.4));
 
   @include on-desktop {
     width: 237px;  

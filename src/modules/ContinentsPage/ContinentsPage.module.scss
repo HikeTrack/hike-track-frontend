@@ -55,6 +55,7 @@
 .region {
   display: flex;
   gap: 20px;
+  cursor: pointer;
 }
 
 .regionIcon {
@@ -120,6 +121,8 @@
   border: none;
   padding-left: 8px;
   background-color: transparent;
+
+  @include main-web;
 
   &:focus {
     outline: none;

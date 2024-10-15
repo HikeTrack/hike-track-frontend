@@ -12,6 +12,8 @@
   border: 1px solid $color-primary;
   border-radius: 32px;
 
+  @include hover(box-shadow, 0 4px 12px rgba(0, 0, 0, 0.4));
+
   @include on-desktop {
     width: 280px;
     height: 300px;

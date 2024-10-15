@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ProfileEditor } from "../../components/ProfileEditor/ProfileEditor";
 import { useAuth } from "../../context/AuthContext";
@@ -11,6 +11,11 @@ export const UserAccountPage = () => {
   const defaultAvatarIcon = getDefaultAvatarIcon();
   const pencilIcon = getPencilIcon();
   const bookmarkIcon = getBookmarkIcon();
+
+  const [isProfileVisible, setIsProfileVisible] = useState(true);
+  const [isEditorVisible, setIsEditorVisible] = useState(false);
+
+  const handleEditorVisibility = () => setIsEditorVisible(!isEditorVisible);
   
   return (
     <div className={styles.page}>
@@ -25,7 +30,12 @@ export const UserAccountPage = () => {
         <div className={styles.topContainer}>
           <img src={defaultAvatarIcon} alt="Avatar" />
 
-          <img src={pencilIcon} alt="Pencil" />
+          <button 
+            className={styles.editButton}
+            onClick={handleEditorVisibility}
+          >
+            <img src={pencilIcon} alt="Pencil" />
+          </button>
         </div>
 
         <h4 className={styles.title}>{`${user?.firstName} ${user?.lastName}`}</h4>
@@ -65,11 +75,13 @@ export const UserAccountPage = () => {
         
       </div>
 
-      <div className={styles.profileEditor}>
-        <ProfileEditor 
-          defaultAvatar={defaultAvatarIcon}
-        />
-      </div>
+      {isEditorVisible && (
+        <div className={styles.profileEditor}>
+          <ProfileEditor 
+            defaultAvatar={defaultAvatarIcon}
+          />
+        </div>
+      )}
     </div>
   )
 }
