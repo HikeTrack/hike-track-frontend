@@ -62,7 +62,7 @@
 
   grid-column: 1 / -1;
 
-  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+  @include hover(box-shadow, 0 4px 12px rgba(0, 0, 0, 0.4));
   @include button-mobile;
 
   @include on-desktop {
@@ -154,6 +154,9 @@
 .smallCard {
   position: relative;
   cursor: pointer;
+  border-radius: 16px;
+
+  @include hover(box-shadow, 0 4px 12px rgba(0, 0, 0, 0.4));
 
   // height: 126px;
   // width: 166px;
