@@ -37,6 +37,7 @@ export const getNoTraceIcon = (): string => getIcons('noTrace');
 
 export const getInstagramIcon = (): string => getIcons('instagram');
 export const getFacebookIcon = (): string => getIcons('facebook');
+export const getGithubIcon = (): string => getIcons('github');
 export const getYoutubeIcon = (): string => getIcons('youtube');
 
 export const getSearchIcon = (): string => getIcons('search');
