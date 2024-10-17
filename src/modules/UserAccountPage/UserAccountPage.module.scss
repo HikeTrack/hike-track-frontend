@@ -109,11 +109,48 @@
   align-items: center;
 }
 
-.button {
+.guideButton {
   padding-block: 16px;
   padding-inline: 19px;
   color: $color-bg;
   background-color: $color-primary;
+  border: 1px solid $color-primary;
+  border-radius: 1000px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+
+  @include button-mobile;
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+
+  @include on-desktop {
+    grid-column: 1 / 4;
+  }
+}
+
+.deleteButton {
+  padding-block: 16px;
+  padding-inline: 19px;
+  color: $color-grey-900;
+  background-color: $color-bg;
+  border: 1px solid $color-system-error;
+  border-radius: 1000px;
+  cursor: pointer;
+  height: 56px;
+
+  @include button-mobile;
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+
+  @include on-desktop {
+    grid-column: 1 / 4;
+  }
+}
+
+.exploreButton {
+  padding-block: 16px;
+  padding-inline: 19px;
+  color: $color-grey-900;
+  background-color: $color-bg;
   border: 1px solid $color-primary;
   border-radius: 1000px;
   cursor: pointer;

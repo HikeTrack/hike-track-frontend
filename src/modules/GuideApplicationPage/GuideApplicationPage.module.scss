@@ -1,0 +1,250 @@
+@import '../../styles/all';
+
+.page {
+  background-color: $color-grey-50;
+  // height: 100vh;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @include on-desktop {
+    padding-inline: 32px;
+  }
+
+  @include on-desktop-wide {
+    padding-inline: 200px;
+  }
+}
+
+.container {
+  margin-top: 70px;
+  padding: 32px 16px;
+  border-radius: 32px;
+  width: 100%;
+  background-color: $color-bg;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  @include on-desktop {
+    margin-top: 180px;
+    padding-inline: 32px;
+  }
+}
+
+.title {
+  @include h1-mobile-medium;
+
+  @include on-desktop {
+    // grid-column: 3 / -3;
+  }
+}
+
+.avatarContainer {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+
+  @include on-desktop {
+    // grid-column: 3 / -4;
+  }
+}
+
+.avatar {
+
+}
+
+.avatarButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  width: 100%;
+
+  @include on-desktop {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 70px;
+    row-gap: 32px;
+    grid-column: 1 / -1;
+  }
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.checkboxContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.inputWrapper {
+  border: 1px solid $color-grey-500;
+  padding: 16px;
+  border-radius: 24px;
+  // width: 100%;
+
+  &:focus-within {
+    background-color: $color-bg;
+    border-color: $color-grey-700;
+  }
+
+  @include on-desktop {
+    width: auto;
+  }
+}
+
+.textarea {
+  border: 1px solid $color-grey-500;
+  padding: 16px;
+  border-radius: 24px;
+  width: 100%;
+  height: 118px;
+  padding: 16px;
+  width: 100%;
+
+  @include main-web;
+
+  &:focus {
+    outline: none;
+  }
+
+  @include on-desktop {
+    width: auto;
+  }
+}
+
+.inputLabel {
+  @include main-mobile-medium;
+}
+
+.input {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+
+  @include secondary-mobile;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+// .monthDropdown {
+//   border: none;
+//   background-color: transparent;
+//   width: 100%;
+
+//   @include secondary-mobile;
+
+//   &:focus {
+//     outline: none;
+//   }
+// }
+
+.inputDescription {
+  color: $color-grey-800;
+
+}
+
+.checkbox {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border: 1px solid $color-grey-300;
+  border-radius: 50%; /* Makes it round */
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+
+  &:checked {
+    background-color: $color-grey-700;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      width: 10px;
+      height: 10px;
+      background-color: $color-bg;
+      border-radius: 50%; /* Small round dot */
+    }
+  }
+}
+
+.checkboxLabel {
+  
+}
+
+.errorMessage {
+  @include secondary-web;
+
+  color: $color-grey-500;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+
+  @include on-desktop {
+    justify-content: start;
+    gap: 16px;
+  }
+}
+
+.buttonCancel {
+  @include button-mobile;
+  
+  width: 77px;
+  padding-block: 16px;
+  color: $color-grey-700;
+  border: 1px solid $color-primary;
+  border-radius: 1000px;
+  background-color: $color-bg;
+  cursor: pointer;
+
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+
+  @include on-desktop {
+    @include button-web;
+    
+    width: 200px;
+  }
+}
+
+.buttonSubmit {
+  @include button-mobile;
+  
+  width: 202px;
+  padding-block: 16px;
+  color: $color-bg;
+  border: 1px solid $color-primary;
+  border-radius: 1000px;
+  background-color: $color-primary;
+  cursor: pointer;
+
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+
+  @include on-desktop {
+    @include button-web;
+    
+    width: 200px;
+  }
+}
