@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import React, { createContext, useCallback, useContext, useState } from "react";
+import { User } from "../types/User";
 import { validateEmail, validatePassword } from "../utils/authorisationFunctions";
 import { ACCESS_TOKEN, BASE_URL } from "../utils/constants";
 import { useLocalStorage } from "../utils/useLocalStorage";
@@ -7,22 +8,6 @@ import { useLocalStorage } from "../utils/useLocalStorage";
 type Props = {
   children: React.ReactNode;
 };
-
-export type User = {
-  id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  userProfileRespondDto: {
-    id: number;
-    country: string | null;
-    city: string | null;
-    phoneNumber: string | null;
-    aboutMe: string | null;
-    registrationDate: string;
-    userPhoto: string | null;
-  }
-}
 
 type AuthContextType = {
   user: User | null;
@@ -35,6 +20,18 @@ type AuthContextType = {
   setUser: (user: User | null) => void;
   sendEmailForNewPassword: (email: string) => Promise<boolean>;
   resetPassword: (password: string, repeatPassword: string, token: string) => Promise<boolean>;
+  updateUserProfile: (
+    email: string,
+    firstName: string,
+    lastName: string,
+    userProfileRespondDto: {
+      country: string | null;
+      city: string | null;
+      phoneNumber: string | null;
+      aboutMe: string | null;
+      userPhoto: string | null;
+    }
+  ) => Promise<boolean>;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -48,6 +45,7 @@ const AuthContext = createContext<AuthContextType>({
   setUser: () => {},
   sendEmailForNewPassword: async () => false,
   resetPassword: async () => false,
+  updateUserProfile: async () => false,
 });
 
 export const useAuth = () => {
@@ -138,8 +136,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         });
 
         if (userResponse.status === 200) {
-          console.log(userResponse.data)
-          
           const { 
             id, 
             email,
@@ -289,6 +285,70 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     }
   }, [setError, setIsLoading]);
 
+  const updateUserProfile = useCallback(async (
+    email: string,
+    firstName: string,
+    lastName: string,
+    userProfileRespondDto: {
+      country: string | null,
+      city: string | null,
+      phoneNumber: string | null,
+      aboutMe: string | null,
+      userPhoto: string | null,
+    }
+  ): Promise<boolean> => {
+    setIsLoading(true);
+    setError('');
+
+    const payload = {
+      email,
+      firstName,
+      lastName,
+      ...userProfileRespondDto
+    };
+
+    console.log(payload);
+
+    try {
+      const response = await axios.patch(`${BASE_URL}/users/${user?.id}`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        setUser(prevUser => {
+
+          if (!prevUser) {
+            return null;
+          }
+
+          return {
+            ...prevUser,
+            email,
+            firstName,
+            lastName,
+            userProfileRespondDto: {
+              ...prevUser.userProfileRespondDto,
+              country: userProfileRespondDto.country,
+              city: userProfileRespondDto.city,
+              phoneNumber: userProfileRespondDto.phoneNumber,
+              aboutMe: userProfileRespondDto.aboutMe,
+              userPhoto: userProfileRespondDto.userPhoto
+          }
+        };
+      });
+        return true;
+      } else {
+        setError('Failed to update profile');
+        return false;
+      }
+    } catch {
+      setError('Something went wrong, please try again');
+      return false;
+    }
+  }, [setUser, setError, setIsLoading, user, token ]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -301,7 +361,8 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         logoutUser,
         setUser,
         sendEmailForNewPassword,
-        resetPassword
+        resetPassword,
+        updateUserProfile
       }}
     >
       {children}

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { ProfileEditor } from "../../components/ProfileEditor/ProfileEditor";
 import { useAuth } from "../../context/AuthContext";
 import { getBookmarkIcon, getDefaultAvatarIcon, getPencilIcon } from "../../utils/getIcons";
 import styles from './UserAccountPage.module.scss';
@@ -11,11 +10,6 @@ export const UserAccountPage = () => {
   const defaultAvatarIcon = getDefaultAvatarIcon();
   const pencilIcon = getPencilIcon();
   const bookmarkIcon = getBookmarkIcon();
-
-  const [isProfileVisible, setIsProfileVisible] = useState(true);
-  const [isEditorVisible, setIsEditorVisible] = useState(false);
-
-  const handleEditorVisibility = () => setIsEditorVisible(!isEditorVisible);
   
   return (
     <div className={styles.page}>
@@ -30,19 +24,21 @@ export const UserAccountPage = () => {
         <div className={styles.topContainer}>
           <img src={defaultAvatarIcon} alt="Avatar" />
 
-          <button 
+          <Link 
             className={styles.editButton}
-            onClick={handleEditorVisibility}
+            to="/edit-profile"
           >
             <img src={pencilIcon} alt="Pencil" />
-          </button>
+          </Link>
         </div>
 
         <h4 className={styles.title}>{`${user?.firstName} ${user?.lastName}`}</h4>
 
-        {/* <p className={styles.text}>{`${user?.city}, Country`}</p>
+        <p className={styles.text}>
+          {`${user?.userProfileRespondDto.city}, ${user?.userProfileRespondDto.country}`}
+        </p>
 
-        <p className={styles.profileSmallText}>{`Member since ${user?.registrationDate}`}</p> */}
+        <p className={styles.profileSmallText}>{`Member since ${user?.userProfileRespondDto.registrationDate}`}</p>
 
         <div className={styles.bottomContainer}>
           <div className={styles.bookmarkWrapper}>
@@ -53,6 +49,14 @@ export const UserAccountPage = () => {
           <p className={styles.text}>(0)</p>
         </div>
       </div>
+
+      <Link className={styles.guideButton} to="/guide-application">Become a guide today!</Link>
+
+      <button 
+        className={styles.deleteButton}
+      >
+        Delete account
+      </button>
 
       <div className={styles.sectionContent}>
         <div className={styles.profileSections}>
@@ -70,18 +74,10 @@ export const UserAccountPage = () => {
             adventure lists, and Navigator activities.
           </p>
 
-          <Link to="/continents" className={styles.button}>Explore trails</Link>
+          <Link to="/continents" className={styles.exploreButton}>Explore trails</Link>
         </div>
         
       </div>
-
-      {isEditorVisible && (
-        <div className={styles.profileEditor}>
-          <ProfileEditor 
-            defaultAvatar={defaultAvatarIcon}
-          />
-        </div>
-      )}
     </div>
   )
 }

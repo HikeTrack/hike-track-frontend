@@ -12,6 +12,8 @@ import { UserAccountPage } from './modules/UserAccountPage/UserAccountPage';
 import { ForgotPasswordPage } from './modules/ForgotPasswordPage/ForgotPasswordPage'
 import { AuthProvider } from './context/AuthContext';
 import { ResetPasswordPage } from './modules/ResetPasswordPage/ResetPasswordPage';
+import { ProfileEditorPage } from './modules/ProfileEditorPage/ProfileEditorPage';
+import { GuideApplicationPage } from './modules/GuideApplicationPage/GuideApplicationPage';
 
 export const Root = () => (
   <AuthProvider>
@@ -24,6 +26,8 @@ export const Root = () => (
           <Route path="register" element={<RegistrationPage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="profile" element={<UserAccountPage />}></Route>
+          <Route path="edit-profile" element={<ProfileEditorPage />}></Route>
+          <Route path="guide-application" element={<GuideApplicationPage />}></Route>
           <Route path="auth/forgot-password" element={<ForgotPasswordPage />}></Route>
           <Route path="auth/reset-password" element={<ResetPasswordPage />}></Route>
 
