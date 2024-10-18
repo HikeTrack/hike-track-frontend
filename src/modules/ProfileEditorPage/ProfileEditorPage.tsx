@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Months } from "../../enums/Months";
@@ -21,11 +21,11 @@ export const ProfileEditorPage: React.FC = () => {
     lastName: user?.lastName,
     email: user?.email,
     userProfileRespondDto: {
-      country: '',
-      city: '',
-      phoneNumber: '',
-      aboutMe: '',
-      userPhoto: '',
+      country: user?.userProfileRespondDto.country || '',
+      city: user?.userProfileRespondDto.city || '',
+      phoneNumber: user?.userProfileRespondDto.phoneNumber || '',
+      aboutMe: user?.userProfileRespondDto.aboutMe || '',
+      profilePhoto: user?.userProfileRespondDto.profilePhoto || '',
     }
   });
 
@@ -33,6 +33,21 @@ export const ProfileEditorPage: React.FC = () => {
     password: '',
     repeatPassword: ''
   });
+
+  useEffect(() => {
+    setState({
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
+      email: user?.email || '',
+      userProfileRespondDto: {
+        country: user?.userProfileRespondDto?.country || '',
+        city: user?.userProfileRespondDto?.city || '',
+        phoneNumber: user?.userProfileRespondDto?.phoneNumber || '',
+        aboutMe: user?.userProfileRespondDto?.aboutMe || '',
+        profilePhoto: user?.userProfileRespondDto?.profilePhoto || '',
+      }
+    });
+  }, [user]);
 
   const monthsOptions = Object.values(Months).map(month => ({
     value: month,
@@ -101,7 +116,7 @@ export const ProfileEditorPage: React.FC = () => {
           city: state.userProfileRespondDto.city || null,
           phoneNumber: state.userProfileRespondDto.phoneNumber || null,
           aboutMe: state.userProfileRespondDto.aboutMe || null,
-          userPhoto: state.userProfileRespondDto.userPhoto || null,
+          profilePhoto: state.userProfileRespondDto.profilePhoto || null,
         }
       );
 
@@ -128,11 +143,11 @@ export const ProfileEditorPage: React.FC = () => {
       lastName: user?.lastName,
       email: user?.email,
       userProfileRespondDto: {
-        country: '',
-        city: '',
-        phoneNumber: '',
-        aboutMe: '',
-        userPhoto: '',
+        country: user?.userProfileRespondDto.country || '',
+        city: user?.userProfileRespondDto.city || '',
+        phoneNumber: user?.userProfileRespondDto.phoneNumber || '',
+        aboutMe: user?.userProfileRespondDto.aboutMe || '',
+        profilePhoto: user?.userProfileRespondDto.profilePhoto || '',
       }
     });
     setPasswordData({ password: '', repeatPassword: '' });
