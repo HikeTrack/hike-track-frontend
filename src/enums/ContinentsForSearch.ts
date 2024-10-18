@@ -1,4 +1,4 @@
-export enum Continent {
+export enum ContinentsForSearch {
   AllCountries = 'All countries',
   Asia = 'Asia',
   Europe = 'Europe',
