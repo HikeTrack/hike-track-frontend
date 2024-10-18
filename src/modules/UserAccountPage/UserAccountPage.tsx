@@ -50,14 +50,16 @@ export const UserAccountPage = () => {
         </div>
       </div>
 
-      <Link className={styles.guideButton} to="/guide-application">Become a guide today!</Link>
+      <div className={styles.buttonContainerMobile}>
+        <Link className={styles.guideButton} to="/guide-application">Become a guide today!</Link>
 
-      <button 
-        className={styles.deleteButton}
-      >
-        Delete account
-      </button>
-
+        <button 
+          className={styles.deleteButton}
+        >
+          Delete account
+        </button>
+      </div>
+      
       <div className={styles.sectionContent}>
         <div className={styles.profileSections}>
           <div className={styles.section}>Tours</div>
@@ -76,7 +78,16 @@ export const UserAccountPage = () => {
 
           <Link to="/continents" className={styles.exploreButton}>Explore trails</Link>
         </div>
-        
+      </div>
+
+      <div className={styles.buttonContainer}>
+        <Link className={styles.guideButton} to="/guide-application">Become a guide today!</Link>
+
+        <button 
+          className={styles.deleteButton}
+        >
+          Delete account
+        </button>
       </div>
     </div>
   )

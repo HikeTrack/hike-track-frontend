@@ -109,6 +109,27 @@
   align-items: center;
 }
 
+.buttonContainerMobile {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @include on-desktop {
+    display: none;
+  }
+}
+
+.buttonContainer {
+  display: none;
+
+  @include on-desktop {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    grid-column: 1 / 4;
+  }
+}
+
 .guideButton {
   padding-block: 16px;
   padding-inline: 19px;
@@ -122,10 +143,6 @@
 
   @include button-mobile;
   @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
-
-  @include on-desktop {
-    grid-column: 1 / 4;
-  }
 }
 
 .deleteButton {
@@ -140,10 +157,6 @@
 
   @include button-mobile;
   @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
-
-  @include on-desktop {
-    grid-column: 1 / 4;
-  }
 }
 
 .exploreButton {
@@ -184,15 +197,4 @@
 .isActive {
   color: $color-primary;
   text-decoration: underline;
-}
-
-.profileEditor {
-  padding: 32px 16px;
-  border-radius: 32px;
-  width: 100%;
-  background-color: $color-bg;
-
-  @include on-desktop {
-    grid-column: 1 / -1;
-  }
 }
