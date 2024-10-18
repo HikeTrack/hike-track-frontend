@@ -75,10 +75,10 @@ export const ProfileEditorPage: React.FC = () => {
 
     console.log("Token before API calls:", token);
 
-    if (!passwordData.password || !passwordData.repeatPassword) {
-      setError('Please type in correct password')
-      return;
-    }
+    // if (!passwordData.password || !passwordData.repeatPassword) {
+    //   setError('Please type in correct password')
+    //   return;
+    // }
 
     if (!state.firstName || !state.lastName || !state.email) {
       setError('Please fill in all the necessary fields')
@@ -86,11 +86,11 @@ export const ProfileEditorPage: React.FC = () => {
     }
 
     if (token) {
-      const isSuccessPassword = await resetPassword(
-        passwordData.password,
-        passwordData.repeatPassword,
-        token
-      );
+      // const isSuccessPassword = await resetPassword(
+      //   passwordData.password,
+      //   passwordData.repeatPassword,
+      //   token
+      // );
 
       const isSuccessProfileInfo = await updateUserProfile(
         state.firstName,
@@ -105,7 +105,7 @@ export const ProfileEditorPage: React.FC = () => {
         }
       );
 
-      if (isSuccessPassword && isSuccessProfileInfo) {
+      if (isSuccessProfileInfo) {
         navigate('/profile');
       }
     } else {
@@ -272,13 +272,14 @@ export const ProfileEditorPage: React.FC = () => {
                 type="password" 
                 id="password"
                 name="password"
+                placeholder="Leave empty to keep current password"
                 value={passwordData.password}
                 onChange={handlePasswordDataChange}
                 aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="countryError"
+                aria-describedby="passError"
               />
             </div>
-            {error && <span id="countryError" className={styles.errorMessage}>{error}</span>}
+            {error && <span id="passError" className={styles.errorMessage}>{error}</span>}
           </div>
 
           <div className={styles.inputContainer}>
@@ -288,15 +289,16 @@ export const ProfileEditorPage: React.FC = () => {
               <input 
                 className={styles.input}
                 type="password" 
-                id="confirm-password"
+                id="repeatPassword"
                 name="repeatPassword"
+                placeholder="Leave empty to keep current password"
                 value={passwordData.repeatPassword}
                 onChange={handlePasswordDataChange}
                 aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="countryError"
+                aria-describedby="confirmPassError"
               />
             </div>
-            {error && <span id="countryError" className={styles.errorMessage}>{error}</span>}
+            {error && <span id="repeatPassError" className={styles.errorMessage}>{error}</span>}
           </div>
 
           <div className={styles.inputContainer}>
@@ -326,12 +328,12 @@ export const ProfileEditorPage: React.FC = () => {
                 <input 
                   className={styles.input}
                   type="text" 
-                  id="birth-day"
+                  id="birthDay"
                   // value={state.password}
                   // onChange={handleInputChange}
                   placeholder="Day"
                   aria-invalid={error ? 'true' : 'false'}
-                  aria-describedby="countryError"
+                  aria-describedby="birthdateError"
                 />
               </div>
 
@@ -339,17 +341,17 @@ export const ProfileEditorPage: React.FC = () => {
                 <input 
                   className={styles.input}
                   type="text" 
-                  id="birth-year"
+                  id="birthYear"
                   // value={state.password}
                   // onChange={handleInputChange}
                   placeholder="Year"
                   aria-invalid={error ? 'true' : 'false'}
-                  aria-describedby="countryError"
+                  aria-describedby="birthdateError"
                 />
               </div>
             </div>
             
-            {error && <span id="countryError" className={styles.errorMessage}>{error}</span>}
+            {error && <span id="birthdateError" className={styles.errorMessage}>{error}</span>}
           </div>
 
           <div className={styles.inputContainer}>
@@ -357,15 +359,15 @@ export const ProfileEditorPage: React.FC = () => {
 
             <textarea 
               className={styles.textarea}
-              id="about-me"
+              id="aboutMe"
               name="aboutMe"
               value={state.userProfileRespondDto.aboutMe}
               onChange={handleInputChange}
               aria-invalid={error ? 'true' : 'false'}
-              aria-describedby="countryError"
+              aria-describedby="aboutMeError"
             />
 
-            {error && <span id="countryError" className={styles.errorMessage}>{error}</span>}
+            {error && <span id="aboutMeError" className={styles.errorMessage}>{error}</span>}
           </div>
 
           <div className={styles.buttonContainer}>

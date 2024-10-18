@@ -310,7 +310,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     console.log(payload);
 
     try {
-      const response = await axios.patch(`${BASE_URL}/users/${user?.id}`, payload, {
+      const response = await axios.patch(`${BASE_URL}/user/${user?.id}`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -29,8 +29,8 @@
   gap: 32px;
 
   @include on-desktop {
-    margin-top: 180px;
-    padding-inline: 208px;
+    margin-top: 200px;
+    padding-inline: 190px;
   }
 }
 
@@ -72,7 +72,7 @@
   @include on-desktop {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    column-gap: 70px;
+    column-gap: 40px;
     row-gap: 32px;
     grid-column: 1 / -1;
   }
