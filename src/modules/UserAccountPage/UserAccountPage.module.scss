@@ -198,3 +198,126 @@
   color: $color-primary;
   text-decoration: underline;
 }
+
+//////////////////////
+.guideContainer {
+  grid-column: 4 / -1;
+  display: flex;
+  gap: 16px;
+}
+
+.form {
+  background-color: $color-bg;
+  padding: 32px;
+  border-radius: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+
+.inputWrapper {
+  border: 1px solid $color-grey-500;
+  padding: 16px;
+  border-radius: 24px;
+  width: 100%;
+
+  &:focus-within {
+    background-color: $color-bg;
+    border-color: $color-grey-700;
+  }
+
+  @include on-desktop {
+    width: auto;
+  }
+}
+
+.inputTitle {
+  @include main-web-bold;
+}
+
+.input {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+
+  @include main-web;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.submitButton {
+  @include button-mobile;
+  
+  width: 100%;
+  padding-block: 16px;
+  color: $color-bg;
+  border: 1px solid $color-primary;
+  border-radius: 1000px;
+  background-color: $color-primary;
+  cursor: pointer;
+
+  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+
+  @include on-desktop {
+    @include button-web;
+    
+    width: 100px;
+  }
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdownButton {
+  border: 1px solid $color-grey-500;
+  padding: 16px;
+  border-radius: 24px;
+  background-color: transparent;
+  width: 148px;
+  cursor: pointer;
+
+  @include secondary-mobile;
+
+  &:focus {
+    outline: none;
+  }
+
+  @include on-desktop {
+    width: 100%;
+  }
+}
+
+.dropdownList {
+  position: absolute;
+  top: -130px;
+
+  z-index: 100;
+  // margin-top: 8px;
+  width: 100%;
+  max-height: 120px;
+  overflow-y: auto;
+  list-style-type: none;
+  background-color: $color-bg;
+  border: 1px solid $color-grey-500;
+  border-radius: 25px;
+  text-align: center;
+  cursor: grab;
+
+  @include hover(box-shadow, 0 4px 12px rgba(0, 0, 0, 0.4));
+}
+
+.dropdownItem {
+  text-decoration: none;
+  padding-block: 8px;
+  cursor: pointer;
+}
+
+.image {
+  height: 200px;
+  width: 200px;
+}

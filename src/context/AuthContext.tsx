@@ -29,7 +29,7 @@ type AuthContextType = {
       city: string | null;
       phoneNumber: string | null;
       aboutMe: string | null;
-      userPhoto: string | null;
+      profilePhoto: string | null;
     }
   ) => Promise<boolean>;
 };
@@ -294,7 +294,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       city: string | null,
       phoneNumber: string | null,
       aboutMe: string | null,
-      userPhoto: string | null,
+      profilePhoto: string | null,
     }
   ): Promise<boolean> => {
     setIsLoading(true);
@@ -334,7 +334,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
               city: userProfileRespondDto.city,
               phoneNumber: userProfileRespondDto.phoneNumber,
               aboutMe: userProfileRespondDto.aboutMe,
-              userPhoto: userProfileRespondDto.userPhoto
+              userPhoto: userProfileRespondDto.profilePhoto
           }
         };
       });

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Loader } from "../../components/Loader/Loader";
-import { Continent } from "../../enums/Continents";
+import { ContinentsForSearch } from "../../enums/ContinentsForSearch";
 import { Country } from "../../types/Country";
 import { getCountries } from "../../utils/fetchData";
 import { 
@@ -21,28 +21,28 @@ import {
 } from "../../utils/getIcons";
 import styles from './ContinentsPage.module.scss';
 
-const continentIcons: { [key in Continent]: string } = {
-  [Continent.AllCountries]: getWorldIcon(),
-  [Continent.Europe]: getEuropeIcon(),
-  [Continent.Asia]: getAsiaIcon(),
-  [Continent.Africa]: getAfricaIcon(),
-  [Continent.NorthAmerica]: getNorthAmericaIcon(),
-  [Continent.SouthAmerica]: getSouthAmericaIcon(),
+const continentIcons: { [key in ContinentsForSearch]: string } = {
+  [ContinentsForSearch.AllCountries]: getWorldIcon(),
+  [ContinentsForSearch.Europe]: getEuropeIcon(),
+  [ContinentsForSearch.Asia]: getAsiaIcon(),
+  [ContinentsForSearch.Africa]: getAfricaIcon(),
+  [ContinentsForSearch.NorthAmerica]: getNorthAmericaIcon(),
+  [ContinentsForSearch.SouthAmerica]: getSouthAmericaIcon(),
 };
 
-const continentIconsSelected: { [key in Continent]: string } = {
-  [Continent.AllCountries]: getWorldGreenIcon(),
-  [Continent.Europe]: getEuropeGreenIcon(),
-  [Continent.Asia]: getAsiaGreenIcon(),
-  [Continent.Africa]: getAfricaGreenIcon(),
-  [Continent.NorthAmerica]: getNorthAmericaGreenIcon(),
-  [Continent.SouthAmerica]: getSouthAmericaGreenIcon(),
+const continentIconsSelected: { [key in ContinentsForSearch]: string } = {
+  [ContinentsForSearch.AllCountries]: getWorldGreenIcon(),
+  [ContinentsForSearch.Europe]: getEuropeGreenIcon(),
+  [ContinentsForSearch.Asia]: getAsiaGreenIcon(),
+  [ContinentsForSearch.Africa]: getAfricaGreenIcon(),
+  [ContinentsForSearch.NorthAmerica]: getNorthAmericaGreenIcon(),
+  [ContinentsForSearch.SouthAmerica]: getSouthAmericaGreenIcon(),
 }
 
 export const ContinentsPage: React.FC = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedContinent, setSelectedContinent] = useState(Continent.AllCountries);
+  const [selectedContinent, setSelectedContinent] = useState(ContinentsForSearch.AllCountries);
   const [filteredCountries, setFilteredCountries] = useState<Country[]>([]);
 
   const searchIcon = getSearchIcon();
@@ -62,14 +62,14 @@ export const ContinentsPage: React.FC = () => {
   }, []); 
 
   useEffect(() => {
-    if (selectedContinent === Continent.AllCountries) {
+    if (selectedContinent === ContinentsForSearch.AllCountries) {
       setFilteredCountries(countries);
     } else {
       setFilteredCountries(countries.filter(country => country.continent === selectedContinent));
     }
   }, [selectedContinent, countries]);
 
-  const handleContinentClick = (continent: Continent) => {
+  const handleContinentClick = (continent: ContinentsForSearch) => {
     setSelectedContinent(continent);
   };
 
@@ -79,7 +79,7 @@ export const ContinentsPage: React.FC = () => {
     setFilteredCountries(
       countries.filter(
         country => country.name.toLowerCase().includes(query) &&
-        (selectedContinent === Continent.AllCountries || country.continent === selectedContinent)
+        (selectedContinent === ContinentsForSearch.AllCountries || country.continent === selectedContinent)
       )
     );
   };
@@ -102,7 +102,7 @@ export const ContinentsPage: React.FC = () => {
         <div className={styles.leftPanel}>
           <h4 className={styles.title}>Part of the world</h4>
 
-          {Object.values(Continent).map((continent) =>(
+          {Object.values(ContinentsForSearch).map((continent) =>(
             <div 
               className={styles.region} 
               key={continent}
