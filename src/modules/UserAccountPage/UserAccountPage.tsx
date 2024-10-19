@@ -7,7 +7,7 @@ import { fileToDataString } from "../../utils/fileToDataString";
 import { getBookmarkIcon, getDefaultAvatarIcon, getPencilIcon } from "../../utils/getIcons";
 import styles from './UserAccountPage.module.scss';
 
-export const UserAccountPage = () => {
+export const UserAccountPage: React.FC = () => {
   const { user } = useAuth();
   const defaultAvatarIcon = getDefaultAvatarIcon();
   const pencilIcon = getPencilIcon();

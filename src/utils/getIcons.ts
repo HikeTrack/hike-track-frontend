@@ -47,6 +47,7 @@ export const getAsiaIcon = (): string => getIcons('asia');
 export const getSouthAmericaIcon = (): string => getIcons('southAmerica');
 export const getAfricaIcon = (): string => getIcons('africa');
 export const getNorthAmericaIcon = (): string => getIcons('northAmerica');
+export const getAustraliaIcon = (): string => getIcons('australia');
 
 export const getWorldGreenIcon = (): string => getIcons('worldGreen');
 export const getEuropeGreenIcon = (): string => getIcons('europeGreen');
@@ -54,6 +55,7 @@ export const getAsiaGreenIcon = (): string => getIcons('asiaGreen');
 export const getSouthAmericaGreenIcon = (): string => getIcons('southAmericaGreen');
 export const getAfricaGreenIcon = (): string => getIcons('africaGreen');
 export const getNorthAmericaGreenIcon = (): string => getIcons('northAmericaGreen');
+export const getAustraliaGreenIcon = (): string => getIcons('australiaGreen');
 
 export const getArrowBackIcon = (): string => getIcons('arrowBack');
 export const getCalendarIcon = (): string => getIcons('calendar');

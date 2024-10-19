@@ -4,5 +4,6 @@ export enum ContinentsForSearch {
   Europe = 'Europe',
   Africa = 'Africa',
   NorthAmerica = 'North America',
-  SouthAmerica = 'South America'
+  SouthAmerica = 'South America',
+  Australia = 'Australia'
 }

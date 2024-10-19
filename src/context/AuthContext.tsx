@@ -1,7 +1,8 @@
 import axios, { AxiosError } from "axios";
-import React, { createContext, useCallback, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { User } from "../types/User";
 import { validateEmail, validatePassword } from "../utils/authorisationFunctions";
+import { axiosReg, axiosToken } from "../utils/axios";
 import { ACCESS_TOKEN, BASE_URL } from "../utils/constants";
 import { useLocalStorage } from "../utils/useLocalStorage";
 
@@ -86,7 +87,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       const payload = { firstName, lastName, email, password, repeatPassword };
 
       try {
-        const response = await axios.post(`${BASE_URL}/auth/registration`, payload);
+        const response = await axiosReg.post(`/auth/registration`, payload);
       
         if (response.status === 200) {
           setError('');
@@ -122,18 +123,17 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     const payload = { email, password };
 
     try {
-      const response = await axios.post(`${BASE_URL}/auth/login`, payload);
+      const response = await axiosReg.post(`/auth/login`, payload);
 
       if (response.status === 200) {
         const token = response.data.Token;
+
+        console.log(token);
+
         localStorage.setItem(ACCESS_TOKEN, token);
         setToken(token);
 
-        const userResponse = await axios.get(`${BASE_URL}/user/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const userResponse = await axiosToken.get(`/user/me`);
 
         if (userResponse.status === 200) {
           const { 
@@ -187,11 +187,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         return;
       }
 
-      const response = await axios.post(`${BASE_URL}/user/logout`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axiosToken.post('/user/logout', {});
 
       if (response.status === 200) {
         setUser(null);
@@ -214,7 +210,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     const payload = { email };
 
     try {
-      const response = await axios.post(`${BASE_URL}/auth/forgot-password`, payload);
+      const response = await axiosReg.post('/auth/forgot-password', payload);
       
       if (response.status === 200) {
         console.log('Success: email has been sent');
@@ -264,7 +260,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     const payload = { password, repeatPassword };
 
     try {
-      const response = await axios.post(`${BASE_URL}/auth/reset-password?token=${token}`, payload);
+      const response = await axiosReg.post(`/auth/reset-password?token=${token}`, payload);
       
       if (response.status === 200) {
         return true;
@@ -310,11 +306,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     console.log(payload);
 
     try {
-      const response = await axios.patch(`${BASE_URL}/user/${user?.id}`, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axiosToken.patch(`/user/${user?.id}`);
 
       if (response.status === 200) {
         setUser(prevUser => {
@@ -348,6 +340,49 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       return false;
     }
   }, [setUser, setError, setIsLoading, user, token ]);
+
+  const refreshTokenSilently = useCallback(async () => {
+    const currToken = localStorage.getItem('token');
+
+    if (currToken) {
+      try {
+        const response = await axiosReg.post('/user/token', { 
+          token: currToken.replace(/(^"|"$)/g, '')
+        });
+
+        if (response.status === 200) {
+          const newToken = response.data.Token;
+
+          localStorage.setItem(ACCESS_TOKEN, newToken);
+          setToken(newToken);
+        } else {
+          console.log('Failed to refresh token');
+        }
+      } catch (error) {
+        const axiosError = error as AxiosError;
+  
+        if (axiosError.response && axiosError.response.status === 401) {
+          setError('Something went wrong. Try again later');
+        }
+  
+        return false;
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  }, [setToken, setIsLoading, setError]);
+
+  useEffect(() => {
+    refreshTokenSilently();
+
+    const interval = setInterval(() => {
+      refreshTokenSilently();
+    }, 780000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [refreshTokenSilently]);
 
   return (
     <AuthContext.Provider

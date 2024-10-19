@@ -9,6 +9,8 @@ import {
   getAfricaIcon, 
   getAsiaGreenIcon, 
   getAsiaIcon, 
+  getAustraliaGreenIcon, 
+  getAustraliaIcon, 
   getEuropeGreenIcon, 
   getEuropeIcon, 
   getNorthAmericaGreenIcon, 
@@ -28,6 +30,7 @@ const continentIcons: { [key in ContinentsForSearch]: string } = {
   [ContinentsForSearch.Africa]: getAfricaIcon(),
   [ContinentsForSearch.NorthAmerica]: getNorthAmericaIcon(),
   [ContinentsForSearch.SouthAmerica]: getSouthAmericaIcon(),
+  [ContinentsForSearch.Australia]: getAustraliaIcon(),
 };
 
 const continentIconsSelected: { [key in ContinentsForSearch]: string } = {
@@ -37,6 +40,7 @@ const continentIconsSelected: { [key in ContinentsForSearch]: string } = {
   [ContinentsForSearch.Africa]: getAfricaGreenIcon(),
   [ContinentsForSearch.NorthAmerica]: getNorthAmericaGreenIcon(),
   [ContinentsForSearch.SouthAmerica]: getSouthAmericaGreenIcon(),
+  [ContinentsForSearch.Australia]: getAustraliaGreenIcon(),
 }
 
 export const ContinentsPage: React.FC = () => {
