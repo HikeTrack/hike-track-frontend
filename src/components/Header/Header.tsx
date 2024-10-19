@@ -91,6 +91,10 @@ export const Header: React.FC = () => {
         <NavLink to="/about" className={styles.navItem}>
           About us
         </NavLink>
+
+        <NavLink to="/create-tour" className={styles.navItem}>
+          Create a new tour
+        </NavLink>
       </nav>
 
       <div className={styles.containerRight}>

@@ -14,6 +14,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ResetPasswordPage } from './modules/ResetPasswordPage/ResetPasswordPage';
 import { ProfileEditorPage } from './modules/ProfileEditorPage/ProfileEditorPage';
 import { GuideApplicationPage } from './modules/GuideApplicationPage/GuideApplicationPage';
+import { CreateTourPage } from './modules/CreateTourPage/CreateTourPage';
 
 export const Root = () => (
   <AuthProvider>
@@ -25,11 +26,12 @@ export const Root = () => (
           <Route path="about" element={<AboutUsPage />} />
           <Route path="register" element={<RegistrationPage />} />
           <Route path="login" element={<LoginPage />} />
+          <Route path="auth/forgot-password" element={<ForgotPasswordPage />}></Route>
+          <Route path="auth/reset-password" element={<ResetPasswordPage />}></Route>
           <Route path="profile" element={<UserAccountPage />}></Route>
           <Route path="edit-profile" element={<ProfileEditorPage />}></Route>
           <Route path="guide-application" element={<GuideApplicationPage />}></Route>
-          <Route path="auth/forgot-password" element={<ForgotPasswordPage />}></Route>
-          <Route path="auth/reset-password" element={<ResetPasswordPage />}></Route>
+          <Route path="create-tour" element={<CreateTourPage />}></Route>
 
           <Route 
             path="/toursByCountry/:countryId"
