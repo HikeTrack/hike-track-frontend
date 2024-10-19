@@ -23,3 +23,10 @@ export enum Price {
   from300To500 = '300$ - 500$',
   Over500 = 'Over 500$',
 }
+
+export enum RouteType {
+  PointToPoint = 'Point to Point',
+  RoundTrip = 'Round Trip',
+  MultiDestination = 'Multi Destination',
+  OpenJaw = 'Open Jaw',
+} 

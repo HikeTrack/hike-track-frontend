@@ -13,17 +13,23 @@ export const RegistrationPage: React.FC = () => {
   const navigate = useNavigate();
   const { registerUser, setUser, error, isLoading } = useAuth();
   const [isCreateAccountClicked, setIsCreateAccountClicked] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [state, setState] = useState({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
     repeatPassword: '',
+    wantsToBeGuide: false,
   });
-
+ 
   const handleCreateAccountClick = () => {
     setIsCreateAccountClicked(true);
   }
+
+  // const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setIsGuideButtonChecked(e.target.checked);
+  // }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -35,6 +41,7 @@ export const RegistrationPage: React.FC = () => {
 
   const handleSubmitClick = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsFormSubmitted(true);
 
     if (!state.firstName 
       || !state.lastName
@@ -143,11 +150,15 @@ export const RegistrationPage: React.FC = () => {
                 value={state.firstName}
                 onChange={handleInputChange}
                 placeholder="First name"
-                aria-invalid={error ? 'true' : 'false'}
+                aria-invalid={isFormSubmitted && !state.firstName ? 'true' : 'false'}
                 aria-describedby="firstNameError"
               />
             </div>
-            {error && <span id="firstNameError" className={styles.errorMessage}>{error}</span>}
+            {isFormSubmitted && !state.firstName && (
+              <span id="firstNameError" className={styles.errorMessage}>
+                First name is required
+              </span>
+            )}
 
             <div className={styles.inputWrapper}>
               <input 
@@ -157,11 +168,15 @@ export const RegistrationPage: React.FC = () => {
                 value={state.lastName}
                 onChange={handleInputChange}
                 placeholder="Last name"
-                aria-invalid={error ? 'true' : 'false'}
+                aria-invalid={isFormSubmitted && !state.lastName ? 'true' : 'false'}
                 aria-describedby="lastNameError"
               />
             </div>
-            {error && <span id="lastNameError" className={styles.errorMessage}>{error}</span>}
+            {isFormSubmitted && !state.lastName && (
+              <span id="lastNameError" className={styles.errorMessage}>
+                Last name is required
+              </span>
+            )}
 
             <div className={styles.inputWrapper}>
               <input 
@@ -171,11 +186,15 @@ export const RegistrationPage: React.FC = () => {
                 value={state.email}
                 onChange={handleInputChange}
                 placeholder="Email address"
-                aria-invalid={error ? 'true' : 'false'}
+                aria-invalid={isFormSubmitted && !state.email ? 'true' : 'false'}
                 aria-describedby="emailError"
               />
             </div>
-            {error && <span id="emailError" className={styles.errorMessage}>{error}</span>}
+            {isFormSubmitted && !state.email && (
+              <span id="emailError" className={styles.errorMessage}>
+                Email is required
+              </span>
+            )}
 
             <div className={styles.inputWrapper}>
               <input 
@@ -185,11 +204,15 @@ export const RegistrationPage: React.FC = () => {
                 value={state.password}
                 onChange={handleInputChange}
                 placeholder="Password"
-                aria-invalid={error ? 'true' : 'false'}
+                aria-invalid={isFormSubmitted && !state.password ? 'true' : 'false'}
                 aria-describedby="passwordError"
               />
             </div>
-            {error && <span id="passwordError" className={styles.errorMessage}>{error}</span>}
+            {isFormSubmitted && !state.email && (
+              <span id="passwordError" className={styles.errorMessage}>
+                Password is required
+              </span>
+            )}
 
             <div className={styles.inputWrapper}>
               <input 
@@ -199,13 +222,33 @@ export const RegistrationPage: React.FC = () => {
                 value={state.repeatPassword}
                 onChange={handleInputChange}
                 placeholder="Repeat password"
-                aria-invalid={error ? 'true' : 'false'}
+                aria-invalid={isFormSubmitted && !state.repeatPassword ? 'true' : 'false'}
                 aria-describedby="repeatPasswordError"
               />
             </div>
-            {error && <span id="repeatPasswordError" className={styles.errorMessage}>{error}</span>}
+            {isFormSubmitted && !state.repeatPassword && (
+              <span id="passwordError" className={styles.errorMessage}>
+                Repeating password is required
+              </span>
+            )}
 
-            <button type="submit" className={styles.button}>Sign up</button>
+            <div className={styles.checkboxContainer}>
+              <input 
+                className={styles.checkbox} 
+                type="checkbox"
+                // checked={isGuideButtonChecked}
+                // onChange={handleCheckboxChange}
+              />
+
+              <label className={styles.checkboxLabel}>I want to become a guide!</label>
+            </div>
+
+            <button 
+              type="submit" 
+              className={styles.button}
+            >
+              Sign up
+            </button>
           </form>
 
           <div className={styles.titleSmall}>

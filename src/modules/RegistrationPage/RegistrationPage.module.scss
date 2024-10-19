@@ -221,3 +221,12 @@
 
   color: $color-grey-500;
 }
+
+.checkboxContainer {
+  display: flex;
+  gap: 16px;
+}
+
+.checkboxLabel {
+  font-size: 18px;
+}

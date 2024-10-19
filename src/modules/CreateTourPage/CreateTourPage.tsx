@@ -2,7 +2,7 @@ import React, { ChangeEvent, ChangeEventHandler, FormEvent, useState } from "rea
 import { ContinentsForGuide } from "../../enums/ContinentsForGuide";
 import { BASE_URL } from "../../utils/constants";
 import { fileToDataString } from "../../utils/fileToDataString";
-import { Activity, Difficulty } from '../../enums/Filters';
+import { Activity, Difficulty, RouteType } from '../../enums/Filters';
 import { TourDropdown } from "../../components/TourDropdown/TourDropodown";
 import styles from './CreateTourPage.module.scss';
 
@@ -18,7 +18,7 @@ export const CreateTourPage: React.FC = () => {
   const [countryName, setCountryName] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | null>(null);
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
-  const [selectedRouteType, setSelectedRouteType] = useState();
+  const [selectedRouteType, setSelectedRouteType] = useState<RouteType | null>(null);
   const [length, setLength] = useState('');
   const [price, setPrice] = useState('');
   const [duration, setDuration] = useState('');
@@ -37,6 +37,11 @@ export const CreateTourPage: React.FC = () => {
   const activityOptions = Object.values(Activity).map(activity => ({
     value: activity,
     label: activity,
+  }));
+
+  const routeTypeOptions = Object.values(RouteType).map(route => ({
+    value: route,
+    label: route,
   }));
 
   const handleToggle = () => setIsOpen(!isOpen);
@@ -64,6 +69,15 @@ export const CreateTourPage: React.FC = () => {
 
     setIsOpen(false);
   };
+
+  const handleRouteTypeSelect = (value: string | null) => {
+    if (typeof value === 'string') {
+      setSelectedRouteType(value as RouteType);
+    }
+
+    setIsOpen(false);
+  };
+
 
   const handleCountryChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCountryName(e.target.value);
@@ -143,7 +157,7 @@ export const CreateTourPage: React.FC = () => {
           </div>
 
           <div className={styles.inputContainer}>
-            <label htmlFor="date" className={styles.inputLabel}>Date:</label>
+            <label htmlFor="date" className={styles.inputLabel}>Date (YYYY.MM.DD):</label>
             
             <div className={styles.inputWrapper}>
               <input 
@@ -151,7 +165,6 @@ export const CreateTourPage: React.FC = () => {
                 type="text" 
                 id="date"
                 name="date"
-                placeholder="Date"
                 // value={state.firstName}
                 // onChange={handleInputChange}
                 aria-invalid={error ? 'true' : 'false'}
@@ -172,7 +185,7 @@ export const CreateTourPage: React.FC = () => {
           </div>
 
           <div className={styles.inputContainer}>
-          <label htmlFor="date" className={styles.inputLabel}>Country:</label>
+            <label htmlFor="date" className={styles.inputLabel}>Country:</label>
             
             <div className={styles.inputWrapper}>
               <input 
@@ -180,7 +193,6 @@ export const CreateTourPage: React.FC = () => {
                 type="text" 
                 id="countryName"
                 name="countryName"
-                placeholder="Country"
                 // value={state.firstName}
                 // onChange={handleInputChange}
                 aria-invalid={error ? 'true' : 'false'}
@@ -189,83 +201,131 @@ export const CreateTourPage: React.FC = () => {
             </div>
           </div>
 
-          <TourDropdown 
-            label="Difficulty"
-            options={difficultyOptions}
-            selected={selectedDifficulty}
-            onChange={handleDifficultySelect}
-          />
-
-          <TourDropdown 
-            label="Activity"
-            options={activityOptions}
-            selected={selectedActivity}
-            onChange={handleActivitySelect}
-          />
-
-          <div className={styles.inputWrapper}>
-            <input 
-              className={styles.input}
-              type="text" 
-              id="length"
-              name="length"
-              placeholder="Length"
-              // value={state.firstName}
-              // onChange={handleInputChange}
-              aria-invalid={error ? 'true' : 'false'}
-              aria-describedby="lengthError"
+          <div className={styles.inputContainer}>
+            <label className={styles.inputLabel}>Difficulty:</label>
+            
+            <TourDropdown 
+              label="Difficulty"
+              options={difficultyOptions}
+              selected={selectedDifficulty}
+              onChange={handleDifficultySelect}
+            />
+          </div>
+          
+          <div className={styles.inputContainer}>
+            <label className={styles.inputLabel}>Activity:</label>
+            
+            <TourDropdown 
+              label="Activity"
+              options={activityOptions}
+              selected={selectedActivity}
+              onChange={handleActivitySelect}
             />
           </div>
 
-          <div className={styles.inputWrapper}>
-            <input 
-              className={styles.input}
-              type="text" 
-              id="elevation"
-              name="elevation"
-              placeholder="Elevation"
-              // value={state.firstName}
-              // onChange={handleInputChange}
-              aria-invalid={error ? 'true' : 'false'}
-              aria-describedby="elevationError"
+          <div className={styles.inputContainer}>
+            <label className={styles.inputLabel}>Route type:</label>
+            
+            <TourDropdown 
+              label="Route type"
+              options={routeTypeOptions}
+              selected={selectedRouteType}
+              onChange={handleRouteTypeSelect}
             />
           </div>
+          
+          <div className={styles.inputContainer}>
+            <label htmlFor="length" className={styles.inputLabel}>Length (in km):</label>
+            
+            <div className={styles.inputWrapper}>
+              <input 
+                className={styles.input}
+                type="text" 
+                id="length"
+                name="length"
+                // value={state.firstName}
+                // onChange={handleInputChange}
+                aria-invalid={error ? 'true' : 'false'}
+                aria-describedby="lengthError"
+              />
+            </div>
+          </div>
+          
+          <div className={styles.inputContainer}>
+            <label htmlFor="elevation" className={styles.inputLabel}>Elevation (in m):</label>
+            
+            <div className={styles.inputWrapper}>
+              <input 
+                className={styles.input}
+                type="text" 
+                id="elevation"
+                name="elevation"
+                // value={state.firstName}
+                // onChange={handleInputChange}
+                aria-invalid={error ? 'true' : 'false'}
+                aria-describedby="elevationError"
+              />
+            </div>
+          </div>
+          
+          <div className={styles.inputContainer}>
+            <label htmlFor="price" className={styles.inputLabel}>Price:</label>
 
-          <div className={styles.inputWrapper}>
-            <input 
-              className={styles.input}
-              type="text" 
-              id="price"
-              name="price"
-              placeholder="Price"
-              // value={state.firstName}
-              // onChange={handleInputChange}
-              aria-invalid={error ? 'true' : 'false'}
-              aria-describedby="firstNameError"
-            />
+            <div className={styles.inputWrapper}>
+              <input 
+                className={styles.input}
+                type="text" 
+                id="price"
+                name="price"
+                // value={state.firstName}
+                // onChange={handleInputChange}
+                aria-invalid={error ? 'true' : 'false'}
+                aria-describedby="firstNameError"
+              />
+            </div>
           </div>
 
-          <div className={styles.inputWrapper}>
-            <input 
-              className={styles.input}
-              type="text" 
-              id="duration"
-              name="duration"
-              placeholder="Duration"
-              // value={state.firstName}
-              // onChange={handleInputChange}
-              aria-invalid={error ? 'true' : 'false'}
-              aria-describedby="durationError"
-            />
+          <div className={styles.inputContainer}>
+            <label htmlFor="duration" className={styles.inputLabel}>Duration (in km):</label>
+            
+            <div className={styles.inputWrapper}>
+              <input 
+                className={styles.input}
+                type="text" 
+                id="duration"
+                name="duration"
+                // value={state.firstName}
+                // onChange={handleInputChange}
+                aria-invalid={error ? 'true' : 'false'}
+                aria-describedby="durationError"
+              />
+            </div>
           </div>
 
-          <div className={styles.inputWrapper}>
-            <input 
-              className={styles.input}
-              type="text" 
+          <div className={styles.inputContainer}>
+            <label htmlFor="duration" className={styles.inputLabel}>Map link:</label>
+            
+            <div className={styles.inputWrapper}>
+              <input 
+                className={styles.input}
+                type="text" 
+                id="map"
+                name="map"
+                // value={state.firstName}
+                // onChange={handleInputChange}
+                aria-invalid={error ? 'true' : 'false'}
+                aria-describedby="mapLinkError"
+              />
+            </div>
+          </div>
+
+          <div className={styles.inputContainer}>
+            <label htmlFor="duration" className={styles.inputLabel}>Tour description:</label>
+            
+            <textarea 
+              className={styles.textarea}
               id="map"
               name="map"
-              placeholder="Map link"
               // value={state.firstName}
               // onChange={handleInputChange}
               aria-invalid={error ? 'true' : 'false'}

@@ -3,10 +3,11 @@ import { getDefaultAvatarIcon } from "../../utils/getIcons";
 import styles from './GuideApplicationPage.module.scss';
 
 export const GuideApplicationPage: React.FC = () => {
+  const defaultAvatar = getDefaultAvatarIcon();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const defaultAvatar = getDefaultAvatarIcon();
+  const [email, setEmail] = useState('');
   
   return (
     <div className={styles.page}>
