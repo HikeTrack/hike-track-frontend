@@ -1,13 +1,24 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { getDefaultAvatarIcon } from "../../utils/getIcons";
 import styles from './GuideApplicationPage.module.scss';
 
+type LocationState = {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 export const GuideApplicationPage: React.FC = () => {
-  const defaultAvatar = getDefaultAvatarIcon();
+  const location = useLocation();
+  const { firstName, lastName, email } = location.state as LocationState || {};
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const defaultAvatar = getDefaultAvatarIcon();
 
-  const [email, setEmail] = useState('');
+  const [userFirstName] = useState(firstName || '');
+  const [userLastName] = useState(lastName || '');
+  const  [userEmail] = useState(email || '');
   
   return (
     <div className={styles.page}>
@@ -33,8 +44,8 @@ export const GuideApplicationPage: React.FC = () => {
                 className={styles.input}
                 type="text" 
                 id="firstName"
-                // value={state.firstName}
-                // onChange={handleInputChange}
+                value={userFirstName}
+                readOnly
                 aria-invalid={error ? 'true' : 'false'}
                 aria-describedby="firstNameError"
               />
@@ -50,8 +61,8 @@ export const GuideApplicationPage: React.FC = () => {
                 className={styles.input}
                 type="text" 
                 id="lastName"
-                // value={state.lastName}
-                // onChange={handleInputChange}
+                value={userLastName}
+                readOnly
                 aria-invalid={error ? 'true' : 'false'}
                 aria-describedby="lastNameError"
               />
@@ -67,8 +78,8 @@ export const GuideApplicationPage: React.FC = () => {
                 className={styles.input}
                 type="email" 
                 id="email"
-                // value={state.email}
-                // onChange={handleInputChange}
+                value={userEmail}
+                readOnly
                 aria-invalid={error ? 'true' : 'false'}
                 aria-describedby="emailError"
               />

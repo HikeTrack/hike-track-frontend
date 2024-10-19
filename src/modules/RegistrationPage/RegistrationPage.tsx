@@ -13,6 +13,7 @@ export const RegistrationPage: React.FC = () => {
   const navigate = useNavigate();
   const { registerUser, setUser, error, isLoading } = useAuth();
   const [isCreateAccountClicked, setIsCreateAccountClicked] = useState(false);
+  const [isGuideButtonChecked, setIsGuideButtonChecked] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [state, setState] = useState({
     firstName: '',
@@ -20,16 +21,15 @@ export const RegistrationPage: React.FC = () => {
     email: '',
     password: '',
     repeatPassword: '',
-    wantsToBeGuide: false,
   });
  
   const handleCreateAccountClick = () => {
     setIsCreateAccountClicked(true);
   }
 
-  // const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setIsGuideButtonChecked(e.target.checked);
-  // }
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsGuideButtonChecked(e.target.checked);
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -61,7 +61,17 @@ export const RegistrationPage: React.FC = () => {
     );
     
     if (isSuccess) {
-      navigate('/login');
+      if (isGuideButtonChecked) {
+        navigate('/guide-application', { 
+          state: { 
+            firstName: state.firstName,
+            lastName: state.lastName,
+            email: state.email,
+          } 
+        });
+      } else {
+        navigate('/login');
+      }
     }
   }
   
@@ -236,8 +246,8 @@ export const RegistrationPage: React.FC = () => {
               <input 
                 className={styles.checkbox} 
                 type="checkbox"
-                // checked={isGuideButtonChecked}
-                // onChange={handleCheckboxChange}
+                checked={isGuideButtonChecked}
+                onChange={handleCheckboxChange}
               />
 
               <label className={styles.checkboxLabel}>I want to become a guide!</label>
