@@ -344,15 +344,15 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   }, [setUser, setError, setIsLoading, user, token ]);
 
   const refreshTokenSilently = useCallback(async () => {
-    const currToken = localStorage.getItem(ACCESS_TOKEN);
+    const token = localStorage.getItem(ACCESS_TOKEN);
 
-    console.log(currToken)
+    console.log(token)
 
-    if (currToken) {
+    if (token) {
       try {
-        const response = await axiosReg.post('/user/token', { 
-          token: currToken
-        });
+        const response = await axiosToken.post('/token', {});
+
+        console.log('API Response:', response);
 
         if (response.status === 200) {
           const newToken = response.data.Token;
