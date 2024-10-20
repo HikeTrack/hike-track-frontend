@@ -130,8 +130,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       if (response.status === 200) {
         const token = response.data.Token;
 
-        console.log(token);
-
         localStorage.setItem(ACCESS_TOKEN, token);
         setToken(token);
 
@@ -346,12 +344,14 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   }, [setUser, setError, setIsLoading, user, token ]);
 
   const refreshTokenSilently = useCallback(async () => {
-    const currToken = localStorage.getItem('token');
+    const currToken = localStorage.getItem(ACCESS_TOKEN);
+
+    console.log(currToken)
 
     if (currToken) {
       try {
         const response = await axiosReg.post('/user/token', { 
-          token: currToken.replace(/(^"|"$)/g, '')
+          token: currToken
         });
 
         if (response.status === 200) {

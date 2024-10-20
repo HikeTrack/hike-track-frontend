@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Months } from "../../enums/Months";
@@ -6,15 +6,15 @@ import { getDefaultAvatarIcon } from "../../utils/getIcons";
 import styles from './GuideApplicationPage.module.scss';
 
 type LocationState = {
-  firstName: string;
-  lastName: string;
-  email: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
 }
 
 export const GuideApplicationPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { sendGuideApplication } = useAuth();
+  const { sendGuideApplication, user } = useAuth();
   const { firstName, lastName, email } = location.state as LocationState || {};
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -24,10 +24,18 @@ export const GuideApplicationPage: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
 
-  const [userFirstName] = useState(firstName || '');
-  const [userLastName] = useState(lastName || '');
-  const  [userEmail] = useState(email || '');
+  const [userFirstName, setUserFirstName] = useState(firstName || user?.firstName || '');
+  const [userLastName, setUserLastName] = useState(lastName || user?.lastName || '');
+  const [userEmail, setUserEmail] = useState(email || user?.email || '');
 
+  useEffect(() => {
+    if (user) {
+      setUserFirstName(user.firstName || '');
+      setUserLastName(user.lastName || '');
+      setUserEmail(user.email || '');
+    }
+  }, [user]);
+  
   const monthsOptions = Object.values(Months).map(month => ({
     value: month,
     label: month,
