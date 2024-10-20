@@ -21,6 +21,7 @@ type AuthContextType = {
   setUser: (user: User | null) => void;
   sendEmailForNewPassword: (email: string) => Promise<boolean>;
   resetPassword: (password: string, repeatPassword: string, token: string) => Promise<boolean>;
+  sendGuideApplication: (email: string) => Promise<boolean>;
   updateUserProfile: (
     email: string,
     firstName: string,
@@ -46,6 +47,7 @@ const AuthContext = createContext<AuthContextType>({
   setUser: () => {},
   sendEmailForNewPassword: async () => false,
   resetPassword: async () => false,
+  sendGuideApplication: async () => false,
   updateUserProfile: async () => false,
 });
 
@@ -138,6 +140,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         if (userResponse.status === 200) {
           const { 
             id, 
+            role,
             email,
             firstName, 
             lastName, 
@@ -147,6 +150,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
 
           setUser({
             id,
+            role,
             email,
             firstName,
             lastName,
@@ -384,6 +388,36 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     };
   }, [refreshTokenSilently]);
 
+  const sendGuideApplication = useCallback(async (email: string): Promise<boolean> => {
+    setIsLoading(true);
+    setError('');
+
+    const payload = { email };
+
+    try {
+      const response = await axiosReg.post(`/user/request`, payload);
+
+      if (response.status === 200) {
+        setError('');
+        return true;
+      } 
+    } catch (error) {
+      const axiosError = error as AxiosError;
+
+      if (axiosError.response && axiosError.response.status === 409) {
+        setError('This email is already registered. Please use a different email.');
+      } else {
+        setError('Registration failed. Please try again');
+      }
+
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+
+    return false;
+  }, [setIsLoading, setError]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -397,6 +431,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         setUser,
         sendEmailForNewPassword,
         resetPassword,
+        sendGuideApplication,
         updateUserProfile
       }}
     >

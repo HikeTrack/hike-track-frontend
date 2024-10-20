@@ -1,5 +1,8 @@
+export type UserRoles = 'ROLE_ADMIN' | 'ROLE_GUIDE' | 'ROLE_USER';
+
 export type User = {
   id: number;
+  role: UserRoles[];
   email: string;
   firstName: string;
   lastName: string;

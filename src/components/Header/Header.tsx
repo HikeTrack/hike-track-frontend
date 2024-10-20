@@ -92,9 +92,9 @@ export const Header: React.FC = () => {
           About us
         </NavLink>
 
-        <NavLink to="/create-tour" className={styles.navItem}>
+        {user?.role.includes('ROLE_GUIDE') && (<NavLink to="/create-tour" className={styles.navItem}>
           Create a new tour
-        </NavLink>
+        </NavLink>)}
       </nav>
 
       <div className={styles.containerRight}>
