@@ -169,84 +169,86 @@ export const UserAccountPage: React.FC = () => {
         </button>
       </div>
 
-      <div className={styles.guideContainer}>
-        <form className={styles.form}>
-          <label htmlFor="email" className={styles.inputTitle}>Become a guide:</label>
-          
-          <div className={styles.inputWrapper}>
-            <input 
-              className={styles.input}
-              type="email" 
-              id="email"
-              // value={state.email}
-              // onChange={handleInputChange}
-              placeholder="Email address"
-              // aria-invalid={error ? 'true' : 'false'}
-              aria-describedby="emailError"
+      {user?.role.includes('ROLE_ADMIN') && (
+        <div className={styles.guideContainer}>
+          <form className={styles.form}>
+            <label htmlFor="email" className={styles.inputTitle}>Become a guide:</label>
+            
+            <div className={styles.inputWrapper}>
+              <input 
+                className={styles.input}
+                type="email" 
+                id="email"
+                // value={state.email}
+                // onChange={handleInputChange}
+                placeholder="Email address"
+                // aria-invalid={error ? 'true' : 'false'}
+                aria-describedby="emailError"
+              />
+            </div>
+
+            <button className={styles.submitButton}>Submit</button>
+          </form>
+
+          <form className={styles.form} onSubmit={handleFormSubmit}>
+          <label htmlFor="country" className={styles.inputTitle}>Add a coutry:</label>
+            
+            <div className={styles.dropdown}>
+              <button className={styles.dropdownButton} onClick={handleToggle}>
+                {continentsOptions.find(continent => continent.value === selectedContinent)?.label || 'Choose continent'}
+              </button>
+              {isOpen && (
+                <ul className={styles.dropdownList}>
+                  {continentsOptions.map(option => (
+                    <li 
+                      className={styles.dropdownItem}
+                      key={option.value}
+                      onClick={() => handleSelectContinent(option.value)}
+                    >
+                      {option.label}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <div className={styles.inputWrapper}>
+              <input 
+                className={styles.input}
+                type="text" 
+                id="country"
+                value={countryName}
+                onChange={handleCountryChange}
+                placeholder="Country"
+                aria-describedby="emailError"
+              />
+            </div>
+
+            <div className={styles.inputWrapper}>
+              <input 
+                className={styles.input}
+                type="file" 
+                id="image"
+                accept="image/*"
+                onChange={handleFileChange}
+                aria-describedby="imageError"
+              />
+            </div>
+
+            <button className={styles.submitButton} type="submit">Submit</button>
+          </form>
+
+          <div className={styles.form}>
+            <h3 className={styles.inputTitle}>Your image:</h3>
+            
+            <img 
+              src={previewImgUrl} 
+              alt="image" 
+              className={styles.image}
             />
           </div>
-
-          <button className={styles.submitButton}>Submit</button>
-        </form>
-
-        <form className={styles.form} onSubmit={handleFormSubmit}>
-        <label htmlFor="country" className={styles.inputTitle}>Add a coutry:</label>
-          
-          <div className={styles.dropdown}>
-            <button className={styles.dropdownButton} onClick={handleToggle}>
-              {continentsOptions.find(continent => continent.value === selectedContinent)?.label || 'Choose continent'}
-            </button>
-            {isOpen && (
-              <ul className={styles.dropdownList}>
-                {continentsOptions.map(option => (
-                  <li 
-                    className={styles.dropdownItem}
-                    key={option.value}
-                    onClick={() => handleSelectContinent(option.value)}
-                  >
-                    {option.label}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          <div className={styles.inputWrapper}>
-            <input 
-              className={styles.input}
-              type="text" 
-              id="country"
-              value={countryName}
-              onChange={handleCountryChange}
-              placeholder="Country"
-              aria-describedby="emailError"
-            />
-          </div>
-
-          <div className={styles.inputWrapper}>
-            <input 
-              className={styles.input}
-              type="file" 
-              id="image"
-              accept="image/*"
-              onChange={handleFileChange}
-              aria-describedby="imageError"
-            />
-          </div>
-
-          <button className={styles.submitButton} type="submit">Submit</button>
-        </form>
-
-        <div className={styles.form}>
-          <h3 className={styles.inputTitle}>Your image:</h3>
-          
-          <img 
-            src={previewImgUrl} 
-            alt="image" 
-            className={styles.image}
-          />
         </div>
-      </div>
+      )}
     </div>
   )
 }

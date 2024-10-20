@@ -11,7 +11,7 @@ const appleIcon = getRegistrationAppleIcon();
 
 export const RegistrationPage: React.FC = () => {
   const navigate = useNavigate();
-  const { registerUser, setUser, error, isLoading } = useAuth();
+  const { registerUser } = useAuth();
   const [isCreateAccountClicked, setIsCreateAccountClicked] = useState(false);
   const [isGuideButtonChecked, setIsGuideButtonChecked] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);

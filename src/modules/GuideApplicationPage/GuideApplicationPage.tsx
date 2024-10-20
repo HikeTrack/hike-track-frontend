@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { Months } from "../../enums/Months";
 import { getDefaultAvatarIcon } from "../../utils/getIcons";
 import styles from './GuideApplicationPage.module.scss';
 
@@ -11,14 +13,50 @@ type LocationState = {
 
 export const GuideApplicationPage: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { sendGuideApplication } = useAuth();
   const { firstName, lastName, email } = location.state as LocationState || {};
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
   const defaultAvatar = getDefaultAvatarIcon();
+  const [selectedMonth, setSelectedMonth] = useState<Months | null>(null);
+  const [selectedDay, setSelectedDay] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
 
   const [userFirstName] = useState(firstName || '');
   const [userLastName] = useState(lastName || '');
   const  [userEmail] = useState(email || '');
+
+  const monthsOptions = Object.values(Months).map(month => ({
+    value: month,
+    label: month,
+  }));
+
+  const handleToggle = () => setIsOpen(!isOpen);
+
+  const handleSelectMonth = (value: string | null) => {
+    if (typeof value === 'string') {
+      setSelectedMonth(value as Months);
+    }
+
+    setIsOpen(false);
+  };
+
+  const handleSubmitCick = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!email) {
+      setError('No email is provided');
+      return;
+    }
+
+    const isSuccess = await sendGuideApplication(email);
+
+    if (isSuccess) {
+      navigate('/login');
+    }
+  }
   
   return (
     <div className={styles.page}>
@@ -35,7 +73,7 @@ export const GuideApplicationPage: React.FC = () => {
           <button className={styles.avatarButton}>Change photo</button>
         </div>
 
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={handleSubmitCick}>
           <div className={styles.inputContainer}>
             <label htmlFor="firstName" className={styles.inputLabel}>First name:</label>
             
@@ -107,45 +145,54 @@ export const GuideApplicationPage: React.FC = () => {
           <div className={styles.inputContainer}>
             <label htmlFor="birth-day" className={styles.inputLabel}>Birtday:</label>
             
-            <div className={styles.inputWrapper}>
-              <input 
-                className={styles.input}
-                type="text" 
-                id="birth-month"
-                // value={state.password}
-                // onChange={handleInputChange}
-                placeholder="Month"
-                aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="countryError"
-              />
-            </div>
+            <div className={styles.birthdayMobile}>
+              <div className={styles.dropdown}>
+                <button className={styles.dropdownButton} onClick={handleToggle}>
+                  {monthsOptions.find(month => month.value === selectedMonth)?.label || 'Month'}
+                </button>
+                {isOpen && (
+                  <ul className={styles.dropdownList}>
+                    {monthsOptions.map(option => (
+                      <li 
+                        className={styles.dropdownItem}
+                        key={option.value}
+                        onClick={() => handleSelectMonth(option.value)}
+                      >
+                        {option.label}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
 
-            <div className={styles.inputWrapper}>
-              <input 
-                className={styles.input}
-                type="text" 
-                id="birth-day"
-                // value={state.password}
-                // onChange={handleInputChange}
-                placeholder="Day"
-                aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="countryError"
-              />
-            </div>
+              <div className={styles.inputWrapper}>
+                <input 
+                  className={styles.input}
+                  type="text" 
+                  id="birthDay"
+                  // value={state.password}
+                  // onChange={handleInputChange}
+                  placeholder="Day"
+                  aria-invalid={error ? 'true' : 'false'}
+                  aria-describedby="birthdateError"
+                />
+              </div>
 
-            <div className={styles.inputWrapper}>
-              <input 
-                className={styles.input}
-                type="text" 
-                id="birth-year"
-                // value={state.password}
-                // onChange={handleInputChange}
-                placeholder="Year"
-                aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="countryError"
-              />
+              <div className={styles.inputWrapper}>
+                <input 
+                  className={styles.input}
+                  type="text" 
+                  id="birthYear"
+                  // value={state.password}
+                  // onChange={handleInputChange}
+                  placeholder="Year"
+                  aria-invalid={error ? 'true' : 'false'}
+                  aria-describedby="birthdateError"
+                />
+              </div>
             </div>
-            {error && <span id="countryError" className={styles.errorMessage}>{error}</span>}
+            
+            {error && <span id="birthdateError" className={styles.errorMessage}>{error}</span>}
           </div>
 
           <div className={styles.inputContainer}>
@@ -255,16 +302,16 @@ export const GuideApplicationPage: React.FC = () => {
 
             <label className={styles.inputLabel}>I agree to the terms and privacy policy</label>
           </div>
-        </form>
 
-        <div className={styles.buttonContainer}>
-          <button className={styles.buttonSubmit}>Submit Application</button>
-          <button 
-            className={styles.buttonCancel} 
-          >
-            Cancel
-          </button>
-        </div>
+          <div className={styles.buttonContainer}>
+            <button className={styles.buttonSubmit} type="submit">Submit Application</button>
+            <button 
+              className={styles.buttonCancel} 
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   )
