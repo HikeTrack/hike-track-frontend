@@ -114,14 +114,18 @@
 }
 
 .login {
+  @include button-mobile;
+
   color: $color-bg;
   text-decoration: none;
-  background-color: $color-primary;
-  border: 1px solid $color-primary;
   border-radius: 100px;
   padding: 20px 16px;
 
-  @include hover(box-shadow, 0 4px 12px rgba(0, 0, 0, 0.4));
+  @include green-button;
+
+  @include on-desktop {
+    @include button-web;
+  }
 }
 
 .registration {
@@ -145,11 +149,72 @@
   background-color: $color-grey-100;
 }
 
-.profileLink {
+.profileButton {
+  @include button-web;
+
+  position: relative;
   text-decoration: none;
   color: $color-grey-900;
+  padding: 8px 16px;
+  background-color: $color-bg;
+  border: none;
+  border-radius: 32px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
 }
 
 .profileAvatar {
   height: 48px;
+}
+
+.userCard {
+  position: absolute;
+  top: 105px;
+
+  background-color: $color-bg;
+  padding: 16px;
+  border-radius: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cardTop {
+  display: flex;
+  gap: 24px;
+  text-decoration: none;
+}
+
+.userNameWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.userName {
+  color: $color-grey-900;
+}
+
+.userText {
+  color: $color-grey-500;
+}
+
+.userCardNav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.userCardNavLink {
+  text-decoration: none;
+  color: $color-grey-500;
+  padding: 16px;
+
+  &:hover {
+    background-color: $color-grey-50;
+    border-radius: 1000px;
+    color: $color-grey-900;
+  }
 }

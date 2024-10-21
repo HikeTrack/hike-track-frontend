@@ -2,7 +2,7 @@ import classNames from "classnames";
 import React, { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { getMenuIcon, getLogoIcon, getDefaultAvatarIcon } from '../../utils/getIcons';
+import { getMenuIcon, getLogoIcon, getDefaultAvatarIcon, getGoNextIcon } from '../../utils/getIcons';
 import { AsideMenu } from "../AsideMenu/AsideMenu";
 import styles from './Header.module.scss';
 
@@ -10,10 +10,12 @@ export const Header: React.FC = () => {
   const navigate = useNavigate();
   const { user, logoutUser } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserClicked, setIsUserClicked] = useState(false);
 
   const logoIcon = getLogoIcon();
   const burgerMenuIcon = getMenuIcon(isMenuOpen);
   const defaultAvatarIcon = getDefaultAvatarIcon();
+  const goNextIcon = getGoNextIcon();
 
   const handleLogOut = () => {
     logoutUser();
@@ -35,6 +37,14 @@ export const Header: React.FC = () => {
   useEffect(() => {
     menuOverflowStatus(isMenuOpen);
   }, [isMenuOpen]);
+
+  const handleUserCardVisibility = () => {
+    setIsUserClicked((prev: boolean) => !prev);
+  };
+
+  const closeUserCard = () => {
+    setIsUserClicked(false);
+  };
   
   return (
     <>
@@ -100,17 +110,60 @@ export const Header: React.FC = () => {
       <div className={styles.containerRight}>
         {user ? (
           <>
-          <div className={styles.profileContainer}>
-            <Link to="/profile" className={styles.profileLink}>
-              {user.firstName}
-            </Link>
+          <button 
+            className={styles.profileButton}
+            onClick={handleUserCardVisibility}
+          >
+            <span>{user.firstName}</span>
 
             <img 
               src={defaultAvatarIcon} 
               alt="Avatar" 
               className={styles.profileAvatar}
             />
-          </div>
+          </button>
+
+          {isUserClicked && (
+            <div className={styles.userCard}>
+              <Link 
+                to="/profile" 
+                className={styles.cardTop}
+                onClick={closeUserCard}
+              >
+                <img 
+                  src={defaultAvatarIcon} 
+                  alt="Avatar" 
+                  className={styles.profileAvatar}
+                />
+
+                <div className={styles.userNameWrapper}>
+                  <span className={styles.userName}>{user?.firstName}</span>
+
+                  <span className={styles.userText}>Show profile</span>
+                </div>
+
+                <img src={goNextIcon} alt="arrow" />
+              </Link>
+
+              <nav className={styles.userCardNav}>
+                <NavLink 
+                  to="/create-tour" 
+                  className={styles.userCardNavLink}
+                  onClick={closeUserCard}
+                >
+                  Create a tour
+                </NavLink>
+
+                <NavLink 
+                  to="/" 
+                  className={styles.userCardNavLink}
+                  onClick={closeUserCard}
+                >
+                  Settings
+                </NavLink>
+              </nav>
+            </div>
+          )}
 
           <button className={styles.login} onClick={handleLogOut}>Log out</button>
           </>
@@ -127,6 +180,8 @@ export const Header: React.FC = () => {
           </>
         )}
       </div>
+
+      
     </header>
     </>
   )
