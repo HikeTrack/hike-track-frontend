@@ -74,18 +74,20 @@ export const UserAccountPage: React.FC = () => {
   }
 
   const handleFileChange: ChangeEventHandler<HTMLInputElement> = async (e) => {
-    const files = e.target.files?.[0];
+    const file = e.target.files?.[0];
 
-    if (!files) {
+    console.log(file);
+
+    if (!file) {
       setSelectedImage(null);
       setPreviewImgUrl('');
       return;
     }
 
-    setSelectedImage(files);
+    setSelectedImage(file);
 
     try {
-      const imgUrl = await fileToDataString(files);
+      const imgUrl = await fileToDataString(file);
       setPreviewImgUrl(imgUrl);
     } catch (error) {
       console.log(error);
@@ -106,7 +108,7 @@ export const UserAccountPage: React.FC = () => {
         country: countryName,
       };
       formData.append('requestDto', new Blob([JSON.stringify(requestDto)], { type: 'application/json' }));
-      formData.append('files', selectedImage);
+      formData.append('file', selectedImage);
   
       const response = await axiosToken.post('/countries', formData, {
         headers: {
@@ -162,7 +164,9 @@ export const UserAccountPage: React.FC = () => {
       </div>
 
       <div className={styles.buttonContainerMobile}>
-        <Link className={styles.guideButton} to="/guide-application">Become a guide today!</Link>
+        {!user?.role.includes('ROLE_GUIDE') && (
+          <Link className={styles.guideButton} to="/guide-application">Become a guide today!</Link>
+        )}
 
         <button 
           className={styles.deleteButton}
