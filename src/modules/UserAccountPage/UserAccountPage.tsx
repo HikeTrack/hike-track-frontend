@@ -103,11 +103,11 @@ export const UserAccountPage: React.FC = () => {
   
     try {
       const formData = new FormData();
-      const requestDto = {
+      const data = {
         continent: selectedContinent,
         country: countryName,
       };
-      formData.append('requestDto', new Blob([JSON.stringify(requestDto)], { type: 'application/json' }));
+      formData.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }));
       formData.append('file', selectedImage);
   
       const response = await axiosToken.post('/countries', formData, {
