@@ -74,18 +74,18 @@ export const UserAccountPage: React.FC = () => {
   }
 
   const handleFileChange: ChangeEventHandler<HTMLInputElement> = async (e) => {
-    const file = e.target.files?.[0];
+    const files = e.target.files?.[0];
 
-    if (!file) {
+    if (!files) {
       setSelectedImage(null);
       setPreviewImgUrl('');
       return;
     }
 
-    setSelectedImage(file);
+    setSelectedImage(files);
 
     try {
-      const imgUrl = await fileToDataString(file);
+      const imgUrl = await fileToDataString(files);
       setPreviewImgUrl(imgUrl);
     } catch (error) {
       console.log(error);
@@ -94,33 +94,31 @@ export const UserAccountPage: React.FC = () => {
 
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+  
     if (!selectedContinent || !countryName || !selectedImage) {
       return;
     }
-
+  
     try {
       const formData = new FormData();
-
       const requestDto = {
         continent: selectedContinent,
         country: countryName,
       };
       formData.append('requestDto', new Blob([JSON.stringify(requestDto)], { type: 'application/json' }));
-
-      formData.append('file', selectedImage);
-
-      const response = await fetch(`${BASE_URL}/countries`, {
-        method: 'POST',
-        body: formData,
+      formData.append('files', selectedImage);
+  
+      const response = await axiosToken.post('/countries', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
-
-      const result = await response.json();
-      console.log(result);
+  
+      console.log(response.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
-  }
+  };  
 
   ////////////////////
   

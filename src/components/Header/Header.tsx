@@ -146,13 +146,15 @@ export const Header: React.FC = () => {
               </Link>
 
               <nav className={styles.userCardNav}>
-                <NavLink 
-                  to="/create-tour" 
-                  className={styles.userCardNavLink}
-                  onClick={closeUserCard}
-                >
-                  Create a tour
-                </NavLink>
+                {user?.role.includes('ROLE_GUIDE') && (
+                  <NavLink 
+                    to="/create-tour" 
+                    className={styles.userCardNavLink}
+                    onClick={closeUserCard}
+                  >
+                    Create a tour
+                  </NavLink>
+                )}
 
                 <NavLink 
                   to="/" 
