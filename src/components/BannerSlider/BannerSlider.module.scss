@@ -58,12 +58,11 @@
   width: 166px;
   text-align: center;
   padding-block: 16px;
-  background-color: $color-primary;
   color: $color-bg;
   text-decoration: none;
   border-radius: 1000px;
 
-  @include hover(box-shadow, 0 4px 12px rgba(0, 0, 0, 0.4));
+  @include green-button;
 
   @include on-desktop {
     width: 237px;  

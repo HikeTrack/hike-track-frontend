@@ -56,13 +56,10 @@
   color: $color-bg;
   text-align: center;
   text-decoration: none;
-  background-color: $color-primary;
-  border: 1px solid $color-primary;
   border-radius: 1000px;
-
   grid-column: 1 / -1;
 
-  @include hover(box-shadow, 0 4px 12px rgba(0, 0, 0, 0.4));
+  @include green-button;
   @include button-mobile;
 
   @include on-desktop {

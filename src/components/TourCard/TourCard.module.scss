@@ -95,12 +95,11 @@
   bottom: 26px;
   left: 86.5px;
 
+  @include green-button;
   @include button-web;
-  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
   
   width: 173px;
   text-decoration: none;
-  background-color: $color-primary;
   padding-block: 13px;
   border-radius: 1000px;
   color: $color-bg;

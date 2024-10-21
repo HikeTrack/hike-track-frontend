@@ -62,3 +62,25 @@
   line-height: 0; 
   cursor: pointer;
 }
+
+@mixin green-button {
+  background-color: $color-primary;
+  border: 1px solid $color-primary;
+  transition: background-color 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
+
+  &:focus {
+    background-color: $color-primary-focused;
+    border: 1px solid $color-primary-focused;
+  }
+
+  &:hover {
+    background-color: $color-primary-hovered;
+    border: 1px solid $color-primary-hovered;
+    box-shadow: 0px 4px 10px 0px rgba(21, 71, 15, 0.3);
+  }
+
+  &:disabled {
+    background-color: $color-primary-disabled;
+    border: 1px solid $color-primary-disabled;
+  }
+}

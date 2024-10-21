@@ -187,12 +187,10 @@
   width: 100%;
   padding-block: 16px;
   color: $color-bg;
-  border: 1px solid $color-primary;
   border-radius: 1000px;
-  background-color: $color-primary;
   cursor: pointer;
 
-  @include hover(box-shadow, 0px 4px 10px 0px rgba(21, 71, 15, 0.3));
+  @include green-button;
 
   @include on-desktop {
     @include button-web;
