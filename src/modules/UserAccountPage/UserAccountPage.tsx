@@ -2,6 +2,7 @@ import React, { ChangeEvent, ChangeEventHandler, FormEvent, useState } from "rea
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { ContinentsForGuide } from "../../enums/ContinentsForGuide";
+import { axiosToken } from "../../utils/axios";
 import { BASE_URL } from "../../utils/constants";
 import { fileToDataString } from "../../utils/fileToDataString";
 import { getBookmarkIcon, getDefaultAvatarIcon, getPencilIcon } from "../../utils/getIcons";
@@ -12,6 +13,39 @@ export const UserAccountPage: React.FC = () => {
   const defaultAvatarIcon = getDefaultAvatarIcon();
   const pencilIcon = getPencilIcon();
   const bookmarkIcon = getBookmarkIcon();
+
+  /////////////////////
+  const [userEmail, setUserEmail] = useState('');
+  const [error, setError] = useState('');
+
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setUserEmail(e.target.value);
+  }
+
+  const submitGuidePromotion = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!userEmail) {
+      return;
+    }
+
+    const payload = { email: userEmail };
+
+    console.log(payload);
+
+    try {
+      const response = await axiosToken.post('/user/role_change', payload);
+
+      if (response.status === 200) {
+        console.log('Successfully submitted.')
+      } else {
+        console.log('An error occured', response.data);
+      }
+    } catch (error) {
+      console.error('Unsuccessful', error);
+      setError('Failed to promote user. Please try again later');
+    }
+  };
 
   ////////////////////
   const [isOpen, setIsOpen] = useState(false);
@@ -171,23 +205,21 @@ export const UserAccountPage: React.FC = () => {
 
       {user?.role.includes('ROLE_ADMIN') && (
         <div className={styles.guideContainer}>
-          <form className={styles.form}>
-            <label htmlFor="email" className={styles.inputTitle}>Become a guide:</label>
+          <form className={styles.form} onSubmit={submitGuidePromotion}>
+            <label htmlFor="email" className={styles.inputTitle}>Promote to guide role:</label>
             
             <div className={styles.inputWrapper}>
               <input 
                 className={styles.input}
                 type="email" 
                 id="email"
-                // value={state.email}
-                // onChange={handleInputChange}
+                value={userEmail}
+                onChange={handleEmailChange}
                 placeholder="Email address"
-                // aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="emailError"
               />
             </div>
 
-            <button className={styles.submitButton}>Submit</button>
+            <button className={styles.submitButton} type="submit">Submit</button>
           </form>
 
           <form className={styles.form} onSubmit={handleFormSubmit}>
