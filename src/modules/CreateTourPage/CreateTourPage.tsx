@@ -9,16 +9,20 @@ import styles from './CreateTourPage.module.scss';
 export const CreateTourPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
   
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [previewImgUrl, setPreviewImgUrl] = useState('');
+  const [mainImage, setMainImage] = useState<File | null>(null);
+  const [previewMainImgUrl, setPreviewMainImgUrl] = useState('');
+  
+  const [additionalImages, setAdditionalImages] = useState<File[]>([]);
+  const [previewAdditionalImgUrl, setPreviewAdditionalImgUrl] = useState<string[]>([]);
 
   const [selectedContinent, setSelectedContinent] = useState<ContinentsForGuide | null>(null);
-  const [countryName, setCountryName] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | null>(null);
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
   const [selectedRouteType, setSelectedRouteType] = useState<RouteType | null>(null);
+  
+  const [countryName, setCountryName] = useState('');
+  const [date, setDate] = useState('');
   const [length, setLength] = useState('');
   const [price, setPrice] = useState('');
   const [duration, setDuration] = useState('');
@@ -44,40 +48,29 @@ export const CreateTourPage: React.FC = () => {
     label: route,
   }));
 
-  const handleToggle = () => setIsOpen(!isOpen);
-
   const handleContinentSelect = (value: string | null) => {
     if (typeof value === 'string') {
       setSelectedContinent(value as ContinentsForGuide);
     }
-
-    setIsOpen(false);
   };
 
   const handleDifficultySelect = (value: string | null) => {
     if (typeof value === 'string') {
       setSelectedDifficulty(value as Difficulty);
     }
-
-    setIsOpen(false);
   };
 
   const handleActivitySelect = (value: string | null) => {
     if (typeof value === 'string') {
       setSelectedActivity(value as Activity);
     }
-
-    setIsOpen(false);
   };
 
   const handleRouteTypeSelect = (value: string | null) => {
     if (typeof value === 'string') {
       setSelectedRouteType(value as RouteType);
     }
-
-    setIsOpen(false);
   };
-
 
   const handleCountryChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCountryName(e.target.value);
@@ -87,25 +80,38 @@ export const CreateTourPage: React.FC = () => {
     const file = e.target.files?.[0];
 
     if (!file) {
-      setSelectedImage(null);
-      setPreviewImgUrl('');
+      setMainImage(null);
+      setPreviewMainImgUrl('');
       return;
     }
 
-    setSelectedImage(file);
+    setMainImage(file);
 
     try {
       const imgUrl = await fileToDataString(file);
-      setPreviewImgUrl(imgUrl);
+      setPreviewMainImgUrl(imgUrl);
     } catch (error) {
       console.log(error);
     }
   };
 
+  // const handleAdditionalImgChange: ChangeEventHandler<HTMLInputElement> = async (e) => {
+  //   const files = e.target.files;
+
+  //   if (files && files.length > 0) {
+  //     const selectedFiles = Array.from(files).slice(0, 5);
+  //     setAdditionalImages(selectedFiles);
+
+  //     try {
+  //       const previews = await Promise.all(selectedFiles.map(file => fileToDataString(file)))
+  //     }
+  //   }
+  // }
+
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!selectedContinent || !countryName || !selectedImage) {
+    if (!selectedContinent || !countryName || !mainImage) {
       return;
     }
 
@@ -118,7 +124,7 @@ export const CreateTourPage: React.FC = () => {
       };
       formData.append('requestDto', new Blob([JSON.stringify(requestDto)], { type: 'application/json' }));
 
-      formData.append('file', selectedImage);
+      formData.append('file', mainImage);
 
       const response = await fetch(`${BASE_URL}/countries`, {
         method: 'POST',
@@ -143,7 +149,33 @@ export const CreateTourPage: React.FC = () => {
 
         <form className={styles.form} onSubmit={handleFormSubmit}>
           <div className={styles.inputContainer}>
-            <label htmlFor="image" className={styles.inputLabel}>Upload an image:</label>
+            <label htmlFor="image" className={styles.inputLabel}>Upload main image:</label>
+            
+            <div className={styles.inputWrapper}>
+              <input 
+                className={styles.input}
+                type="file" 
+                id="image"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+            </div>
+
+            {/* {mainImage && ( */}
+              <div className={styles.inputWrapper}>
+                <div className={styles.inputImageWrapper}>
+                  <img 
+                    src={previewMainImgUrl} 
+                    alt="main tour image"
+                    className={styles.inputImage}
+                  />
+                </div>
+              </div>
+            {/* )} */}
+          </div>
+
+          <div className={styles.inputContainer}>
+            <label htmlFor="image" className={styles.inputLabel}>Upload additional images:</label>
             
             <div className={styles.inputWrapper}>
               <input 
@@ -154,6 +186,19 @@ export const CreateTourPage: React.FC = () => {
                 // onChange={handleFileChange}
               />
             </div>
+
+            <div className={styles.inputWrapper}>
+                {previewAdditionalImgUrl.map((preview, index) => (
+                  <div className={styles.inputImageWrapper}>
+                    <img 
+                      key={index}
+                      src={preview} 
+                      alt={`Additional image ${index + 1}`}
+                      className={styles.inputImage}
+                    />
+                  </div>
+                ))}
+              </div>
           </div>
 
           <div className={styles.inputContainer}>
@@ -165,7 +210,7 @@ export const CreateTourPage: React.FC = () => {
                 type="text" 
                 id="date"
                 name="date"
-                // value={state.firstName}
+                value={date}
                 // onChange={handleInputChange}
                 aria-invalid={error ? 'true' : 'false'}
                 aria-describedby="dateError"
@@ -193,8 +238,8 @@ export const CreateTourPage: React.FC = () => {
                 type="text" 
                 id="countryName"
                 name="countryName"
-                // value={state.firstName}
-                // onChange={handleInputChange}
+                value={countryName}
+                onChange={handleCountryChange}
                 aria-invalid={error ? 'true' : 'false'}
                 aria-describedby="firstNameError"
               />
@@ -243,7 +288,7 @@ export const CreateTourPage: React.FC = () => {
                 type="text" 
                 id="length"
                 name="length"
-                // value={state.firstName}
+                value={length}
                 // onChange={handleInputChange}
                 aria-invalid={error ? 'true' : 'false'}
                 aria-describedby="lengthError"

@@ -90,6 +90,14 @@
   }
 }
 
+.inputImageWrapper {
+  position: relative;
+}
+
+.inputImage {
+  height: 60px;
+}
+
 .textarea {
   border: 1px solid $color-grey-500;
   padding: 16px;
