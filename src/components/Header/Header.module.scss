@@ -53,26 +53,29 @@
 }
 
 .logoLink {
-  display: inline-block;
-  border-radius: 50%;
-  padding: 0;  
-  margin: 0;    
-  line-height: 0; 
-  cursor: pointer;
+  // display: inline-block;
+  // border-radius: 50%;
+  // padding: 0;
+  // margin: 0;
+  // line-height: 0;
+  // cursor: pointer;
   
-  
-  @include hover(box-shadow, 0 4px 12px rgba(0, 0, 0, 0.4));
+  // @include hover(box-shadow, 0 4px 12px rgba(0, 0, 0, 0.4));
+
+  @include logo-link;
 }
 
 .logoIcon {
-  display: block;
-  height: 42px;
-  width: 42px;
+  // display: block;
+  // height: 42px;
+  // width: 42px;
 
-  @include on-desktop {
-    height: 80px;
-    width: 80px;
-  }
+  // @include on-desktop {
+  //   height: 80px;
+  //   width: 80px;
+  // }
+
+  @include logo-size;
 }
 
 .menuButton {
@@ -172,6 +175,7 @@
   position: absolute;
   top: 105px;
 
+  z-index: 10;
   background-color: $color-bg;
   padding: 16px;
   border-radius: 32px;
@@ -211,6 +215,23 @@
   text-decoration: none;
   color: $color-grey-500;
   padding: 16px;
+
+  &:hover {
+    background-color: $color-grey-50;
+    border-radius: 1000px;
+    color: $color-grey-900;
+  }
+}
+
+.logout {
+  @include main-web;
+
+  text-decoration: none;
+  border: none;
+  color: $color-grey-500;
+  padding: 16px;
+  background-color: transparent;
+  text-align: left;
 
   &:hover {
     background-color: $color-grey-50;

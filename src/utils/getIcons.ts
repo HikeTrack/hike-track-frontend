@@ -82,3 +82,14 @@ export const getArrowRightDisabledGreenIcon = (): string => getIcons('arrowRight
 
 export const getPrevMonthArrow = (): string => getIcons('prevMonthArrow');
 export const getNextMonthArrow = (): string => getIcons('nextMonthArrow');
+
+export const getSmallCameraIcon = (): string => getIcons('smallCamera');
+export const getRemoveIcon = (): string => getIcons('remove');
+export const getPhoneIcon = (): string => getIcons('phone');
+export const getEmailIcon = (): string => getIcons('email');
+export const getLocationIcon = (): string => getIcons('location');
+export const getBirthdayIcon = (): string => getIcons('birthday');
+export const getAboutMeIcon = (): string => getIcons('aboutMe');
+export const getMyToursIcon = (): string => getIcons('myTours');
+export const getGoNextGreyIcon = (): string => getIcons('goNextGrey');
+export const getGoNextWhiteIcon = (): string => getIcons('goNextWhite');

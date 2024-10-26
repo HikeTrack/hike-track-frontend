@@ -102,9 +102,9 @@ export const Header: React.FC = () => {
           About us
         </NavLink>
 
-        {user?.role.includes('ROLE_GUIDE') && (<NavLink to="/create-tour" className={styles.navItem}>
-          Create a new tour
-        </NavLink>)}
+        <NavLink to="/create-tour" className={styles.navItem}>
+          Create a tour
+        </NavLink>
       </nav>
 
       <div className={styles.containerRight}>
@@ -163,11 +163,11 @@ export const Header: React.FC = () => {
                 >
                   Settings
                 </NavLink>
+
+                <button className={styles.logout} onClick={handleLogOut}>Log out</button>
               </nav>
             </div>
           )}
-
-          <button className={styles.login} onClick={handleLogOut}>Log out</button>
           </>
         ) : (
           <>

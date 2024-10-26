@@ -1,19 +1,15 @@
 import React, { ChangeEvent, ChangeEventHandler, FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
+import { UserCard } from "../../components/UserCard/UserCard";
 import { useAuth } from "../../context/AuthContext";
 import { ContinentsForGuide } from "../../enums/ContinentsForGuide";
 import { axiosToken } from "../../utils/axios";
-import { BASE_URL } from "../../utils/constants";
 import { fileToDataString } from "../../utils/fileToDataString";
-import { getBookmarkIcon, getDefaultAvatarIcon, getPencilIcon } from "../../utils/getIcons";
 import styles from './UserAccountPage.module.scss';
 
 export const UserAccountPage: React.FC = () => {
   const { user } = useAuth();
-  const defaultAvatarIcon = getDefaultAvatarIcon();
-  const pencilIcon = getPencilIcon();
-  const bookmarkIcon = getBookmarkIcon();
-
+  
   /////////////////////
   const [userEmail, setUserEmail] = useState('');
   const [error, setError] = useState('');
@@ -47,6 +43,7 @@ export const UserAccountPage: React.FC = () => {
     }
   };
 
+  ////////////////////
   ////////////////////
   const [isOpen, setIsOpen] = useState(false);
   const [selectedContinent, setSelectedContinent] = useState<ContinentsForGuide | null>(null);
@@ -105,7 +102,7 @@ export const UserAccountPage: React.FC = () => {
       const formData = new FormData();
       const data = {
         continent: selectedContinent,
-        country: countryName,
+        name: countryName,
       };
       // formData.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }));
       formData.append('data', JSON.stringify(data));
@@ -134,34 +131,8 @@ export const UserAccountPage: React.FC = () => {
         <div className={styles.section}>Calendar</div>
       </div>
 
-      <div className={styles.userCard}>
-        <div className={styles.topContainer}>
-          <img src={defaultAvatarIcon} alt="Avatar" />
-
-          <Link 
-            className={styles.editButton}
-            to="/edit-profile"
-          >
-            <img src={pencilIcon} alt="Pencil" />
-          </Link>
-        </div>
-
-        <h4 className={styles.title}>{`${user?.firstName} ${user?.lastName}`}</h4>
-
-        <p className={styles.text}>
-          {`${user?.userProfileRespondDto.city}, ${user?.userProfileRespondDto.country}`}
-        </p>
-
-        <p className={styles.profileSmallText}>{`Member since ${user?.userProfileRespondDto.registrationDate}`}</p>
-
-        <div className={styles.bottomContainer}>
-          <div className={styles.bookmarkWrapper}>
-            <img src={bookmarkIcon} alt="Bookmark" />
-            <p className={styles.text}>Saved tours</p>
-          </div>
-
-          <p className={styles.text}>(0)</p>
-        </div>
+      <div className={styles.userCardWrapper}>
+        <UserCard/>
       </div>
 
       <div className={styles.buttonContainerMobile}>
