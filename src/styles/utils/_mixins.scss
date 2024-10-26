@@ -45,12 +45,12 @@
 
 @mixin logo-size {
   display: block;
-  height: 64px;
-  width: 64px;
+  // height: 64px;
+  width: 150px;
 
   @include on-desktop {
-    height: 80px;
-    width: 80px;
+    // height: 64px;
+    width: 180px;
   }
 }
 

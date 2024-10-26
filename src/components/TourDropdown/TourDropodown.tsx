@@ -31,7 +31,7 @@ export const TourDropdown: React.FC<Props> = ({
   return (
     <div className={styles.dropdown}>
       <button className={styles.dropdownButton} onClick={handleToggle}>
-        {options.find(option => option.value === selected)?.label || 'Choose an option'}
+        {options.find(option => option.value === selected)?.label || 'Options'}
       </button>
       {isOpen && (
         <ul className={styles.dropdownList}>
