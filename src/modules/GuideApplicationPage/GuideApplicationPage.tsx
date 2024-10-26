@@ -51,18 +51,30 @@ export const GuideApplicationPage: React.FC = () => {
     setIsOpen(false);
   };
 
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { id, value } = e.target;
+
+  //   if (id === 'email') {
+  //     setUserEmail(value);
+  //   }
+  // };
+
   const handleSubmitCick = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!email) {
+    if (!userEmail) {
       setError('No email is provided');
       return;
     }
 
-    const isSuccess = await sendGuideApplication(email);
+    const isSuccess = await sendGuideApplication(userEmail);
 
     if (isSuccess) {
-      navigate('/login');
+      if (user) {
+        navigate('/profile');
+      } else {
+        navigate('/login');
+      }
     }
   }
   
@@ -125,6 +137,7 @@ export const GuideApplicationPage: React.FC = () => {
                 type="email" 
                 id="email"
                 value={userEmail}
+                // onChange={handleInputChange}
                 readOnly
                 aria-invalid={error ? 'true' : 'false'}
                 aria-describedby="emailError"
