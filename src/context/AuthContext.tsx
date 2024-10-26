@@ -414,7 +414,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-
+ 
     return false;
   }, [setIsLoading, setError]);
 
