@@ -133,7 +133,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         localStorage.setItem(ACCESS_TOKEN, token);
         setToken(token);
 
-        const userResponse = await axiosToken.get(`/user/me`);
+        const userResponse = await axiosToken.get(`/users/me`);
 
         if (userResponse.status === 200) {
           const { 
@@ -189,7 +189,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         return;
       }
 
-      const response = await axiosToken.post('/user/logout', {});
+      const response = await axiosToken.post('/users/logout', {});
 
       if (response.status === 200) {
         setUser(null);
@@ -308,7 +308,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     console.log(payload);
 
     try {
-      const response = await axiosToken.patch(`/user/${user?.id}`);
+      const response = await axiosToken.patch(`/users/${user?.id}`);
 
       if (response.status === 200) {
         setUser(prevUser => {
@@ -350,7 +350,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
 
     if (token) {
       try {
-        const response = await axiosToken.post('/token', {});
+        const response = await axiosToken.post('/tokens', {});
 
         console.log('API Response:', response);
 
@@ -395,7 +395,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     const payload = { email };
 
     try {
-      const response = await axiosReg.post(`/user/request`, payload);
+      const response = await axiosReg.post(`/users/request`, payload);
 
       if (response.status === 200) {
         setError('');

@@ -1,3 +1,14 @@
+export enum Country {
+  Ukraine = 'Ukraine',
+  Indonesia = 'Indonesia',
+  India = 'India',
+  Italy = 'Italy',
+  Turkey = 'Turkey',
+  Canada = 'Canada',
+  Nepal = 'Nepal',
+  China = 'China',
+}
+
 export enum Difficulty {
   Easy = 'Easy',
   Medium = 'Medium',

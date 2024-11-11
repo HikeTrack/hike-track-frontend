@@ -4,10 +4,11 @@ export type TourDetails = {
   id: number,
   name: string,
   length: number,
-  price: number,
   date: string,
-  difficulty: Difficulty,
   countryId: number,
+  price: number,
+  difficulty: Difficulty,
+  mainPhoto: string,
   details: {
     id: number,
     additionalPhotos: string,
@@ -15,19 +16,18 @@ export type TourDetails = {
     routeType: string,
     duration: number,
     map: string,
-    activity: number,
+    activity: string,
   },
-  reviews: [
-    {
-      id: number,
-      userProfileId: null,
-      content: string,
-      tourId: null,
-      dateCreated: string,
-    }
-  ],
-  currentReviewPage: number,
-  totalReviewPages: number,
-  totalReviewElements: number,
-  mainPhoto: string,
+  // reviews: [
+  //   {
+  //     id: number,
+  //     userProfileId: null,
+  //     content: string,
+  //     tourId: null,
+  //     dateCreated: string,
+  //   }
+  // ],
+  // currentReviewPage: number,
+  // totalReviewPages: number,
+  // totalReviewElements: number,
 }
