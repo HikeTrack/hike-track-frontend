@@ -97,14 +97,13 @@ export const UserAccountPage: React.FC = () => {
     if (!selectedContinent || !countryName || !selectedImage) {
       return;
     }
-  
+   
     try {
       const formData = new FormData();
       const data = {
         continent: selectedContinent,
         name: countryName,
       };
-      // formData.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }));
       formData.append('data', JSON.stringify(data));
       formData.append('file', selectedImage);
   

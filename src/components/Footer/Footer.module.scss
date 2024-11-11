@@ -83,6 +83,8 @@
 }
 
 .containerSubscribe {
+  // position: relative;
+
   margin-block: 16px 24px;
   width: 100%;
   display: flex;
@@ -97,6 +99,8 @@
 }
 
 .input {
+  position: relative;
+
   border: none;
   background-color: transparent;
   width: 100%;
@@ -132,6 +136,12 @@
 
     padding-inline: 41px;
   }
+}
+
+.subscribeError {
+  position: absolute;
+
+  bottom: 0;
 }
 
 .containerSocials {
@@ -196,3 +206,19 @@
   gap: 32px;
 }
 
+.notification {
+  width: 534px;
+  background: $color-bg;
+  border-radius: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.notificationTitle {
+  @include h3-web;
+}
+
+.notificationButton {
+  @include green-button;
+}

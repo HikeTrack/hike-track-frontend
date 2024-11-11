@@ -2,12 +2,14 @@ import React, { ChangeEvent, ChangeEventHandler, FormEvent, useRef, useState } f
 import { ContinentsForGuide } from "../../enums/ContinentsForGuide";
 import { BASE_URL } from "../../utils/constants";
 import { fileToDataString } from "../../utils/fileToDataString";
-import { Activity, Difficulty, RouteType } from '../../enums/Filters';
+import { Activity, Country, Difficulty, RouteType } from '../../enums/Filters';
 import { TourDropdown } from "../../components/TourDropdown/TourDropodown";
 import { UserCard } from "../../components/UserCard/UserCard";
 import { getRemoveIcon, getSmallCameraIcon } from "../../utils/getIcons";
+import { axiosToken } from "../../utils/axios";
 import styles from './CreateTourPage.module.scss';
-import { GoogleMap } from "../../components/GoolgeMap/GoogleMap";
+import { getCountryIdByName } from "../../utils/getCountryByIdName";
+import { convertHoursToMinutes, convertKilometresToMetres, prepareDateString } from "../../utils/InputCheckAndPreparation";
 
 export const CreateTourPage: React.FC = () => {
   const smallCameraIcon = getSmallCameraIcon();
@@ -22,25 +24,23 @@ export const CreateTourPage: React.FC = () => {
   const [additionalImages, setAdditionalImages] = useState<File[]>([]);
   const [previewAdditionalImgUrl, setPreviewAdditionalImgUrl] = useState<string[]>([]);
 
-  const [selectedContinent, setSelectedContinent] = useState<ContinentsForGuide | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | null>(null);
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
   const [selectedRouteType, setSelectedRouteType] = useState<RouteType | null>(null);
   
   const [tour, setTour] = useState('');
-  const [countryName, setCountryName] = useState('');
-  const [stateName, setStateName] = useState('');
-  const [date, setDate] = useState('');
-  const [length, setLength] = useState('');
-  const [elevation, setElevation] = useState('');
+  const [tourDate, setTourDate] = useState('');
+  const [length, setLength] = useState<number | null>(null);
+  const [elevation, setElevation] = useState<number | null>(null);
   const [description, setDescription] = useState('');
-  const [duration, setDuration] = useState('');
+  const [duration, setDuration] = useState<number | null>(null);
   const [mapLink, setMapLink] = useState('');
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useState<number | null>(null);
 
-  const continentOptions = Object.values(ContinentsForGuide).map(continent => ({
-    value: continent,
-    label: continent,
+  const countryOptions = Object.values(Country).map(country => ({
+    value: country,
+    label: country,
   }));
 
   const difficultyOptions = Object.values(Difficulty).map(difficulty => ({
@@ -58,9 +58,9 @@ export const CreateTourPage: React.FC = () => {
     label: route,
   }));
 
-  const handleContinentSelect = (value: string | null) => {
+  const handleCountrySelect = (value: string | null) => {
     if (typeof value === 'string') {
-      setSelectedContinent(value as ContinentsForGuide);
+      setSelectedCountry(value as Country);
     }
   };
 
@@ -130,7 +130,7 @@ export const CreateTourPage: React.FC = () => {
         ]
         );
       } catch (error) {
-        setError('Couldn not load an image, try again');
+        setError('Could not load an image, try again');
       }
     }
   }
@@ -143,20 +143,22 @@ export const CreateTourPage: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
 
+    const numericValue = value === '' ? null : Number(value);
+
     if (id === 'tour') {
       setTour(value);
     } else if (id === 'date') {
-      setDate(value);
+      setTourDate(value);
     } else if (id === 'length') {
-      setLength(value);
+      setLength(numericValue);
     } else if (id === 'elevation') {
-      setElevation(value);
+      setElevation(numericValue);
     } else if (id === 'duration') {
-      setDuration(value);
-    } else if (id === 'stateName') {
-      setStateName(value);
-    } else if (id === 'countryName') {
-      setCountryName(value);
+      setDuration(numericValue);
+    } else if (id === 'price') {
+      setPrice(numericValue);
+    } else if (id === 'map') {
+      setMapLink(value);
     }
   };
 
@@ -173,20 +175,18 @@ export const CreateTourPage: React.FC = () => {
     setPreviewMainImgUrl('');
     setAdditionalImages([]);
     setPreviewAdditionalImgUrl([]);
-    setSelectedContinent(null);
+    setSelectedCountry(null);
     setSelectedDifficulty(null);
     setSelectedActivity(null);
     setSelectedRouteType(null);
     setTour('');
-    setCountryName('');
-    setStateName('');
-    setDate('');
-    setLength('');
-    setDuration('');
-    setElevation('');
+    setTourDate('');
+    setLength(null);
+    setDuration(null);
+    setElevation(null);
     setDescription('');
-    setPrice('');
-    setMapLink('');
+    setPrice(null);
+    setMapLink(''); 
     setError('');
 
     if (fileInputRef.current) {
@@ -197,30 +197,73 @@ export const CreateTourPage: React.FC = () => {
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!selectedContinent || !countryName || !mainImage) {
+    if (!tour 
+      || !length 
+      || !price
+      || !tourDate
+      || !selectedDifficulty
+      || !selectedCountry
+      || !elevation
+      || !selectedRouteType
+      || !duration
+      || !mapLink
+      || !selectedActivity
+      || !mainImage
+      || additionalImages.length === 0
+      ) {
+      setError('All information must be provided')
       return;
     }
 
     try {
+      const countryId = await getCountryIdByName(selectedCountry);
+
+      if (countryId === null) {
+        setError('Invalid country');
+        return;
+      }
+
+      const durationInMinutes = convertHoursToMinutes(duration);
+      const elevationGainInMetres = convertKilometresToMetres(elevation);
+      const lengthInMetres = convertKilometresToMetres(length);
+      const preparedDate = prepareDateString(tourDate);
+
+      console.log(preparedDate);
+
       const formData = new FormData();
 
-      const requestDto = {
-        continent: selectedContinent,
-        country: countryName,
+      const data = {
+        name: tour,
+        length: lengthInMetres,
+        price: price,
+        date: preparedDate,
+        difficulty: selectedDifficulty,
+        countryId: countryId,
+        detailsrequestDto: {
+          elevationGain: elevationGainInMetres,
+          routeType: selectedRouteType,
+          duration: durationInMinutes,
+          map: mapLink,
+          activity: selectedActivity
+        }
       };
-      formData.append('requestDto', new Blob([JSON.stringify(requestDto)], { type: 'application/json' }));
+      formData.append('data', JSON.stringify(data));
+      formData.append('mainPhoto', mainImage);
 
-      formData.append('file', mainImage);
-
-      const response = await fetch(`${BASE_URL}/countries`, {
-        method: 'POST',
-        body: formData,
+      additionalImages.forEach((image) => {
+        formData.append(`additionalPhotos`, image);
       });
 
-      const result = await response.json();
-      console.log(result);
+      const response = await axiosToken.post('/tours', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log(response.data);
     } catch (error) {
       console.log(error);
+      setError('An error occured while submitting the form. Please try again')
     }
   }
   
@@ -230,11 +273,11 @@ export const CreateTourPage: React.FC = () => {
         <UserCard/>
       </div>
 
-      <form className={styles.formContainer} onSubmit={handleFormSubmit}>
+      <div className={styles.formContainer}>
         <div className={styles.centralPanel}>
           <h1 className={styles.title}>Create a new tour</h1>
 
-          <div className={styles.form}>
+          <form className={styles.form} onSubmit={handleFormSubmit}>
             <div className={styles.inputContainer}>
               <label htmlFor="tour" className={styles.inputLabel}>Tour name:</label>
               
@@ -252,23 +295,53 @@ export const CreateTourPage: React.FC = () => {
               </div>
             </div>
 
-            <div className={styles.inputContainer}>
-              <label htmlFor="date" className={styles.inputLabel}>Date (YYYY.MM.DD):</label>
-              
-              <div className={styles.inputWrapper}>
-                <input 
-                  className={styles.input}
-                  type="text" 
-                  id="date"
-                  name="date"
-                  value={date}
-                  onChange={handleInputChange}
-                  aria-invalid={error ? 'true' : 'false'}
-                  aria-describedby="dateError"
+            <div className={styles.inputContainerBig}>
+              <div className={styles.inputContainer}>
+                <label className={styles.inputLabel}>Country:</label>
+                
+                <TourDropdown 
+                  label="Country"
+                  options={countryOptions}
+                  selected={selectedCountry}
+                  onChange={handleCountrySelect}
                 />
+              </div> 
+             
+              <div className={styles.inputContainer}>
+                <label htmlFor="date" className={styles.inputLabel}>Date (YYYY.MM.DD):</label>
+                
+                <div className={styles.inputWrapper}>
+                  <input 
+                    className={styles.input}
+                    type="text" 
+                    id="date"
+                    name="date"
+                    value={tourDate}
+                    onChange={handleInputChange}
+                    aria-invalid={error ? 'true' : 'false'}
+                    aria-describedby="dateError"
+                  />
+                </div>
+              </div>
+
+              <div className={styles.inputContainer}>
+                <label htmlFor="price" className={styles.inputLabel}>Price:</label>
+
+                <div className={styles.inputWrapper}>
+                  <input 
+                    className={styles.input}
+                    type="number" 
+                    id="price"
+                    name="price"
+                    value={price !== null ? price : ''}
+                    onChange={handleInputChange}
+                    aria-invalid={error ? 'true' : 'false'}
+                    aria-describedby="firstNameError"
+                  />
+                </div>
               </div>
             </div>
-
+            
             <div className={styles.inputContainerBig}>
               <div className={styles.inputContainer}>
                 <label className={styles.inputLabel}>Difficulty:</label>
@@ -311,10 +384,10 @@ export const CreateTourPage: React.FC = () => {
                 <div className={styles.inputWrapper}>
                   <input 
                     className={styles.input}
-                    type="text" 
+                    type="number" 
                     id="length"
                     name="length"
-                    value={length}
+                    value={length !== null ? length : ''}
                     onChange={handleInputChange}
                     aria-invalid={error ? 'true' : 'false'}
                     aria-describedby="lengthError"
@@ -331,7 +404,7 @@ export const CreateTourPage: React.FC = () => {
                     type="text" 
                     id="elevation"
                     name="elevation"
-                    value={elevation}
+                    value={elevation !== null ? elevation : ''}
                     onChange={handleInputChange}
                     aria-invalid={error ? 'true' : 'false'}
                     aria-describedby="elevationError"
@@ -340,7 +413,7 @@ export const CreateTourPage: React.FC = () => {
               </div>
 
               <div className={styles.inputContainer}>
-                <label htmlFor="duration" className={styles.inputLabel}>Duration (in km):</label>
+                <label htmlFor="duration" className={styles.inputLabel}>Duration (in hours):</label>
                 
                 <div className={styles.inputWrapper}>
                   <input 
@@ -348,7 +421,7 @@ export const CreateTourPage: React.FC = () => {
                     type="text" 
                     id="duration"
                     name="duration"
-                    value={duration}
+                    value={duration !== null ? duration : ''}
                     onChange={handleInputChange}
                     aria-invalid={error ? 'true' : 'false'}
                     aria-describedby="durationError"
@@ -444,57 +517,9 @@ export const CreateTourPage: React.FC = () => {
                 </div>
               )}
             </div>
-            
-            <div className={styles.inputContainerBig}>
-              <div className={styles.inputContainer}>
-                <label className={styles.inputLabel}>Continent:</label>
-                
-                <TourDropdown 
-                  label="Continent"
-                  options={continentOptions}
-                  selected={selectedContinent}
-                  onChange={handleContinentSelect}
-                />
-              </div>
-
-              <div className={styles.inputContainer}>
-                <label htmlFor="state-name" className={styles.inputLabel}>State:</label>
-                
-                <div className={styles.inputWrapper}>
-                  <input 
-                    className={styles.input}
-                    type="text" 
-                    id="stateName"
-                    name="stateName"
-                    value={stateName}
-                    onChange={handleInputChange}
-                    aria-invalid={error ? 'true' : 'false'}
-                    aria-describedby="stateError"
-                  />
-                </div>
-              </div>
-
-              <div className={styles.inputContainer}>
-                <label htmlFor="date" className={styles.inputLabel}>Country:</label>
-                
-                <div className={styles.inputWrapper}>
-                  <input 
-                    className={styles.input}
-                    type="text" 
-                    id="countryName"
-                    name="countryName"
-                    value={countryName}
-                    onChange={handleInputChange}
-                    aria-invalid={error ? 'true' : 'false'}
-                    aria-describedby="countryError"
-                  />
-                </div>
-              </div>
-            </div>
-            
 
             <div className={styles.inputContainer}>
-              {/* <label htmlFor="duration" className={styles.inputLabel}>Map link:</label>
+              <label htmlFor="map" className={styles.inputLabel}>Insert your map link:</label>
               
               <div className={styles.inputWrapper}>
                 <input 
@@ -502,24 +527,39 @@ export const CreateTourPage: React.FC = () => {
                   type="text" 
                   id="map"
                   name="map"
-                  // value={state.firstName}
-                  // onChange={handleInputChange}
+                  value={mapLink}
+                  onChange={handleInputChange}
                   aria-invalid={error ? 'true' : 'false'}
                   aria-describedby="mapLinkError"
                 />
-              </div> */}
-
-
+              </div>
 
 
 
               {/* <GoogleMap /> */}
             </div>
-          </div>
+
+            <div className={styles.buttonContainer}>
+              <button 
+                className={styles.buttonCancel}
+                onClick={handleInputReset}
+              >
+                Cancel
+              </button>
+
+              <button 
+                className={styles.buttonSave}
+                type="submit"
+                // disabled={isLoading}
+              >
+                Save
+              </button>
+            </div>
+          </form>
         </div>
 
         <div className={styles.rightPanel}>
-          <div className={styles.serviceContainer}>
+          {/* <div className={styles.serviceContainer}>
             <h4 className={styles.titleSmall}>Extra services</h4>
 
             <div className={styles.checkboxContainer}>
@@ -614,9 +654,9 @@ export const CreateTourPage: React.FC = () => {
                 <label className={styles.checkboxLabel}>Photo and video shooting</label>
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <div className={styles.pricingContainer}>
+          {/* <div className={styles.pricingContainer}>
             <h4 className={styles.titleSmall}>Pricing</h4>
 
             <div className={styles.inputContainer}>
@@ -625,7 +665,7 @@ export const CreateTourPage: React.FC = () => {
               <div className={styles.inputWrapper}>
                 <input 
                   className={styles.input}
-                  type="text" 
+                  type="number" 
                   id="price"
                   name="price"
                   // value={state.firstName}
@@ -663,18 +703,18 @@ export const CreateTourPage: React.FC = () => {
                     type="text" 
                     id="price"
                     name="price"
-                    // value={state.firstName}
-                    // onChange={handleInputChange}
+                    value={price !== null ? price : ''}
+                    onChange={handleInputChange}
                     aria-invalid={error ? 'true' : 'false'}
                     aria-describedby="firstNameError"
                   />
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
-        <div className={styles.buttonContainer}>
+        {/* <div className={styles.buttonContainer}>
           <button 
             className={styles.buttonCancel}
             onClick={handleInputReset}
@@ -685,12 +725,12 @@ export const CreateTourPage: React.FC = () => {
           <button 
             className={styles.buttonSave}
             type="submit"
-            disabled={isLoading}
+            // disabled={isLoading}
           >
             Save
           </button>
-        </div>
-      </form>
+        </div> */}
+      </div>
     </div>
   )
 }
