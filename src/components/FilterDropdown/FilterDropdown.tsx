@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from './FilterDropdown.module.scss';
 
 type Option  = {
@@ -19,17 +19,35 @@ export const FilterDropdown: React.FC<Props> = ({
   onChange,
   label
 }) => {
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = () => setIsOpen(!isOpen);
 
   const handleSelect = (value: string | number) => {
-    onChange(value);
+    if (typeof value === 'string' || typeof value === 'number') {
+      onChange(value);
+    }
+
     setIsOpen(false);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, []);
+
   return (
-    <div className={styles.dropdown}>
+    <div className={styles.dropdown} ref={dropdownRef}>
       <button className={styles.dropdownButton} onClick={handleToggle}>
         {options.find(option => option.value === selected)?.label || '--'}
       </button>

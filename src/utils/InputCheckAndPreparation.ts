@@ -18,7 +18,7 @@ export const convertHoursToMinutes = (input: number) => {
   return input * 60;
 }
 
-export const prepareDateString = (input: string): { eventTime: string } => {
+export const prepareDateString = (input: string): string => {
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const [year, month, day] = input.split('.');
@@ -33,7 +33,5 @@ export const prepareDateString = (input: string): { eventTime: string } => {
     { zone: userTimeZone }
   );
 
-  const eventTime = dateTime.toISO() + `[${userTimeZone}]`;
-
-  return { eventTime };
+  return dateTime.toISO() + `[${userTimeZone}]`;
 }

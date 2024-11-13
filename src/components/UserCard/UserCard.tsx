@@ -5,10 +5,6 @@ import { User } from "../../types/User";
 import { getAboutMeIcon, getBirthdayIcon, getBookmarkIcon, getDefaultAvatarIcon, getEmailIcon, getGoNextGreyIcon, getGoNextWhiteIcon, getLocationIcon, getMyToursIcon, getPencilIcon, getPhoneIcon } from "../../utils/getIcons";
 import styles from './UserCard.module.scss';
 
-// type Props = {
-//   user: User | null;
-// }
-
 export const UserCard: React.FC = () => {
   const { user } = useAuth();
   const defaultAvatarIcon = getDefaultAvatarIcon();
@@ -43,20 +39,24 @@ export const UserCard: React.FC = () => {
       </div>
 
       <div className={styles.userDataContainer}>
-        <div className={styles.userDataWrapper}>
-          <img src={phoneIcon} alt="phone" />
-          <p className={styles.textGrey}>{user?.userProfileRespondDto.phoneNumber}</p>
-        </div>
+        {user?.userProfileRespondDto.phoneNumber && (
+          <div className={styles.userDataWrapper}>
+            <img src={phoneIcon} alt="phone" />
+            <p className={styles.textGrey}>{user?.userProfileRespondDto.phoneNumber}</p>
+          </div>
+        )}
 
         <div className={styles.userDataWrapper}>
           <img src={emailIcon} alt="email" />
           <p className={styles.textGrey}>{user?.email}</p>
         </div>
 
-        <div className={styles.userDataWrapper}>
-          <img src={locationIcon} alt="location" />
-          <p className={styles.textGrey}>{`${user?.userProfileRespondDto.city}, ${user?.userProfileRespondDto.country}`}</p>
-        </div>
+        {user?.userProfileRespondDto.city && user?.userProfileRespondDto.country && (
+          <div className={styles.userDataWrapper}>
+            <img src={locationIcon} alt="location" />
+            <p className={styles.textGrey}>{`${user?.userProfileRespondDto.city}, ${user?.userProfileRespondDto.country}`}</p>
+          </div>
+        )}
 
         <div className={styles.userDataWrapper}>
           <img src={birthdayIcon} alt="birthday" />
@@ -72,7 +72,7 @@ export const UserCard: React.FC = () => {
           <img src={goNextGrey} alt="arrow" />
         </div>
 
-        <Link to="" className={styles.userDataWrapperBlack}>
+        <Link to="/profile" className={styles.userDataWrapperBlack}>
           <div className={styles.textWrapper}>
             <img src={myToursIcon} alt="tours" />
             <p className={styles.textTours}>My tours</p>

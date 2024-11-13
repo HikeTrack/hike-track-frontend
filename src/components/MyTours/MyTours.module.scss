@@ -1,0 +1,88 @@
+@import '../../styles/all';
+
+.myTours {
+  display: flex;
+  flex-direction: column;
+}
+
+.topPanel {
+  display: flex;
+  gap: 64px;
+}
+
+.topPanelButton {
+  color: $color-grey-900;
+  text-decoration: none;
+  padding: 10px 12px;
+  border: 1px solid $color-grey-100;
+  border-radius: 13px;
+}
+
+.topPanelButtonActive {
+  color: $color-grey-900;
+  text-decoration: none;
+  padding: 12px;
+  border: 1px solid $color-grey-100;
+  border-radius: 13px;
+  background: $color-grey-100;
+}
+
+.searchBar {
+  display: flex;
+  border: 1px solid $color-grey-50;
+  border-radius: 1000px;
+  width: 100%;
+  padding: 16px;
+  margin-block: 64px 32px;
+
+  @include on-desktop {
+    width: 622px;
+  }
+}
+
+.searchInput {
+  width: 100%;
+  border: none;
+  padding-left: 8px;
+  background-color: transparent;
+
+  @include main-web;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    @include main-web;
+    
+    color: $color-grey-500;
+  }
+}
+
+.gridText {
+  @include on-desktop {
+    @include h4-web;
+    
+    grid-column: 1 / 6;
+  }
+}
+
+.myToursGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  @include on-desktop {
+    grid-column: 4 / -1;
+
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 32px;
+  }
+
+  @include on-desktop-wide {
+    grid-column: 4 / -1;
+
+    gap: 20px;
+  }
+}

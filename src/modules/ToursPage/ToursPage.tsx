@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { CalendarFilter } from "../../components/CalendarFilter/CalendarFilter";
 import { FilterDropdown } from "../../components/FilterDropdown/FilterDropdown";
@@ -6,31 +6,31 @@ import { Loader } from "../../components/Loader/Loader";
 import { TourCard } from "../../components/TourCard/TourCard";
 import { Countries } from "../../enums/Countries";
 import { Activity, Difficulty, Length, Price } from "../../enums/Filters";
+import { CountryOption } from "../../types/Country";
 import { Tour } from "../../types/Tour";
-import { getToursByCountry } from "../../utils/fetchData";
+import { getCountries, getToursByCountry } from "../../utils/fetchData";
 import { getArrowBackIcon, getCalendarIcon } from "../../utils/getIcons";
-import { countryNames } from "../../utils/mapCountries";
 import styles from './ToursPage.module.scss';
 
 export const ToursPage: React.FC = () => {
   const { countryId } = useParams<{ countryId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
-
-  console.log("countryId from useParams:", countryId);
   
   const [tours, setTours] = useState<Tour[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const initialCountryId = Number(countryId) as Countries;
-  const [selectedCountry, setSelectedCountry] = useState<Countries>(initialCountryId);
+
+  const [countryOptions, setCountryOptions] = useState<CountryOption[]>([]);
+  const [selectedCountryId, setSelectedCountryId] = useState<number>(initialCountryId);
   const [filteredTours, setFilteredTours] = useState<Tour[]>(tours);
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [calendarVisible, setCalendarVisible] = useState(false);
 
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
-  // const [activity, setActivity] = useState<Activity | null>(null);
+  const [activity, setActivity] = useState<Activity | null>(null);
   
   const [length, setLength] = useState<Length | null>(null);
   const [lengthRange, setLengthRange] = useState<{ min: number, max: number } | null>(null);
@@ -46,7 +46,7 @@ export const ToursPage: React.FC = () => {
       const id = Number(countryId);
 
       if (Object.values(Countries).includes(id)) {
-        setSelectedCountry(id as Countries);
+        setSelectedCountryId(id as Countries);
       }
       
       const fetchTours = async () => {
@@ -150,9 +150,9 @@ export const ToursPage: React.FC = () => {
       filtered = filtered.filter(tour => tour.length >= min && tour.length <= max);
     }
 
-    // if (activity) {
-    //   filtered = filtered.filter(tour => tour.activity === activity);
-    // }
+    if (activity) {
+      filtered = filtered.filter(tour => tour.details?.activity === activity);
+    }
 
     if (price) {
       const [min, max] = priceRanges[price];
@@ -162,9 +162,27 @@ export const ToursPage: React.FC = () => {
     setFilteredTours(filtered);
   }, [tours, startDate, endDate, difficulty, length, price]);
 
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const countries = await getCountries();
+        const options = countries.map(country => ({
+          value: country.id,
+          label: country.name,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label));
+        setCountryOptions(options);
+      } catch (error) {
+        console.error('Error fetching countries');
+      }
+    }
+
+    fetchCountries();
+  }, []);
+
   const handleCountryChange = (value: string | number) => {
     if (typeof value === 'number') {
-      setSelectedCountry(value as Countries);
+      setSelectedCountryId(value as Countries);
     }
 
     setFilteredTours([]);
@@ -182,16 +200,10 @@ export const ToursPage: React.FC = () => {
     navigate(`/toursByCountry/${value}`);
   };
 
-  const countryOptions = Object.entries(Countries)
-    .filter(([key]) => isNaN(Number(key)))
-    .map(([name, id]) => ({
-      value: id,
-      label: name,
-    }));
-
   const handleDifficultyChange = (value: string | number) => {
-    if (typeof value === 'string')
-    setDifficulty(value as Difficulty);
+    if (typeof value === 'string') {
+      setDifficulty(value as Difficulty);
+    }
   };
 
   const difficultyOptions = Object.values(Difficulty).map(difficulty => ({
@@ -222,14 +234,14 @@ export const ToursPage: React.FC = () => {
     label: length,
   }));
 
-  // const handleActivity = (activity: Activity) => {
-  //   setActivity(activity);
-  // };
+  const handleActivityChange = (activity: string | number) => {
+    setActivity(activity as Activity);
+  };
 
-  // const activityOptions = Object.values(Activity).map(activity => ({
-  //   value: activity,
-  //   label: activity,
-  // }));
+  const activityOptions = Object.values(Activity).map(activity => ({
+    value: activity,
+    label: activity,
+  }));
 
   const handlePriceChange = (value: string | number) => {
     if (typeof value === 'string' && Object.values(Price).includes(value as Price)) {
@@ -276,6 +288,7 @@ export const ToursPage: React.FC = () => {
     setPriceRange(null);
     setStartDate(null);
     setEndDate(null);
+    setActivity(null);
 
     const params = new URLSearchParams();
 
@@ -309,9 +322,7 @@ export const ToursPage: React.FC = () => {
 
           <p className={styles.availability}>
             Active routes: 
-            <span className={styles.span}>___</span>, 
-            on which start dates are planned: 
-            <span className={styles.span}>___</span>
+            <span className={styles.span}> {filteredTours.length}</span>
           </p>
         </div>
 
@@ -345,7 +356,7 @@ export const ToursPage: React.FC = () => {
               <FilterDropdown 
                 label="Country"
                 options={countryOptions}
-                selected={selectedCountry}
+                selected={selectedCountryId}
                 onChange={handleCountryChange}
               />
 
@@ -365,13 +376,13 @@ export const ToursPage: React.FC = () => {
                 onChange={handleLengthChange}
               />
 
-              {/* <h4 className={styles.dropdownTitle}>Activity</h4>
+              <h4 className={styles.dropdownTitle}>Activity</h4>
               <FilterDropdown 
                 label="Activity"
                 options={activityOptions}
-                selected={length}
-                onChange={handleActivity}
-              /> */}
+                selected={activity}
+                onChange={handleActivityChange}
+              /> 
             </div>
 
             <h4 className={styles.dropdownTitle}>Determine the price range</h4>
