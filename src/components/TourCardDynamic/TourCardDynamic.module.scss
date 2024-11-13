@@ -1,0 +1,118 @@
+@import '../../styles/all';
+
+.tourCard {
+  position: relative;
+  
+  width: 100%;
+  height: 421px;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+
+  @include on-desktop {
+    grid-column: span 3;
+  }
+
+  @include on-desktop-wide {
+    grid-column: span 3;
+  }
+
+  &:hover .tourDetails {
+    bottom: 0;
+  }
+}
+
+.tourDate {
+  position: absolute;
+  top: 24px;
+  left: 24px; 
+
+  text-align: center;
+  height: 50px;
+  width: 50px;
+  border-radius: 16px;
+  background: $color-primary;
+}
+
+.date {
+  @include secondary-web;
+  
+  color: $color-bg;
+  text-transform: uppercase;
+}
+
+.tourInfo {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+}
+
+.tourLocation {
+  color: $color-bg;
+}
+
+.tourTitle {
+  @include main-web-bold;
+
+  color: $color-bg;
+}
+
+.tourDetails {
+  position: absolute;
+  bottom: -219px;
+
+  width: 100%;
+  height: 219px;
+  padding: 16px 26px;
+  background-color: $color-bg;
+  border-radius: 16px;
+  // display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: bottom 0.3s ease-in-out;
+}
+
+.tourDetailsWrapper {
+  display: flex;
+  gap: 11px;
+}
+
+.tourTextWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.tourText {
+  @include secondary-web;
+}
+
+.tourHighlighted {
+  font-weight: 600;
+}
+
+.tourLink {
+  position: absolute;
+  bottom: 26px;
+  left: 86.5px;
+
+  @include green-button;
+  @include button-web;
+  
+  width: 173px;
+  text-decoration: none;
+  padding-block: 13px;
+  border-radius: 1000px;
+  color: $color-bg;
+  text-align: center;
+  cursor: pointer;
+
+  @include on-desktop {
+    bottom: 26px;
+    left: 55px;
+  }
+
+  @include on-desktop-wide {
+    bottom: 26px;
+    left: 86.5px;
+  }
+}

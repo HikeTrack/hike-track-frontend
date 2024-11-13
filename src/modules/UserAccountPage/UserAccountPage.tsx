@@ -1,5 +1,6 @@
 import React, { ChangeEvent, ChangeEventHandler, FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
+import { MyTours } from "../../components/MyTours/MyTours";
 import { UserCard } from "../../components/UserCard/UserCard";
 import { useAuth } from "../../context/AuthContext";
 import { ContinentsForGuide } from "../../enums/ContinentsForGuide";
@@ -146,25 +147,33 @@ export const UserAccountPage: React.FC = () => {
         </button>
       </div>
       
-      <div className={styles.sectionContent}>
-        <div className={styles.profileSections}>
-          <div className={styles.section}>Tours</div>
-          <div className={styles.section}>Photos</div>
-          <div className={styles.section}>Reviews</div>
-          <div className={styles.section}>Calendar</div>
-        </div>
-        
-        <div className={styles.noContent}>
-          <h4 className={styles.title}>No upcoming tours yet</h4>
+      {!user?.role.includes('ROLE_GUIDE') && (
+        <div className={styles.sectionContent}>
+          <div className={styles.profileSections}>
+            <div className={styles.section}>Tours</div>
+            <div className={styles.section}>Photos</div>
+            <div className={styles.section}>Reviews</div>
+            <div className={styles.section}>Calendar</div>
+          </div>
+          
+          <div className={styles.noContent}>
+            <h4 className={styles.title}>No upcoming tours yet</h4>
 
-          <p className={styles.contentSmallText}>
-            Inspire friends with your trail reviews, 
-            adventure lists, and Navigator activities.
-          </p>
+            <p className={styles.contentSmallText}>
+              Inspire friends with your trail reviews, 
+              adventure lists, and Navigator activities.
+            </p>
 
-          <Link to="/continents" className={styles.exploreButton}>Explore trails</Link>
+            <Link to="/continents" className={styles.exploreButton}>Explore trails</Link>
+          </div>
         </div>
-      </div>
+      )}
+
+      {user?.role.includes('ROLE_GUIDE') && (
+        <div className={styles.myToursContainer}>
+          <MyTours />
+        </div>
+      )}
 
       <div className={styles.buttonContainer}>
         <Link className={styles.guideButton} to="/guide-application">Become a guide today!</Link>
@@ -196,7 +205,7 @@ export const UserAccountPage: React.FC = () => {
           </form>
 
           <form className={styles.form} onSubmit={handleFormSubmit}>
-          <label htmlFor="country" className={styles.inputTitle}>Add a coutry:</label>
+            <label htmlFor="country" className={styles.inputTitle}>Add a coutry:</label>
             
             <div className={styles.dropdown}>
               <button className={styles.dropdownButton} onClick={handleToggle}>

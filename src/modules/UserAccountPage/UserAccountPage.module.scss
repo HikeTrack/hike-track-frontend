@@ -51,6 +51,23 @@
   }
 }
 
+.myToursContainer {
+  padding: 32px 16px;
+  border-radius: 32px;
+  width: 100%;
+  background-color: $color-bg;
+  
+  @include on-desktop {
+    margin-top: 186px;
+    padding-block: 32px;
+    grid-column: 5 / -1;
+  }
+  
+  @include on-desktop-wide {
+    grid-column: 4 / -1;
+  }
+}
+
 .userCardWrapper {
   // padding: 32px 16px;
   // border-radius: 32px;

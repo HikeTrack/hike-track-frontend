@@ -40,3 +40,7 @@ export const getRandomToursByCountry = async (countryName: string) => {
 
   return getRandomTours(tours);
 }
+
+export const getToursByGuideId = async (guideId: number) => {
+  return getData<Tour[]>(`/tours/guide/${guideId}`);
+}

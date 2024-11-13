@@ -5,7 +5,7 @@ export type Details = {
   routeType: string,
   duration: number,
   map: string,
-  activity: string,
+  activity: 'Hiking' | 'Biking' | 'Climbing',
 } | null;
 
 export type Tour = {

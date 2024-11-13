@@ -1,0 +1,96 @@
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { Tour } from "../../types/Tour";
+import { getToursByGuideId } from "../../utils/fetchData";
+import { getSearchIcon } from "../../utils/getIcons";
+import { Loader } from "../Loader/Loader";
+import { TourCardDynamic } from "../TourCardDynamic/TourCardDynamic";
+import debounce from "lodash/debounce";
+import styles from './MyTours.module.scss';
+
+export const MyTours: React.FC = () => {
+  const { user } = useAuth();
+  const searchIcon = getSearchIcon();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [tours, setTours] = useState<Tour[]>([]);
+  const [filteredTours, setFilteredTours] = useState<Tour[]>([]);
+
+  useEffect(() => {
+    if (user?.id) {
+      const guideId = user.id;
+      
+      const fetchTours = async () => {
+        setIsLoading(true);
+        
+        try {
+          const tourData = await getToursByGuideId(guideId);
+
+          setTours(tourData);
+          setFilteredTours(tourData);
+        } catch (error) {
+          setError('Failed to load tours. Please try again later.')
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchTours();
+    }
+  }, [user?.id]);
+
+  const handleQueryChange = debounce((event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value.toLowerCase().trim();
+
+    setFilteredTours(tours.filter(tour => tour.name.toLowerCase().includes(query)));
+  }, 300);
+  
+  return (
+    <div className={styles.myTours}>
+      <div className={styles.topPanel}>
+        <Link
+          to="/profile"
+          className={styles.topPanelButtonActive}
+        >
+          Tour List
+        </Link>
+
+        <Link 
+          to="/create-tour"
+          className={styles.topPanelButton}  
+        >
+          Add new tour
+        </Link>
+      </div>
+
+      <div className={styles.searchBar}>
+        <img src={searchIcon} alt="Search" />
+        
+        <input 
+          id="search"
+          type="search"
+          placeholder="Tour search"
+          className={styles.searchInput}
+          onChange={handleQueryChange}
+        />
+      </div> 
+
+      <div className={styles.myToursGrid}>
+        {isLoading ? (
+          <div className={styles.loaderWrapper}>
+            <Loader />
+          </div>
+        ) : error ? (
+          <p>{error}</p>
+        ) : filteredTours.length > 0 ? (
+          filteredTours.map((tour) => (
+            <TourCardDynamic tour={tour} key={tour.id}/>
+          ))
+        ) : (
+          <p className={styles.gridText}>There are no tours yet.</p>
+        )}
+      </div>
+    </div>
+  )
+}
