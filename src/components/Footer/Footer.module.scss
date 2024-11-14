@@ -83,7 +83,7 @@
 }
 
 .containerSubscribe {
-  // position: relative;
+  position: relative;
 
   margin-block: 16px 24px;
   width: 100%;
@@ -140,8 +140,9 @@
 
 .subscribeError {
   position: absolute;
+  bottom: -30px;
 
-  bottom: 0;
+  color: $color-grey-500;
 }
 
 .containerSocials {
@@ -206,19 +207,51 @@
   gap: 32px;
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
 .notification {
+  padding: 24px;
   width: 534px;
   background: $color-bg;
   border-radius: 32px;
   display: flex;
   flex-direction: column;
   gap: 32px;
+  align-items: center;
 }
 
 .notificationTitle {
+  text-align: center;
+  
   @include h3-web;
 }
 
 .notificationButton {
   @include green-button;
+  @include button-mobile;
+
+  width: 100%;
+  padding: 16px;
+  border-radius: 1000px;
+  text-decoration: none;
+  color: $color-bg;
+
+  @include on-desktop {
+    @include button-web;
+  }
+}
+
+.logoIcon {
+  height: 73px;
 }

@@ -9,7 +9,7 @@ import { convertHoursToMinutes, convertKilometresToMetres, prepareDateString } f
 import styles from './CreateTourPage.module.scss';
 import { getCountries } from "../../utils/fetchData";
 import { CountryOption } from "../../types/Country";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const CreateTourPage: React.FC = () => {
   const navigate = useNavigate();
@@ -204,6 +204,8 @@ export const CreateTourPage: React.FC = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+
+    navigate('/profile');
   }
 
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
