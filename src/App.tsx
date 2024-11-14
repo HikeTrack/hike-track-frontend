@@ -1,7 +1,7 @@
 import React from 'react';
 import { Header } from './components/Header/Header';
 import { Footer } from './components/Footer/Footer';
-import { matchPath, Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import styles from './App.module.scss';
 
 export const App: React.FC = () => {
@@ -14,8 +14,7 @@ export const App: React.FC = () => {
     '/auth/confirmation'
   ];
 
-  const isNotFound = !hideHeaderAndFooterRoutes.includes(location.pathname) && location.pathname !== '/';
-  const shouldHideHeaderAndFooter = hideHeaderAndFooterRoutes.includes(location.pathname) || isNotFound;
+  const shouldHideHeaderAndFooter = hideHeaderAndFooterRoutes.includes(location.pathname);
   
   return (
     <div className={styles.app}>
