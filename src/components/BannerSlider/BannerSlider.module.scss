@@ -63,10 +63,13 @@
   border-radius: 1000px;
 
   @include green-button;
+  @include button-mobile;
 
   @include on-desktop {
     width: 237px;  
     padding-block: 20px;
+
+    @include button-web;
   }
 }
 
