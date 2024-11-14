@@ -5,13 +5,14 @@ import { Link } from "react-router-dom";
 import { Tour } from "../../types/Tour";
 import { Countries } from "../../enums/Countries";
 import { getDifficultyGreenIcon, getPriceIcon } from "../../utils/getIcons";
-import styles from './TourCardDynamic.module.scss';
+import styles from './TourCardGuide.module.scss';
 
 type Props = {
   tour: Tour,
+  onRemove: () => void;
 }
 
-export const TourCardDynamic: React.FC<Props> = ({ tour }) => {
+export const TourCardGuide: React.FC<Props> = ({ tour, onRemove }) => {
   const preparedDate = format(new Date(tour.date), 'dd');
   const preparedMonth = format(new Date(tour.date), 'MMM');
   const preparedDistance = formatDistance(tour.length);
@@ -54,12 +55,11 @@ export const TourCardDynamic: React.FC<Props> = ({ tour }) => {
           </div>
         </div>
 
-        <Link 
-          to={`/toursByCountry/${tour.countryId}/${tour.id}`}
-          className={styles.tourLink}
-        >
-          Review
-        </Link>
+        <div className={styles.buttonContainer}>
+          <button className={styles.editButton}>Edit tour</button>
+
+          <button className={styles.removeButton} onClick={onRemove}>Remove tour</button>
+        </div>
       </div>
     </div>
   )

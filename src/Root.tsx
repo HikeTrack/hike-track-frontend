@@ -15,6 +15,8 @@ import { ResetPasswordPage } from './modules/ResetPasswordPage/ResetPasswordPage
 import { ProfileEditorPage } from './modules/ProfileEditorPage/ProfileEditorPage';
 import { GuideApplicationPage } from './modules/GuideApplicationPage/GuideApplicationPage';
 import { CreateTourPage } from './modules/CreateTourPage/CreateTourPage';
+import { ConfirmationPage } from './modules/ConfirmationPage/ConfirmationPage';
+import { NotFoundPage } from './modules/NotFoundPage/NotFoundPage';
 
 export const Root = () => (
   <AuthProvider>
@@ -25,6 +27,7 @@ export const Root = () => (
           <Route path="continents" element={<ContinentsPage />} />
           <Route path="about" element={<AboutUsPage />} />
           <Route path="register" element={<RegistrationPage />} />
+          <Route path="auth/confirmation" element={<ConfirmationPage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="auth/forgot-password" element={<ForgotPasswordPage />}></Route>
           <Route path="auth/reset-password" element={<ResetPasswordPage />}></Route>
@@ -42,6 +45,8 @@ export const Root = () => (
             path="/toursByCountry/:countryId/:tourId"
             element={<TourDetailsPage />}
           />
+
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </Router>

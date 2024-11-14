@@ -1,7 +1,7 @@
 import React from 'react';
 import { Header } from './components/Header/Header';
 import { Footer } from './components/Footer/Footer';
-import { Outlet, useLocation } from 'react-router-dom';
+import { matchPath, Outlet, useLocation } from 'react-router-dom';
 import styles from './App.module.scss';
 
 export const App: React.FC = () => {
@@ -10,9 +10,12 @@ export const App: React.FC = () => {
     '/register', 
     '/login', 
     '/auth/forgot-password', 
-    '/auth/reset-password'
+    '/auth/reset-password',
+    '/auth/confirmation'
   ];
-  const shouldHideHeaderAndFooter = hideHeaderAndFooterRoutes.includes(location.pathname);
+
+  const isNotFound = !hideHeaderAndFooterRoutes.includes(location.pathname) && location.pathname !== '/';
+  const shouldHideHeaderAndFooter = hideHeaderAndFooterRoutes.includes(location.pathname) || isNotFound;
   
   return (
     <div className={styles.app}>

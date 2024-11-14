@@ -3,7 +3,7 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 import { User } from "../types/User";
 import { validateEmail, validatePassword } from "../utils/authorisationFunctions";
 import { axiosReg, axiosToken } from "../utils/axios";
-import { ACCESS_TOKEN, BASE_URL } from "../utils/constants";
+import { ACCESS_TOKEN, BASE_URL, INACTIVITY_LIMIT } from "../utils/constants";
 import { useLocalStorage } from "../utils/useLocalStorage";
 
 type Props = {
@@ -16,12 +16,14 @@ type AuthContextType = {
   isLoading: boolean;
   error: string;
   registerUser: (firstName: string, lastName: string, email: string, password: string, repeatPassword: string) => Promise<boolean>;
+  confirmEmail: (token: string) => Promise<boolean>;
   loginUser: (email: string, password: string) => Promise<boolean>;
   logoutUser: () => void;
   setUser: (user: User | null) => void;
   sendEmailForNewPassword: (email: string) => Promise<boolean>;
   resetPassword: (password: string, repeatPassword: string, token: string) => Promise<boolean>;
   sendGuideApplication: (email: string) => Promise<boolean>;
+  removeTour: (tourId: number, userId: number) => Promise<boolean>;
   updateUserProfile: (
     email: string,
     firstName: string,
@@ -42,6 +44,7 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: false,
   error: '',
   registerUser: async () => false,
+  confirmEmail: async () => false,
   loginUser: async () => false,
   logoutUser: () => {},
   setUser: () => {},
@@ -49,6 +52,7 @@ const AuthContext = createContext<AuthContextType>({
   resetPassword: async () => false,
   sendGuideApplication: async () => false,
   updateUserProfile: async () => false,
+  removeTour: async () => false,
 });
 
 export const useAuth = () => {
@@ -115,6 +119,28 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       setError('Please fill in all fields correctly');
       setIsLoading(false);
       return false;
+    }
+  }, [setError, setIsLoading]);
+
+  const confirmEmail = useCallback(async (token: string): Promise<boolean> => {
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const response = await axiosReg.post(`/auth/confirmation?token=${token}`, {});
+
+      if (response.status === 200) {
+        return true;
+      } else {
+        setError('Failed to confirm email');
+        return false;
+      }
+    } catch (error) {
+      setError('Failed to confirm email');
+
+      return false;
+    } finally {
+      setIsLoading(false);
     }
   }, [setError, setIsLoading]);
 
@@ -343,6 +369,56 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     }
   }, [setUser, setError, setIsLoading, user, token ]);
 
+  const sendGuideApplication = useCallback(async (email: string): Promise<boolean> => {
+    setIsLoading(true);
+    setError('');
+
+    const payload = { email };
+
+    try {
+      const response = await axiosReg.post(`/users/request`, payload);
+
+      if (response.status === 200) {
+        setError('');
+        return true;
+      } 
+    } catch (error) {
+      const axiosError = error as AxiosError;
+
+      if (axiosError.response && axiosError.response.status === 409) {
+        setError('This email is already registered. Please use a different email.');
+      } else {
+        setError('Registration failed. Please try again');
+      }
+
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+ 
+    return false;
+  }, [setIsLoading, setError]);
+
+  const removeTour = useCallback(async (tourId: number, userId: number): Promise<boolean> => {
+    setIsLoading(true);
+    
+    try {
+      const response = await axiosToken.delete(`/tours/${tourId}/${userId}`);
+
+      if (response.status === 200) {
+        return true;
+      } else {
+        setError('Failed to delete the tour');
+        return false;
+      }
+    } catch (error) {
+      console.error('Failed to delete the tour:', error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [setError, setIsLoading]);
+
   const refreshTokenSilently = useCallback(async () => {
     const token = localStorage.getItem(ACCESS_TOKEN);
 
@@ -376,6 +452,16 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     }
   }, [setToken, setIsLoading, setError]);
 
+  let inactivityTimer: NodeJS.Timeout;
+
+  const resetInactivityTimer = () => {
+    clearTimeout(inactivityTimer);
+
+    inactivityTimer = setTimeout(() => {
+      logoutUser();
+    }, INACTIVITY_LIMIT)
+  };
+
   useEffect(() => {
     refreshTokenSilently();
 
@@ -383,40 +469,17 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       refreshTokenSilently();
     }, 780000);
 
+    window.addEventListener('mousemove', resetInactivityTimer);
+    window.addEventListener('keydown', resetInactivityTimer);
+    resetInactivityTimer();
+
     return () => {
       clearInterval(interval);
+      clearTimeout(inactivityTimer);
+      window.removeEventListener('mousemove', resetInactivityTimer);
+      window.removeEventListener('keydown', resetInactivityTimer);
     };
   }, [refreshTokenSilently]);
-
-  const sendGuideApplication = useCallback(async (email: string): Promise<boolean> => {
-    setIsLoading(true);
-    setError('');
-
-    const payload = { email };
-
-    try {
-      const response = await axiosReg.post(`/users/request`, payload);
-
-      if (response.status === 200) {
-        setError('');
-        return true;
-      } 
-    } catch (error) {
-      const axiosError = error as AxiosError;
-
-      if (axiosError.response && axiosError.response.status === 409) {
-        setError('This email is already registered. Please use a different email.');
-      } else {
-        setError('Registration failed. Please try again');
-      }
-
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
- 
-    return false;
-  }, [setIsLoading, setError]);
 
   return (
     <AuthContext.Provider
@@ -426,13 +489,15 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         isLoading,
         error,
         registerUser,
+        confirmEmail,
         loginUser,
         logoutUser,
         setUser,
         sendEmailForNewPassword,
         resetPassword,
         sendGuideApplication,
-        updateUserProfile
+        updateUserProfile,
+        removeTour
       }}
     >
       {children}

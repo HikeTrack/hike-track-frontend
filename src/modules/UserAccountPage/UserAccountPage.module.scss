@@ -68,14 +68,10 @@
   }
 }
 
-.userCardWrapper {
-  // padding: 32px 16px;
-  // border-radius: 32px;
-  // width: 100%;
-  // background-color: $color-bg;
-  // display: flex;
-  // flex-direction: column;
-  // gap: 32px;
+.leftPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
 
   @include on-desktop {
     margin-top: 186px;

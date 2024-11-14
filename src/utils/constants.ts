@@ -2,3 +2,5 @@
 export const BASE_URL = 'https://dsgq7eukko3g1.cloudfront.net';
 
 export const ACCESS_TOKEN = 'user_access_token';
+
+export const INACTIVITY_LIMIT = 12 * 60 * 60 * 1000;

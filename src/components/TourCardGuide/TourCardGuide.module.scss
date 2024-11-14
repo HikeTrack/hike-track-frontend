@@ -90,29 +90,48 @@
   font-weight: 600;
 }
 
-.tourLink {
+.buttonContainer {
   position: absolute;
   bottom: 26px;
-  left: 86.5px;
+  left: 16px;
 
-  @include green-button;
-  @include button-web;
-  
-  width: 173px;
-  text-decoration: none;
-  padding-block: 13px;
-  border-radius: 1000px;
-  color: $color-bg;
-  text-align: center;
-  cursor: pointer;
+  display: flex;
+  gap: 16px;
+  width: 100%;
 
   @include on-desktop {
     bottom: 26px;
-    left: 55px;
   }
 
   @include on-desktop-wide {
     bottom: 26px;
-    left: 86.5px;
   }
 }
+
+.editButton {
+  @include green-button;
+  @include button-web;
+  
+  width: 117px;
+  text-decoration: none;
+  padding-block: 16px;
+  border-radius: 1000px;
+  color: $color-bg;
+  text-align: center;
+  cursor: pointer;
+}
+
+.removeButton {
+  @include button-web;
+  
+  color: $color-system-error;
+  background-color: $color-bg;
+  border: 1px solid $color-system-error;
+  width: 178px;
+  text-decoration: none;
+  padding-block: 16px;
+  border-radius: 1000px;
+  text-align: center;
+  cursor: pointer;
+}
+
