@@ -1,38 +1,19 @@
 @import '../../styles/all';
 
 .page {
-  z-index: 1000;
-  background-image: url('../../../public/img/page-bg/not-found.png');
-
-  @include on-desktop {
-    position: relative;
-    height: 832px;
-  }
-
-  @include on-desktop-wide {
-    height: 1080px;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding-inline: 16px;
 }
 
 .container {
-  background: $color-bg;
-  padding: 16px;
-  
   display: flex;
   flex-direction: column;
   gap: 64px;
+  justify-content: center;
   align-items: center;
-
-  @include on-desktop {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    
-    width: 670px;
-    border-radius: 32px;
-    padding-block: 64px;
-  }
 }
 
 .logoLink {
@@ -47,12 +28,23 @@
   }
 }
 
+.textContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
 .title {
   @include h1-mobile-medium;
 
   @include on-desktop {
-    @include h2-web;
+    @include h3-web;
   }
+}
+
+.text {
+  text-align: center;
 }
 
 .button {
@@ -72,4 +64,3 @@
     width: 400px;
   }
 }
-

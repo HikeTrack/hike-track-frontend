@@ -131,15 +131,14 @@ export const UserAccountPage: React.FC = () => {
         <div className={styles.section}>Calendar</div>
       </div>
 
-      <div className={styles.userCardWrapper}>
+      
+      <div className={styles.leftPanel}>
         <UserCard/>
-      </div>
 
-      <div className={styles.buttonContainerMobile}>
         {!user?.role.includes('ROLE_GUIDE') && (
           <Link className={styles.guideButton} to="/guide-application">Become a guide today!</Link>
         )}
-
+        
         <button 
           className={styles.deleteButton}
         >
@@ -149,6 +148,7 @@ export const UserAccountPage: React.FC = () => {
       
       {!user?.role.includes('ROLE_GUIDE') && (
         <div className={styles.sectionContent}>
+          
           <div className={styles.profileSections}>
             <div className={styles.section}>Tours</div>
             <div className={styles.section}>Photos</div>
@@ -175,15 +175,7 @@ export const UserAccountPage: React.FC = () => {
         </div>
       )}
 
-      <div className={styles.buttonContainer}>
-        <Link className={styles.guideButton} to="/guide-application">Become a guide today!</Link>
-
-        <button 
-          className={styles.deleteButton}
-        >
-          Delete account
-        </button>
-      </div>
+      
 
       {user?.role.includes('ROLE_ADMIN') && (
         <div className={styles.guideContainer}>

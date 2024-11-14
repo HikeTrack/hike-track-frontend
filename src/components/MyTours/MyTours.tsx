@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Tour } from "../../types/Tour";
 import { getToursByGuideId } from "../../utils/fetchData";
 import { getSearchIcon } from "../../utils/getIcons";
 import { Loader } from "../Loader/Loader";
-import { TourCardDynamic } from "../TourCardDynamic/TourCardDynamic";
+import { TourCardGuide } from "../TourCardGuide/TourCardGuide";
 import debounce from "lodash/debounce";
 import styles from './MyTours.module.scss';
 
 export const MyTours: React.FC = () => {
-  const { user } = useAuth();
+  const { user, removeTour } = useAuth();
   const searchIcon = getSearchIcon();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -45,6 +45,28 @@ export const MyTours: React.FC = () => {
 
     setFilteredTours(tours.filter(tour => tour.name.toLowerCase().includes(query)));
   }, 300);
+
+
+  const handleRemoveTour = useCallback(async (tourId: number) => {
+    setIsLoading(true);
+
+    if (user?.id) {
+      try {
+        const success = await removeTour(tourId, user.id);
+
+        if (success) {
+          setTours(prevTours => prevTours.filter(tour => tour.id !== tourId));
+          setFilteredTours(prevFiltered => prevFiltered.filter(tour => tour.id !== tourId));
+        } else {
+          setError('Failed to remove the tour. Please try again later')
+        }
+      } catch (error) {
+        setError('An error occured while removing the tour. Please try again later');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  }, [user?.id]);
   
   return (
     <div className={styles.myTours}>
@@ -85,7 +107,11 @@ export const MyTours: React.FC = () => {
           <p>{error}</p>
         ) : filteredTours.length > 0 ? (
           filteredTours.map((tour) => (
-            <TourCardDynamic tour={tour} key={tour.id}/>
+            <TourCardGuide 
+              tour={tour} 
+              key={tour.id}
+              onRemove={() => handleRemoveTour(tour.id)}
+            />
           ))
         ) : (
           <p className={styles.gridText}>There are no tours yet.</p>

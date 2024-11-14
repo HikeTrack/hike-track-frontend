@@ -70,7 +70,7 @@ export const RegistrationPage: React.FC = () => {
           } 
         });
       } else {
-        navigate('/login');
+        navigate('/');
       }
     }
   }
