@@ -42,6 +42,10 @@ export const Footer: React.FC = () => {
       setIsLoading(false);
     }
   }
+
+  const handleCloseNotification = () => {
+    setIsSubscribed(false);
+  }
   
   return (
     <footer className={styles.footer}>
@@ -105,9 +109,9 @@ export const Footer: React.FC = () => {
           >
             Subscribe
           </button>
-        </div>
 
-        {error && <p className={styles.subscribeError}>{error}</p>}
+          {error && <p className={styles.subscribeError}>{error}</p>}
+        </div>
 
         <div className={styles.containerSocials}>
           <h4 className={styles.title}>Connect with us</h4>
@@ -181,18 +185,20 @@ export const Footer: React.FC = () => {
         </div>
 
         {isSubscribed && (
-          <div className={styles.notification}>
-            <Link to="/" className={styles.logoLink}>
-              <img 
-                src={logoIcon} 
-                alt="logo" 
-                className={styles.logoIcon}
-              />
-            </Link>
+          <div className={styles.overlay}>
+            <div className={styles.notification}>
+              <Link to="/" className={styles.logoLink}>
+                <img 
+                  src={logoIcon} 
+                  alt="logo" 
+                  className={styles.logoIcon}
+                />
+              </Link>
 
-            <h3 className={styles.notificationTitle}>You have been successfully subscribed!</h3>
+              <h3 className={styles.notificationTitle}>You have been successfully subscribed!</h3>
 
-            <button className={styles.notificationButton}>Go back</button>
+              <button className={styles.notificationButton} onClick={handleCloseNotification}>Go back</button>
+            </div>
           </div>
         )}
     </footer>
