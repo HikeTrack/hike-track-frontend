@@ -40,6 +40,7 @@ export const Footer: React.FC = () => {
       console.error('Subscription error:', axiosError);
     } finally {
       setIsLoading(false);
+      setEmail('');
     }
   }
 
@@ -163,44 +164,44 @@ export const Footer: React.FC = () => {
       </div>
 
       <div className={styles.containerSocialsMobile}>
-          <h4 className={styles.titleBig}>Connect with us</h4>
+        <h4 className={styles.titleBig}>Connect with us</h4>
 
-          <div className={styles.socialsMobile}>
-            <Link to="#" className={styles.logoLink}>
-              <img src={instagramIcon} alt="instagram" />
+        <div className={styles.socialsMobile}>
+          <Link to="#" className={styles.logoLink}>
+            <img src={instagramIcon} alt="instagram" />
+          </Link>
+
+          <Link to="#" className={styles.logoLink}>
+            <img src={facebookIcon} alt="facebook" />
+          </Link>
+
+          <Link to="#" className={styles.logoLink}>
+            <img src={githubIcon} alt="github" />
+          </Link>
+
+          <Link to="#" className={styles.logoLink}>
+            <img src={youtubeIcon} alt="youtube" />
+          </Link>
+        </div>
+      </div>
+
+      {isSubscribed && (
+        <div className={styles.overlay}>
+          <div className={styles.notification}>
+            <Link to="/" className={styles.logoLink}>
+              <img 
+                src={logoIcon} 
+                alt="logo" 
+                className={styles.logoIcon}
+              />
             </Link>
 
-            <Link to="#" className={styles.logoLink}>
-              <img src={facebookIcon} alt="facebook" />
-            </Link>
+            <h3 className={styles.notificationTitle}>You have been successfully subscribed!</h3>
 
-            <Link to="#" className={styles.logoLink}>
-              <img src={githubIcon} alt="github" />
-            </Link>
-
-            <Link to="#" className={styles.logoLink}>
-              <img src={youtubeIcon} alt="youtube" />
-            </Link>
+            <button className={styles.notificationButton} onClick={handleCloseNotification}>Go back</button>
           </div>
         </div>
-
-        {isSubscribed && (
-          <div className={styles.overlay}>
-            <div className={styles.notification}>
-              <Link to="/" className={styles.logoLink}>
-                <img 
-                  src={logoIcon} 
-                  alt="logo" 
-                  className={styles.logoIcon}
-                />
-              </Link>
-
-              <h3 className={styles.notificationTitle}>You have been successfully subscribed!</h3>
-
-              <button className={styles.notificationButton} onClick={handleCloseNotification}>Go back</button>
-            </div>
-          </div>
-        )}
+      )}
     </footer>
   )
 };
