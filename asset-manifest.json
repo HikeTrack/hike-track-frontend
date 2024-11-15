@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/hike-track-frontend/static/css/main.c26ba65c.css",
-    "main.js": "/hike-track-frontend/static/js/main.7849a13c.js",
+    "main.css": "/hike-track-frontend/static/css/main.39f48ff0.css",
+    "main.js": "/hike-track-frontend/static/js/main.55f8a0db.js",
     "static/media/authorisation.png": "/hike-track-frontend/static/media/authorisation.42dc274ecb8fbb5796a3.png",
     "static/media/not-found.png": "/hike-track-frontend/static/media/not-found.1a18bc7c403ee4fcd855.png",
     "static/media/popular-tours.png": "/hike-track-frontend/static/media/popular-tours.8988529a59430dc9f56e.png",
@@ -21,11 +21,11 @@
     "static/media/guide-photo.png": "/hike-track-frontend/static/media/guide-photo.59bb05df324d3e92bd40.png",
     "static/media/star-yellow.svg": "/hike-track-frontend/static/media/star-yellow.e2f5371d18cb9fa907d6.svg",
     "index.html": "/hike-track-frontend/index.html",
-    "main.c26ba65c.css.map": "/hike-track-frontend/static/css/main.c26ba65c.css.map",
-    "main.7849a13c.js.map": "/hike-track-frontend/static/js/main.7849a13c.js.map"
+    "main.39f48ff0.css.map": "/hike-track-frontend/static/css/main.39f48ff0.css.map",
+    "main.55f8a0db.js.map": "/hike-track-frontend/static/js/main.55f8a0db.js.map"
   },
   "entrypoints": [
-    "static/css/main.c26ba65c.css",
-    "static/js/main.7849a13c.js"
+    "static/css/main.39f48ff0.css",
+    "static/js/main.55f8a0db.js"
   ]
 }
