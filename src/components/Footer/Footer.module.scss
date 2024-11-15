@@ -211,8 +211,10 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  // width: 100vw;
+  width: 100%;
+  // height: 100vh;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
@@ -221,20 +223,30 @@
 }
 
 .notification {
-  padding: 24px;
-  width: 534px;
+  padding: 16px;
+  // width: 100%;
+  max-width: 90%;
   background: $color-bg;
   border-radius: 32px;
   display: flex;
   flex-direction: column;
   gap: 32px;
   align-items: center;
+
+  @include on-desktop {
+    padding: 24px;
+    width: 534px;
+  }
 }
 
 .notificationTitle {
+  @include h1-mobile-medium;
+
   text-align: center;
   
-  @include h3-web;
+  @include on-desktop {
+    @include h3-web;
+  }
 }
 
 .notificationButton {
