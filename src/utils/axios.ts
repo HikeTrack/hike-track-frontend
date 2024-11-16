@@ -9,10 +9,15 @@ export const axiosToken = axios.create({
   baseURL: BASE_URL,
 });
 
+let logoutUser: (() => Promise<void>) | null = null;
+
+export const setLogoutUserRef = (logoutFunction: () => Promise<void>) => {
+  logoutUser = logoutFunction;
+}
+
 axiosToken.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem(ACCESS_TOKEN);
-    console.log('Token:', token);
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -20,6 +25,16 @@ axiosToken.interceptors.request.use(
     return config;
   }, 
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+axiosToken.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401 && logoutUser) {
+      await logoutUser();
+    }
     return Promise.reject(error);
   }
 );
