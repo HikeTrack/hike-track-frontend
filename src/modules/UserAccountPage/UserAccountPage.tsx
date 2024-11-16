@@ -1,19 +1,53 @@
-import React, { ChangeEvent, ChangeEventHandler, FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { ChangeEvent, ChangeEventHandler, FormEvent, useCallback, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 // import { MyTours } from "../MyToursPage/MyToursPage";
 import { UserCard } from "../../components/UserCard/UserCard";
 import { useAuth } from "../../context/AuthContext";
 import { ContinentsForGuide } from "../../enums/ContinentsForGuide";
 import { axiosToken } from "../../utils/axios";
 import { fileToDataString } from "../../utils/fileToDataString";
+import { getLogoIcon } from "../../utils/getIcons";
 import styles from './UserAccountPage.module.scss';
 
 export const UserAccountPage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, deleteUserAccount } = useAuth();
+  const navigate = useNavigate();
+  const logoIcon = getLogoIcon();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [isAccountDeleted, setIsAccountDeleted] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    setIsLoading(true);
+
+    if (!user) {
+      return;
+    }
+
+    try {
+      const isDeleted = await deleteUserAccount(user?.id);
+
+      if (isDeleted) {
+        setIsAccountDeleted(true);
+      } else {
+        setError('Failed to delete your account. Please try again later')
+      }
+    } catch (error) {
+      setError('Unexpected error occured. Please try again later')
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCloseNotification = () => {
+    setIsAccountDeleted(false);
+
+    navigate('/');
+  }
   
   /////////////////////
   const [userEmail, setUserEmail] = useState('');
-  const [error, setError] = useState('');
+
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserEmail(e.target.value);
@@ -141,10 +175,29 @@ export const UserAccountPage: React.FC = () => {
         
         <button 
           className={styles.deleteButton}
+          onClick={handleDeleteAccount}
         >
           Delete account
         </button>
       </div>
+
+      {isAccountDeleted && (
+        <div className={styles.overlay}>
+          <div className={styles.notification}>
+            <Link to="/" className={styles.logoLink}>
+              <img 
+                src={logoIcon} 
+                alt="logo" 
+                className={styles.logoIcon}
+              />
+            </Link>
+
+            <h3 className={styles.notificationTitle}>Your account has been removed!</h3>
+
+            <button className={styles.notificationButton} onClick={handleCloseNotification}>Go back</button>
+          </div>
+        </div>
+      )}
       
    
       <div className={styles.sectionContent}>

@@ -24,6 +24,7 @@ type AuthContextType = {
   resetPassword: (password: string, repeatPassword: string, token: string) => Promise<boolean>;
   sendGuideApplication: (email: string) => Promise<boolean>;
   removeTour: (tourId: number, userId: number) => Promise<boolean>;
+  deleteUserAccount: (userId: number) => Promise<boolean>;
   updateUserProfile: (
     email: string,
     firstName: string,
@@ -53,6 +54,7 @@ const AuthContext = createContext<AuthContextType>({
   sendGuideApplication: async () => false,
   updateUserProfile: async () => false,
   removeTour: async () => false,
+  deleteUserAccount: async () => false,
 });
 
 export const useAuth = () => {
@@ -490,6 +492,29 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     }
   }, [setError, setIsLoading]);
 
+  const deleteUserAccount = useCallback(async (userId: number): Promise<boolean> => {
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const response = await axiosToken.delete(`/users/${userId}`);
+
+      if (response.status === 200) {
+        setUser(null);
+        return true;
+      } else {
+        setError('Failed to delete your account');
+        return false;
+      }
+    } catch (error) {
+      console.error('Failed to delete account:', error);
+      setError('An unexpected error occured while deleting your account');
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [setError, setIsLoading]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -506,7 +531,8 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         resetPassword,
         sendGuideApplication,
         updateUserProfile,
-        removeTour
+        removeTour,
+        deleteUserAccount
       }}
     >
       {children}
