@@ -1,7 +1,7 @@
 @import '../../styles/all';
 
 .page {
-  background-color: $color-bg;
+  background-color: $color-grey-50;
   // height: 100vh;
   // padding: 16px;
   display: flex;
@@ -22,7 +22,6 @@
 
 .userCardWrapper {
   margin-top: 100px;
-  padding-inline: 16px;
 
   @include on-desktop {
     padding-inline: auto;
@@ -36,8 +35,9 @@
 }
 
 .formContainer {
-  padding-inline: 16px;
-  padding-bottom: 32px;
+  border-radius: 32px;
+  background-color: $color-bg;
+  padding: 32px 16px;
 
   @include on-desktop {
     padding-inline: auto;

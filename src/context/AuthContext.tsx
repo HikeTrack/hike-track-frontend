@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { User } from "../types/User";
 import { validateEmail, validatePassword } from "../utils/authorisationFunctions";
-import { axiosReg, axiosToken, setLogoutUserRef } from "../utils/axios";
+import { axiosReg, axiosToken } from "../utils/axios";
 import { ACCESS_TOKEN, INACTIVITY_LIMIT } from "../utils/constants";
 import { useLocalStorage } from "../utils/useLocalStorage";
  
@@ -216,7 +216,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
 
     if (token) {
       try {
-        const response = await axiosToken.post('/tokens', {});
+        const response = await axiosToken.post('/tokens/refresh', {});
 
         console.log('API Response:', response);
 
@@ -298,9 +298,9 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     }
   }, [setToken, setUser, setError]);
 
-  useEffect(() => {
-    setLogoutUserRef(logoutUser);
-  }, [logoutUser]);
+  // useEffect(() => {
+  //   setLogoutUserRef(logoutUser);
+  // }, [logoutUser]);
 
   const sendEmailForNewPassword = useCallback(async (email: string): Promise<boolean> => {
     setIsLoading(true);

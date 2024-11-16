@@ -9,11 +9,11 @@ export const axiosToken = axios.create({
   baseURL: BASE_URL,
 });
 
-let logoutUser: (() => Promise<void>) | null = null;
+// let logoutUser: (() => Promise<void>) | null = null;
 
-export const setLogoutUserRef = (logoutFunction: () => Promise<void>) => {
-  logoutUser = logoutFunction;
-}
+// export const setLogoutUserRef = (logoutFunction: () => Promise<void>) => {
+//   logoutUser = logoutFunction;
+// }
 
 axiosToken.interceptors.request.use(
   (config) => {
@@ -29,12 +29,12 @@ axiosToken.interceptors.request.use(
   }
 );
 
-axiosToken.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    if (error.response?.status === 401 && logoutUser) {
-      await logoutUser();
-    }
-    return Promise.reject(error);
-  }
-);
+// axiosToken.interceptors.response.use(
+//   (response) => response,
+//   async (error) => {
+//     if (error.response?.status === 401 && logoutUser) {
+//       await logoutUser();
+//     }
+//     return Promise.reject(error);
+//   }
+// );
