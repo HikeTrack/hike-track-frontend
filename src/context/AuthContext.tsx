@@ -1,11 +1,11 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { User } from "../types/User";
 import { validateEmail, validatePassword } from "../utils/authorisationFunctions";
-import { axiosReg, axiosToken } from "../utils/axios";
-import { ACCESS_TOKEN, BASE_URL, INACTIVITY_LIMIT } from "../utils/constants";
+import { axiosReg, axiosToken, setLogoutUserRef } from "../utils/axios";
+import { ACCESS_TOKEN, INACTIVITY_LIMIT } from "../utils/constants";
 import { useLocalStorage } from "../utils/useLocalStorage";
-
+ 
 type Props = {
   children: React.ReactNode;
 };
@@ -153,10 +153,15 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     try {
       const response = await axiosReg.post(`/auth/login`, payload);
 
+      console.log('Login response:', response);
+
       if (response.status === 200) {
-        const token = response.data.Token;
+        const token = response.data.token;
 
         localStorage.setItem(ACCESS_TOKEN, token);
+
+        console.log('Token saved:', token);
+
         setToken(token);
 
         const userResponse = await axiosToken.get(`/users/me`);
@@ -204,6 +209,68 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     }
   }, [setToken, setUser, setError, setIsLoading]);
 
+  const refreshTokenSilently = useCallback(async () => {
+    const token = localStorage.getItem(ACCESS_TOKEN);
+
+    console.log(token)
+
+    if (token) {
+      try {
+        const response = await axiosToken.post('/tokens', {});
+
+        console.log('API Response:', response);
+
+        if (response.status === 200) {
+          const newToken = response.data.token;
+
+          localStorage.setItem(ACCESS_TOKEN, newToken);
+          setToken(newToken);
+        } else {
+          console.log('Failed to refresh token');
+        }
+      } catch (error) {
+        const axiosError = error as AxiosError;
+  
+        if (axiosError.response && axiosError.response.status === 401) {
+          setError('Something went wrong. Try again later');
+        }
+  
+        return false;
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  }, [setToken, setIsLoading, setError]);
+
+  let inactivityTimer: NodeJS.Timeout;
+
+  const resetInactivityTimer = () => {
+    clearTimeout(inactivityTimer);
+
+    inactivityTimer = setTimeout(() => {
+      logoutUser();
+    }, INACTIVITY_LIMIT)
+  };
+
+  useEffect(() => {
+    refreshTokenSilently();
+
+    const interval = setInterval(() => {
+      refreshTokenSilently();
+    }, 780000);
+
+    window.addEventListener('mousemove', resetInactivityTimer);
+    window.addEventListener('keydown', resetInactivityTimer);
+    resetInactivityTimer();
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(inactivityTimer);
+      window.removeEventListener('mousemove', resetInactivityTimer);
+      window.removeEventListener('keydown', resetInactivityTimer);
+    };
+  }, [refreshTokenSilently]);
+
   const logoutUser = useCallback(async () => {
     setIsLoading(true);
 
@@ -230,6 +297,10 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       setIsLoading(false);
     }
   }, [setToken, setUser, setError]);
+
+  useEffect(() => {
+    setLogoutUserRef(logoutUser);
+  }, [logoutUser]);
 
   const sendEmailForNewPassword = useCallback(async (email: string): Promise<boolean> => {
     setIsLoading(true);
@@ -418,68 +489,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       setIsLoading(false);
     }
   }, [setError, setIsLoading]);
-
-  const refreshTokenSilently = useCallback(async () => {
-    const token = localStorage.getItem(ACCESS_TOKEN);
-
-    console.log(token)
-
-    if (token) {
-      try {
-        const response = await axiosToken.post('/tokens', {});
-
-        console.log('API Response:', response);
-
-        if (response.status === 200) {
-          const newToken = response.data.Token;
-
-          localStorage.setItem(ACCESS_TOKEN, newToken);
-          setToken(newToken);
-        } else {
-          console.log('Failed to refresh token');
-        }
-      } catch (error) {
-        const axiosError = error as AxiosError;
-  
-        if (axiosError.response && axiosError.response.status === 401) {
-          setError('Something went wrong. Try again later');
-        }
-  
-        return false;
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  }, [setToken, setIsLoading, setError]);
-
-  let inactivityTimer: NodeJS.Timeout;
-
-  const resetInactivityTimer = () => {
-    clearTimeout(inactivityTimer);
-
-    inactivityTimer = setTimeout(() => {
-      logoutUser();
-    }, INACTIVITY_LIMIT)
-  };
-
-  useEffect(() => {
-    refreshTokenSilently();
-
-    const interval = setInterval(() => {
-      refreshTokenSilently();
-    }, 780000);
-
-    window.addEventListener('mousemove', resetInactivityTimer);
-    window.addEventListener('keydown', resetInactivityTimer);
-    resetInactivityTimer();
-
-    return () => {
-      clearInterval(interval);
-      clearTimeout(inactivityTimer);
-      window.removeEventListener('mousemove', resetInactivityTimer);
-      window.removeEventListener('keydown', resetInactivityTimer);
-    };
-  }, [refreshTokenSilently]);
 
   return (
     <AuthContext.Provider
