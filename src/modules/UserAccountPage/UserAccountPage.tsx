@@ -1,6 +1,6 @@
 import React, { ChangeEvent, ChangeEventHandler, FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
-import { MyTours } from "../../components/MyTours/MyTours";
+// import { MyTours } from "../MyToursPage/MyToursPage";
 import { UserCard } from "../../components/UserCard/UserCard";
 import { useAuth } from "../../context/AuthContext";
 import { ContinentsForGuide } from "../../enums/ContinentsForGuide";
@@ -31,7 +31,7 @@ export const UserAccountPage: React.FC = () => {
     console.log(payload);
 
     try {
-      const response = await axiosToken.post('/user/role_change', payload);
+      const response = await axiosToken.post('/users/role_change', payload);
 
       if (response.status === 200) {
         console.log('Successfully submitted.')
@@ -146,34 +146,32 @@ export const UserAccountPage: React.FC = () => {
         </button>
       </div>
       
-      {!user?.role.includes('ROLE_GUIDE') && (
-        <div className={styles.sectionContent}>
+   
+      <div className={styles.sectionContent}>
           
-          <div className={styles.profileSections}>
-            <div className={styles.section}>Tours</div>
-            <div className={styles.section}>Photos</div>
-            <div className={styles.section}>Reviews</div>
-            <div className={styles.section}>Calendar</div>
-          </div>
-          
-          <div className={styles.noContent}>
-            <h4 className={styles.title}>No upcoming tours yet</h4>
-
-            <p className={styles.contentSmallText}>
-              Inspire friends with your trail reviews, 
-              adventure lists, and Navigator activities.
-            </p>
-
-            <Link to="/continents" className={styles.exploreButton}>Explore trails</Link>
-          </div>
+        <div className={styles.profileSections}>
+          <div className={styles.section}>Upcoming tours</div>
+          <div className={styles.section}>Photos</div>
+          <div className={styles.section}>Reviews</div>
         </div>
-      )}
+          
+        <div className={styles.noContent}>
+          <h4 className={styles.title}>No upcoming tours yet</h4>
 
-      {user?.role.includes('ROLE_GUIDE') && (
+          <p className={styles.contentSmallText}>
+            Inspire friends with your trail reviews, 
+            adventure lists, and Navigator activities.
+          </p>
+
+          <Link to="/continents" className={styles.exploreButton}>Explore trails</Link>
+        </div>
+      </div>
+
+      {/* {user?.role.includes('ROLE_GUIDE') && (
         <div className={styles.myToursContainer}>
           <MyTours />
         </div>
-      )}
+      )} */}
 
       
 

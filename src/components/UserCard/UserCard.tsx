@@ -72,14 +72,16 @@ export const UserCard: React.FC = () => {
           <img src={goNextGrey} alt="arrow" />
         </div>
 
-        <Link to="/profile" className={styles.userDataWrapperBlack}>
-          <div className={styles.textWrapper}>
-            <img src={myToursIcon} alt="tours" />
-            <p className={styles.textTours}>My tours</p>
-          </div>
-          
-          <img src={goNextWhite} alt="arrow" />
-        </Link>
+        {user?.role.includes('ROLE_GUIDE') && (
+          <Link to="/my-tours" className={styles.userDataWrapperBlack}>
+            <div className={styles.textWrapper}>
+              <img src={myToursIcon} alt="tours" />
+              <p className={styles.textTours}>My tours</p>
+            </div>
+            
+            <img src={goNextWhite} alt="arrow" />
+          </Link>
+        )}
       </div>
     </div>
   )

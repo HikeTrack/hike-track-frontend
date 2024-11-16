@@ -67,15 +67,36 @@ export const GuideApplicationPage: React.FC = () => {
       return;
     }
 
-    const isSuccess = await sendGuideApplication(userEmail);
+    setIsLoading(true);
 
-    if (isSuccess) {
-      if (user) {
-        navigate('/profile');
+    try {
+      const isSuccess = await sendGuideApplication(userEmail);
+
+      if (isSuccess) {
+        setError('');
+
+        if (user) {
+          navigate('/profile');
+        } else {
+          navigate('/login');
+        }
       } else {
-        navigate('/login');
+        setError('Failed to submit application. Please try again later');
       }
+    } catch (error) {
+      setError('An unexpected error occured')
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleInputReset = () => {
+    setUserFirstName(firstName || user?.firstName || '');
+    setUserLastName(lastName || user?.lastName || '');
+    setUserEmail(email || user?.email || '');
+    setError('');
+
+    navigate('/profile');
   }
   
   return (
@@ -326,8 +347,10 @@ export const GuideApplicationPage: React.FC = () => {
 
           <div className={styles.buttonContainer}>
             <button className={styles.buttonSubmit} type="submit">Submit Application</button>
+            
             <button 
               className={styles.buttonCancel} 
+              onClick={handleInputReset}
             >
               Cancel
             </button>

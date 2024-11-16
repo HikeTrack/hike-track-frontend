@@ -4,12 +4,13 @@ import { useAuth } from "../../context/AuthContext";
 import { Tour } from "../../types/Tour";
 import { getToursByGuideId } from "../../utils/fetchData";
 import { getSearchIcon } from "../../utils/getIcons";
-import { Loader } from "../Loader/Loader";
-import { TourCardGuide } from "../TourCardGuide/TourCardGuide";
+import { Loader } from "../../components/Loader/Loader";
+import { TourCardGuide } from "../../components/TourCardGuide/TourCardGuide";
 import debounce from "lodash/debounce";
-import styles from './MyTours.module.scss';
+import styles from './MyToursPage.module.scss';
+import { UserCard } from "../../components/UserCard/UserCard";
 
-export const MyTours: React.FC = () => {
+export const MyToursPage: React.FC = () => {
   const { user, removeTour } = useAuth();
   const searchIcon = getSearchIcon();
   const [isLoading, setIsLoading] = useState(false);
@@ -69,53 +70,72 @@ export const MyTours: React.FC = () => {
   }, [user?.id]);
   
   return (
-    <div className={styles.myTours}>
-      <div className={styles.topPanel}>
+    <div className={styles.page}>
+      <div className={styles.leftPanel}>
+        <UserCard />
+
         <Link
-          to="/profile"
-          className={styles.topPanelButtonActive}
+          to="/profile" 
+          className={styles.backButton}
         >
-          Tour List
+          Back to profile
         </Link>
 
-        <Link 
-          to="/create-tour"
-          className={styles.topPanelButton}  
+        <button 
+          className={styles.deleteButton}
         >
-          Add new tour
-        </Link>
+          Delete account
+        </button>
       </div>
 
-      <div className={styles.searchBar}>
-        <img src={searchIcon} alt="Search" />
-        
-        <input 
-          id="search"
-          type="search"
-          placeholder="Tour search"
-          className={styles.searchInput}
-          onChange={handleQueryChange}
-        />
-      </div> 
+      <div className={styles.myTours}>
+        <div className={styles.topPanel}>
+          <Link
+            to="/profile"
+            className={styles.topPanelButtonActive}
+          >
+            Tour List
+          </Link>
 
-      <div className={styles.myToursGrid}>
-        {isLoading ? (
-          <div className={styles.loaderWrapper}>
-            <Loader />
-          </div>
-        ) : error ? (
-          <p>{error}</p>
-        ) : filteredTours.length > 0 ? (
-          filteredTours.map((tour) => (
-            <TourCardGuide 
-              tour={tour} 
-              key={tour.id}
-              onRemove={() => handleRemoveTour(tour.id)}
-            />
-          ))
-        ) : (
-          <p className={styles.gridText}>There are no tours yet.</p>
-        )}
+          <Link 
+            to="/create-tour"
+            className={styles.topPanelButton}  
+          >
+            Add new tour
+          </Link>
+        </div>
+
+        <div className={styles.searchBar}>
+          <img src={searchIcon} alt="Search" />
+          
+          <input 
+            id="search"
+            type="search"
+            placeholder="Tour search"
+            className={styles.searchInput}
+            onChange={handleQueryChange}
+          />
+        </div> 
+
+        <div className={styles.myToursGrid}>
+          {isLoading ? (
+            <div className={styles.loaderWrapper}>
+              <Loader />
+            </div>
+          ) : error ? (
+            <p>{error}</p>
+          ) : filteredTours.length > 0 ? (
+            filteredTours.map((tour) => (
+              <TourCardGuide 
+                tour={tour} 
+                key={tour.id}
+                onRemove={() => handleRemoveTour(tour.id)}
+              />
+            ))
+          ) : (
+            <p className={styles.gridText}>There are no tours yet.</p>
+          )}
+        </div>
       </div>
     </div>
   )

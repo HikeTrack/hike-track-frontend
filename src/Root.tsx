@@ -17,6 +17,7 @@ import { GuideApplicationPage } from './modules/GuideApplicationPage/GuideApplic
 import { CreateTourPage } from './modules/CreateTourPage/CreateTourPage';
 import { ConfirmationPage } from './modules/ConfirmationPage/ConfirmationPage';
 import { NotFoundPage } from './modules/NotFoundPage/NotFoundPage';
+import { MyToursPage } from './modules/MyToursPage/MyToursPage';
 
 export const Root = () => (
   <AuthProvider>
@@ -34,6 +35,7 @@ export const Root = () => (
           <Route path="profile" element={<UserAccountPage />}></Route>
           <Route path="edit-profile" element={<ProfileEditorPage />}></Route>
           <Route path="guide-application" element={<GuideApplicationPage />}></Route>
+          <Route path="my-tours" element={<MyToursPage />}></Route>
           <Route path="create-tour" element={<CreateTourPage />}></Route>
 
           <Route 
