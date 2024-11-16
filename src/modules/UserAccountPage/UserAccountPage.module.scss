@@ -300,3 +300,64 @@
   height: 200px;
   width: 200px;
 }
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  // width: 100vw;
+  width: 100%;
+  // height: 100vh;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.notification {
+  padding: 16px;
+  // width: 100%;
+  max-width: 90%;
+  background: $color-bg;
+  border-radius: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+
+  @include on-desktop {
+    padding: 24px;
+    width: 534px;
+  }
+}
+
+.notificationTitle {
+  @include h1-mobile-medium;
+
+  text-align: center;
+  
+  @include on-desktop {
+    @include h3-web;
+  }
+}
+
+.notificationButton {
+  @include green-button;
+  @include button-mobile;
+
+  width: 100%;
+  padding: 16px;
+  border-radius: 1000px;
+  text-decoration: none;
+  color: $color-bg;
+
+  @include on-desktop {
+    @include button-web;
+  }
+}
+
+.logoIcon {
+  height: 73px;
+}

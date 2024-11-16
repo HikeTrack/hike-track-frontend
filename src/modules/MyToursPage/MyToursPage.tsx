@@ -80,12 +80,6 @@ export const MyToursPage: React.FC = () => {
         >
           Back to profile
         </Link>
-
-        <button 
-          className={styles.deleteButton}
-        >
-          Delete account
-        </button>
       </div>
 
       <div className={styles.myTours}>
