@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react"
 import { PopularTour } from "../../types/PopularTour";
-import { Countries } from "../../enums/Countries";
 import { PopularToursCard } from '../PopularToursCard/PopularToursCard';
 import { useSwipeable } from "react-swipeable";
-import styles from './PopularTours.module.scss';
 import { Link } from "react-router-dom";
 import { getArrowLeftActiveIcon, getArrowLeftDisabledIcon, getArrowRightActiveIcon, getArrowRightDisabledIcon } from "../../utils/getIcons";
+import { Country } from "../../types/Country";
+import styles from './PopularTours.module.scss';
 
 type Props = {
   tours: PopularTour[];
+  countries: Country[];
 }
 
-export const PopularTours: React.FC<Props> = ({ tours }) => {
+export const PopularTours: React.FC<Props> = ({ tours, countries }) => {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [smallCardIndex, setSmallCardIndex] = useState(0);
   // const [smallCardsCount, setSmallCardsCount] = useState(2);
@@ -116,25 +117,25 @@ export const PopularTours: React.FC<Props> = ({ tours }) => {
 
         <a className={styles.link} href="#">Leave a request</a>
 
-        <div className={styles.cardContainer}>
-          {tours.map(countryCard => (
+        {/* <div className={styles.cardContainer}>
+          {countries.map(countryCard => (
             <div className={styles.smallCard} key={countryCard.id}>
               <Link to={"/toursByCountry/:countryId"}>
                 <img 
-                  src={`/hike-track-frontend/${countryCard.mainPhoto}`} 
+                  src={countryCard.photo}
                   alt="Nature scenery" 
                   className={styles.cardImage}
                 />
                 
-                <p className={styles.location}>{Countries[countryCard.countryId]}</p>
+                <p className={styles.location}>{countryCard.name}</p>
               </Link>
             </div>
           ))}
-        </div>
+        </div> */}
 
         <div className={styles.smallCardSlider} {...handlersSmall}>
           <div className={styles.sliderContainerSmall}>
-            {tours.map(countryCard => (
+            {countries.map(countryCard => (
               <div 
                 className={styles.smallCardMobile} 
                 key={countryCard.id}
@@ -142,12 +143,12 @@ export const PopularTours: React.FC<Props> = ({ tours }) => {
               >
                 <Link to={"/toursByCountry/:countryId"}>
                   <img 
-                    src={`/hike-track-frontend/${countryCard.mainPhoto}`} 
+                    src={countryCard.photo}
                     alt="Nature scenery" 
                     className={styles.cardImageSmall}
                   />
                   
-                  <p className={styles.location}>{Countries[countryCard.countryId]}</p>
+                  <p className={styles.location}>{countryCard.name}</p>
                 </Link>
               </div>
             ))}
@@ -177,7 +178,7 @@ export const PopularTours: React.FC<Props> = ({ tours }) => {
             <button
               className={styles.buttonSmall}
               onClick={handleRightClickForSmall}
-              disabled={isRightBigDisabled}
+              disabled={isRightSmallDisabled}
             >
               {isRightSmallDisabled ? (
                 <img 

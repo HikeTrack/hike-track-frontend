@@ -4,26 +4,38 @@ import { Loader } from "../../components/Loader/Loader";
 import { OurMission } from "../../components/OurMission/OurMission";
 import { PopularTours } from "../../components/PopularTours/PopularTours";
 import { TravelStories } from "../../components/TravelStories/TravelStories";
+import { Country } from "../../types/Country";
 import { PopularTour } from "../../types/PopularTour";
-import { getPopularTours } from "../../utils/fetchData";
+import { getPopularTours, getRandom10Countries } from "../../utils/fetchData";
 import styles from './HomePage.module.scss';
 
 export const HomePage = () => {
+  const [randomCountries, setRandomCountries] = useState<Country[]>([]);
   const [popularTours, setPopularTours] = useState<PopularTour[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchPopularTours = async () => {
+    setIsLoading(true);
+    setError('');
+    
+    const fetchData = async () => {
       try {
-        const popularData = await getPopularTours();
+        const [countryData, popularData] = await Promise.all([
+          getRandom10Countries(),
+          getPopularTours(),
+        ]); 
 
+        setRandomCountries(countryData);
         setPopularTours(popularData);
+      } catch (error) {
+        setError('Error loading data');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchPopularTours();
+    fetchData();
   }, []);
   
   return (
@@ -35,7 +47,10 @@ export const HomePage = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <PopularTours tours={popularTours}/>
+        <PopularTours 
+          tours={popularTours}
+          countries={randomCountries}
+        />
       )}
       
       <div className={styles.section}>
