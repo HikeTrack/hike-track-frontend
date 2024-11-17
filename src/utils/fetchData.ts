@@ -23,6 +23,10 @@ export const getCountries = (): Promise<Country[]> => {
   return getData<Country[]>('/countries');
 };
 
+export const getRandom10Countries = (): Promise<Country[]> => {
+  return getData<Country[]>('/countries/random_ten');
+}
+
 export const getTours = (): Promise<Tour[]> => {
   return getData<Tour[]>('/tours');
 };

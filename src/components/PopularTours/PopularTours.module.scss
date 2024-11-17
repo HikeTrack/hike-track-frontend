@@ -79,15 +79,11 @@
   display: none;
   
   @include on-desktop {
-    grid-column: 1 / -1;
-
     @include grid;
-  }
-
-  @include on-desktop-wide {
-    display: block;
+    
     display: flex;
     gap: 27px;
+    grid-column: 1 / -1;
   }
 }
 

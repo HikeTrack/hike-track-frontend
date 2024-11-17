@@ -151,6 +151,11 @@ export const UserAccountPage: React.FC = () => {
       console.log(response.data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setSelectedContinent(null);
+      setSelectedImage(null);
+      setCountryName('');
+      setPreviewImgUrl('');
     }
   };  
 
