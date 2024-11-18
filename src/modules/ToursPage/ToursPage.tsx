@@ -42,31 +42,43 @@ export const ToursPage: React.FC = () => {
   const [endDate, setEndDate] = useState<Date | null>(null);
 
   useEffect(() => {
-    if (countryId) {
-      const id = Number(countryId);
+    const fetchCountriesAndTours = async () => {
+      try {
+        if (countryOptions.length === 0) {
+          const countries = await getCountries();
 
-      if (Object.values(Countries).includes(id)) {
-        setSelectedCountryId(id as Countries);
-      }
-      
-      const fetchTours = async () => {
-        setIsLoading(true);
-        
-        try {
-          const countryName = Countries[id];
-          const tourData = await getToursByCountry(countryName);
+          const options = countries.map(country => ({
+            value: country.id,
+            label: country.name,
+          }))
+          .sort((a, b) => a.label.localeCompare(b.label));
 
-          setTours(tourData);
-        } catch (error) {
-          setError('Failed to load tours. Please try again later.')
-        } finally {
-          setIsLoading(false);
+          setCountryOptions(options);
         }
-      };
 
-      fetchTours()
-    }
-  }, [countryId]);
+        if (countryId && countryOptions.length > 0) {
+          const id = Number(countryId);
+          const selectedCountry = countryOptions.find(option => option.value === id);
+
+          if (!selectedCountry) {
+            setError('Invalid country selected');
+            return;
+          }
+
+          const countryName = selectedCountry.label;
+
+          const tourData = await getToursByCountry(countryName);
+          setTours(tourData);
+        }
+      } catch (error) {
+        setError('Failed to load data. Please try again later');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCountriesAndTours();
+  }, [countryId, countryOptions]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -161,24 +173,6 @@ export const ToursPage: React.FC = () => {
     
     setFilteredTours(filtered);
   }, [tours, startDate, endDate, difficulty, length, price]);
-
-  useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        const countries = await getCountries();
-        const options = countries.map(country => ({
-          value: country.id,
-          label: country.name,
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label));
-        setCountryOptions(options);
-      } catch (error) {
-        console.error('Error fetching countries');
-      }
-    }
-
-    fetchCountries();
-  }, []);
 
   const handleCountryChange = (value: string | number) => {
     if (typeof value === 'number') {
@@ -407,7 +401,11 @@ export const ToursPage: React.FC = () => {
                 <p>{error}</p>
               ) : filteredTours.length > 0 ? (
                 filteredTours.map((tour) => (
-                  <TourCard tour={tour} key={tour.id}/>
+                  <TourCard 
+                    tour={tour} 
+                    key={tour.id}
+                    countryOptions={countryOptions}
+                  />
                 ))
               ) : (
                 <p className={styles.gridText}>No tours available for this country.</p>
