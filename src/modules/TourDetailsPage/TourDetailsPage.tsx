@@ -3,9 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Loader } from "../../components/Loader/Loader";
 import { TourCard } from "../../components/TourCard/TourCard";
 import { Countries } from "../../enums/Countries";
+import { CountryOption } from "../../types/Country";
 import { Tour } from "../../types/Tour";
 import { TourDetails } from "../../types/TourDetails";
-import { getRandomToursByCountry, getTourById } from "../../utils/fetchData";
+import { getCountries, getRandomToursByCountry, getTourById } from "../../utils/fetchData";
 import { formatDate, formatDistance } from "../../utils/formatFunctions";
 import { getArrowBackIcon, getArrowNextIcon, getBookmarkIcon, getCameraIcon, getCarIcon, getPrinterIcon, getShareIcon, getShareSocialsIcon, getStarIcon, getThumbsUpIcon } from "../../utils/getIcons";
 import { getMapImg, getUserContent1, getUserContent2, getUserContent3, getUserImg } from "../../utils/getImages";
@@ -14,40 +15,82 @@ import styles from './TourDetailsPage.module.scss';
 export const TourDetailsPage: React.FC = () => {
   const { tourId } = useParams<{ tourId: string }>();
   const navigate = useNavigate();
+  const [countryOptions, setCountryOptions] = useState<CountryOption[]>([]);
   const [tourDetails, setTourDetails] = useState<TourDetails>();
   const [suggestedTours, setSuggestedTours] = useState<Tour[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const countryName = countryOptions.find(option => option.value === tourDetails?.countryId)?.label || 'Unknown country';
   
   useEffect(() => {
-    if (tourId) {
-      const id = Number(tourId);
-  
-      const fetchTourDetailsAndSuggestedTours = async () => {
-        setIsLoading(true);
-  
-        try {
+    const fetchData = async () => {
+      setIsLoading(true);
+
+      try {
+        const countriesData = await getCountries();
+        
+        const countryOpt = countriesData.map((country) => ({
+          value: country.id,
+          label: country.name,
+        }));
+        
+        setCountryOptions(countryOpt);
+
+        if (tourId) {
+          const id = Number(tourId);
           const tourDetailsData = await getTourById(id);
           setTourDetails(tourDetailsData);
-  
-          if (tourDetailsData && tourDetailsData.countryId) {
-            const coutryName = Countries[tourDetailsData.countryId];
 
-            if (coutryName) {
-              const randomTours = await getRandomToursByCountry(coutryName);
-              const filteredTours = randomTours.filter(tour => tour.id !== id);
+          if (tourDetailsData && tourDetailsData.countryId) {
+            const countryName = countriesData.find(
+              (country) => country.id === tourDetailsData.countryId
+            )?.name;
+
+            if (countryName) {
+              const randomTours = await getRandomToursByCountry(countryName);
+              const filteredTours = randomTours.filter((tour) => tour.id !== id);
               setSuggestedTours(filteredTours);
             }
           }
-        } catch (error) {
-          setError('Failed to load tours. Please try again later.');
-        } finally {
-          setIsLoading(false);
         }
-      };
-  
-      fetchTourDetailsAndSuggestedTours();
+      } catch (error) {
+        setError('Failed to load tour details. Please try again later');
+      } finally {
+        setIsLoading(false);
+      }
     }
+
+    fetchData();
+    
+    // if (tourId) {
+    //   const id = Number(tourId);
+  
+    //   const fetchTourDetailsAndSuggestedTours = async () => {
+    //     setIsLoading(true);
+  
+    //     try {
+    //       const tourDetailsData = await getTourById(id);
+    //       setTourDetails(tourDetailsData);
+  
+    //       if (tourDetailsData && tourDetailsData.countryId) {
+    //         const coutryName = Countries[tourDetailsData.countryId];
+
+    //         if (coutryName) {
+    //           const randomTours = await getRandomToursByCountry(coutryName);
+    //           const filteredTours = randomTours.filter(tour => tour.id !== id);
+    //           setSuggestedTours(filteredTours);
+    //         }
+    //       }
+    //     } catch (error) {
+    //       setError('Failed to load tours. Please try again later.');
+    //     } finally {
+    //       setIsLoading(false);
+    //     }
+    //   };
+  
+    //   fetchTourDetailsAndSuggestedTours();
+    // }
   }, [tourId]);  
 
   if (!tourDetails) {
@@ -81,7 +124,7 @@ export const TourDetailsPage: React.FC = () => {
         
         <div className={styles.highlightContainer}>
           <div className={styles.highlights}>
-            <p className={styles.highlightText}>{`${Countries[tourDetails.countryId]} | ${tourDetails.details?.elevationGain} m`}</p>
+            <p className={styles.highlightText}>{`${countryName} | ${tourDetails.details?.elevationGain} m`}</p>
 
             <div className={styles.highlightWrapper}>
               <p className={styles.highlightText}>Difficulty <span className={styles.highlightSpan}>{tourDetails.difficulty}</span></p>
@@ -320,7 +363,7 @@ export const TourDetailsPage: React.FC = () => {
             <p>{error}</p>
           ) : suggestedTours.length > 0 ? (
             suggestedTours.map((tour) => (
-              <TourCard tour={tour} key={tour.id}/>
+              <TourCard tour={tour} key={tour.id} countryOptions={countryOptions}/>
             ))
           ) : (
             <p className={styles.gridText}>No tours available for this country.</p>

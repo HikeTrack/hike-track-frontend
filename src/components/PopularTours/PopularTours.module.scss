@@ -92,9 +92,9 @@
 
   @include grid;
 
-  @include on-desktop {
-    display: none;
-  }
+  // @include on-desktop {
+  //   display: none;
+  // }
 }  
 
 .sliderContainerSmall {

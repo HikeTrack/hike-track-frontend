@@ -6,12 +6,16 @@ import { Tour } from "../../types/Tour";
 import styles from './TourCard.module.scss';
 import { Countries } from "../../enums/Countries";
 import { getDifficultyGreenIcon, getPriceIcon } from "../../utils/getIcons";
+import { CountryOption } from "../../types/Country";
 
 type Props = {
-  tour: Tour,
+  tour: Tour;
+  countryOptions: CountryOption[];
 }
 
-export const TourCard: React.FC<Props> = ({ tour }) => {
+export const TourCard: React.FC<Props> = ({ tour, countryOptions }) => {
+  const countryName = countryOptions.find(option => option.value === tour.countryId)?.label || 'Unknown country';
+  
   const preparedDate = format(new Date(tour.date), 'dd');
   const preparedMonth = format(new Date(tour.date), 'MMM');
   const preparedDistance = formatDistance(tour.length);
@@ -22,6 +26,7 @@ export const TourCard: React.FC<Props> = ({ tour }) => {
   return (
     <div className={styles.tourCard}>
       <img
+        className={styles.tourImage}
         src={tour.mainPhoto}
       />
 
@@ -31,7 +36,7 @@ export const TourCard: React.FC<Props> = ({ tour }) => {
       </div>
 
       <div className={styles.tourInfo}>
-        <p className={styles.tourLocation}>{`${Countries[tour.countryId]} | ${preparedDistance}`}</p>
+        <p className={styles.tourLocation}>{`${countryName} | ${preparedDistance}`}</p>
         <p className={styles.tourTitle}>{tour.name}</p>
       </div>
 
