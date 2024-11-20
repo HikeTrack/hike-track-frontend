@@ -220,6 +220,7 @@ export const CreateTourPage: React.FC = () => {
       || !elevation
       || !selectedRouteType
       || !duration
+      || !description
       || !mapLink
       || !selectedActivity
       || !mainImage
@@ -255,12 +256,13 @@ export const CreateTourPage: React.FC = () => {
         date: preparedDate,
         difficulty: selectedDifficulty,
         countryId: countryId,
-        detailsRequestDto: {
+        details: {
           elevationGain: elevationGainInMetres,
           routeType: selectedRouteType,
           duration: durationInMinutes,
           map: mapLink,
-          activity: selectedActivity
+          activity: selectedActivity,
+          description: description
         }
       };
       formData.append('data', JSON.stringify(data));
