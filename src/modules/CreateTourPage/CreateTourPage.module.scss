@@ -52,6 +52,14 @@
   }
 }
 
+.formError {
+  position: absolute;
+  bottom: -25px;
+
+  font-size: 10px;
+  color: $color-system-error;
+}
+
 .centralPanel {
   margin-top: 70px;
   padding-block: 32px;
@@ -132,6 +140,8 @@
 }
 
 .inputContainer {
+  position: relative;
+
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -167,6 +177,8 @@
 }
 
 .inputImageContainer {
+  position: relative;
+
   display: flex;
   // flex-wrap: wrap;
   gap: 8px;
