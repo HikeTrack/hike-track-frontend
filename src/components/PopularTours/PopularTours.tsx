@@ -117,22 +117,6 @@ export const PopularTours: React.FC<Props> = ({ tours, countries }) => {
 
         <a className={styles.link} href="#">Leave a request</a>
 
-        {/* <div className={styles.cardContainer}>
-          {countries.map(countryCard => (
-            <div className={styles.smallCard} key={countryCard.id}>
-              <Link to={"/toursByCountry/:countryId"}>
-                <img 
-                  src={countryCard.photo}
-                  alt="Nature scenery" 
-                  className={styles.cardImage}
-                />
-                
-                <p className={styles.location}>{countryCard.name}</p>
-              </Link>
-            </div>
-          ))}
-        </div> */}
-
         <div className={styles.smallCardSlider} {...handlersSmall}>
           <div className={styles.sliderContainerSmall}>
             {countries.map(countryCard => (

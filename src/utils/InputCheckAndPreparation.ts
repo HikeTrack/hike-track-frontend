@@ -1,3 +1,4 @@
+import { isValid } from 'date-fns';
 import { DateTime } from 'luxon';
 
 export const prepareInputString = (input: string) => {
@@ -16,6 +17,24 @@ export const convertKilometresToMetres = (input: number) => {
 
 export const convertHoursToMinutes = (input: number) => {
   return input * 60;
+}
+
+export const validateDateString = (input: string): boolean => {
+  const dateRegex = /^\d{4}\.\d{2}\.\d{2}$/;
+
+  if (dateRegex.test(input)) {
+    return false;
+  }
+
+  const [year, month, day] = input.split('.').map(Number);
+
+  const isValidDate = !isNaN(year) 
+    && !isNaN(month) 
+    && !isNaN(day)
+    && month >= 1 && month <= 12
+    && day >= 1 && day <= new Date(year, month, 0). getDate();
+
+  return isValidDate;
 }
 
 export const prepareDateString = (input: string): string => {

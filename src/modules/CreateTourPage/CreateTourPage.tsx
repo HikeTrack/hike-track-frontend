@@ -5,7 +5,7 @@ import { TourDropdown } from "../../components/TourDropdown/TourDropodown";
 import { UserCard } from "../../components/UserCard/UserCard";
 import { getRemoveIcon, getSmallCameraIcon } from "../../utils/getIcons";
 import { axiosToken } from "../../utils/axios";
-import { convertHoursToMinutes, convertKilometresToMetres, prepareDateString } from "../../utils/InputCheckAndPreparation";
+import { convertHoursToMinutes, convertKilometresToMetres, prepareDateString, validateDateString } from "../../utils/InputCheckAndPreparation";
 import styles from './CreateTourPage.module.scss';
 import { getCountries } from "../../utils/fetchData";
 import { CountryOption } from "../../types/Country";
@@ -18,6 +18,7 @@ export const CreateTourPage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   
   const [mainImage, setMainImage] = useState<File | null>(null);
   const [previewMainImgUrl, setPreviewMainImgUrl] = useState('');
@@ -80,18 +81,38 @@ export const CreateTourPage: React.FC = () => {
     }
     
     setSelectedCountryId(+value);
+
+    setFormErrors((prev) => ({
+      ...prev,
+      selectedCountryId: '',
+    }));
   };
 
   const handleDifficultySelect = (value: string | null) => {
     setSelectedDifficulty(value as Difficulty);
+
+    setFormErrors((prev) => ({
+      ...prev,
+      selectedDifficulty: '',
+    }));
   };
 
   const handleActivitySelect = (value: string | null) => {
     setSelectedActivity(value as Activity);
+
+    setFormErrors((prev) => ({
+      ...prev,
+      selectedActivity: '',
+    }));
   };
 
   const handleRouteTypeSelect = (value: string | null) => {
     setSelectedRouteType(value as RouteType);
+
+    setFormErrors((prev) => ({
+      ...prev,
+      selectedRouteType: '',
+    }));
   };
 
   const handleMainImageChange: ChangeEventHandler<HTMLInputElement> = async (e) => {
@@ -105,6 +126,11 @@ export const CreateTourPage: React.FC = () => {
     }
 
     setMainImage(file);
+
+    setFormErrors((prev) => ({
+      ...prev,
+      mainImage: '',
+    }));
 
     try {
       const imgUrl = await fileToDataString(file);
@@ -134,6 +160,11 @@ export const CreateTourPage: React.FC = () => {
         ...selectedFiles
       ]);
 
+      setFormErrors((prev) => ({
+        ...prev,
+        additionalImages: '',
+      }));
+
       try {
         const previews = await Promise.all(selectedFiles.map(file => fileToDataString(file)));
         setPreviewAdditionalImgUrl(prevPreviews => [
@@ -142,7 +173,7 @@ export const CreateTourPage: React.FC = () => {
         ]
         );
       } catch (error) {
-        setError('Could not load an image, try again');
+        setError('Could not load an image, please try again');
       }
     }
   }
@@ -155,27 +186,47 @@ export const CreateTourPage: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
 
-    const numericValue = value === '' ? null : Number(value);
+    setFormErrors((prev) => ({
+      ...prev,
+      [id]: ''
+    }));
 
-    if (id === 'tour') {
-      setTour(value);
-    } else if (id === 'date') {
-      setTourDate(value);
-    } else if (id === 'length') {
-      setLength(numericValue);
-    } else if (id === 'elevation') {
-      setElevation(numericValue);
-    } else if (id === 'duration') {
-      setDuration(numericValue);
-    } else if (id === 'price') {
-      setPrice(numericValue);
-    } else if (id === 'map') {
-      setMapLink(value);
+    const normalisedValue = value.replace(',', '.');
+    const numericValue = normalisedValue === '' ? null : Number(normalisedValue);
+
+    switch (id) {
+      case 'tour':
+        setTour(value);
+        break;
+      case 'date':
+        setTourDate(value);
+        break;
+      case 'length':
+        setLength(numericValue);
+        break;
+      case 'elevation':
+        setElevation(numericValue);
+        break;
+      case 'duration':
+        setDuration(numericValue);
+        break;
+      case 'price':
+        setPrice(numericValue);
+        break;
+      case 'map':
+        setMapLink(value);
+        break;
+      default: break;
     }
   };
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { id, value } = e.target;
+
+    setFormErrors((prev) => ({
+      ...prev,
+      [id]: '',
+    }));
 
     if (id === 'description') {
       setDescription(value.slice(0, 500));
@@ -211,21 +262,53 @@ export const CreateTourPage: React.FC = () => {
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!tour 
-      || !length 
-      || !price
-      || !tourDate
-      || !selectedDifficulty
-      || !selectedCountryId
-      || !elevation
-      || !selectedRouteType
-      || !duration
-      || !mapLink
-      || !selectedActivity
-      || !mainImage
-      || additionalImages.length === 0
-      ) {
-      setError('All information must be provided')
+    let errors: Record<string, string> = {};
+
+    if (!tour) {
+      errors.tour = 'Tour name is required';
+    }
+    if (!length || length <= 0) {
+      errors.length = 'Length is required';
+    }
+    if (!price || price <= 0) {
+      errors.price = 'Price is required';
+    }
+    if (!tourDate || !validateDateString(tourDate)) {
+      errors.date = 'Valid tour date is required';
+    }
+    if (!selectedDifficulty) {
+      errors.selectedDifficulty = 'Select difficulty';
+    }
+    if (!selectedCountryId) {
+      errors.selectedCountryId = 'Select country';
+    }
+    if (!elevation || elevation <= 0) {
+      errors.elevation = 'Elevation is required';
+    }
+    if (!selectedRouteType) {
+      errors.selectedRouteType = 'Select route type';
+    }
+    if (!duration || duration <= 0) {
+      errors.duration = 'Duration is required';
+    }
+    if (!description) {
+      errors.description = 'Description is required';
+    }
+    if (!mapLink) {
+      errors.map = 'Map link is required';
+    }
+    if (!selectedActivity) {
+      errors.selectedActivity = 'Select activity';
+    }
+    if (!mainImage) {
+      errors.mainImage = 'Upload main image';
+    }
+    if (additionalImages.length === 0) {
+      errors.additionalImages = 'Upload at least one additional image';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
       return;
     }
 
@@ -238,14 +321,26 @@ export const CreateTourPage: React.FC = () => {
       }
 
       const countryId = selectedCountryOption.value;
-
-      const durationInMinutes = convertHoursToMinutes(duration);
-      const elevationGainInMetres = convertKilometresToMetres(elevation);
-      const lengthInMetres = convertKilometresToMetres(length);
       const preparedDate = prepareDateString(tourDate);
 
-      console.log(preparedDate);
+      let durationInMinutes;
+      let elevationGainInMetres;
+      let lengthInMetres;
 
+      const isValidNumber = (value: number | null): boolean => value !== null && value > 0;
+
+      if (isValidNumber(duration)) {
+        durationInMinutes = convertHoursToMinutes(duration as number);
+      };
+
+      if (isValidNumber(elevation)) {
+        elevationGainInMetres = convertKilometresToMetres(elevation as number);
+      };
+
+      if (isValidNumber(length)) {
+        lengthInMetres = convertKilometresToMetres(length as number);
+      }
+      
       const formData = new FormData();
 
       const data = {
@@ -255,16 +350,20 @@ export const CreateTourPage: React.FC = () => {
         date: preparedDate,
         difficulty: selectedDifficulty,
         countryId: countryId,
-        detailsRequestDto: {
+        details: {
           elevationGain: elevationGainInMetres,
           routeType: selectedRouteType,
           duration: durationInMinutes,
           map: mapLink,
-          activity: selectedActivity
+          activity: selectedActivity,
+          description: description
         }
       };
       formData.append('data', JSON.stringify(data));
-      formData.append('mainPhoto', mainImage);
+      
+      if (mainImage) {
+        formData.append('mainPhoto', mainImage);
+      }
 
       additionalImages.forEach((image) => {
         formData.append(`additionalPhotos`, image);
@@ -328,10 +427,9 @@ export const CreateTourPage: React.FC = () => {
                 name="tour"
                 value={tour}
                 onChange={handleInputChange}
-                aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="tourError"
               />
             </div>
+            {formErrors.tour && <span className={styles.formError}>{formErrors.tour}</span>}
           </div>
 
           <div className={styles.inputContainerBig}>
@@ -344,6 +442,7 @@ export const CreateTourPage: React.FC = () => {
                 selected={selectedCountryId}
                 onChange={handleCountryIdSelect}
               />
+              {formErrors.selectedCountryId && <span className={styles.formError}>{formErrors.selectedCountryId}</span>}
             </div> 
              
             <div className={styles.inputContainer}>
@@ -357,10 +456,9 @@ export const CreateTourPage: React.FC = () => {
                   name="date"
                   value={tourDate}
                   onChange={handleInputChange}
-                  aria-invalid={error ? 'true' : 'false'}
-                  aria-describedby="dateError"
                 />
               </div>
+              {formErrors.date && <span className={styles.formError}>{formErrors.date}</span>}
             </div>
 
             <div className={styles.inputContainer}>
@@ -374,10 +472,9 @@ export const CreateTourPage: React.FC = () => {
                   name="price"
                   value={price !== null ? price : ''}
                   onChange={handleInputChange}
-                  aria-invalid={error ? 'true' : 'false'}
-                  aria-describedby="firstNameError"
                 />
               </div>
+              {formErrors.price && <span className={styles.formError}>{formErrors.price}</span>}
             </div>
           </div>
             
@@ -391,6 +488,7 @@ export const CreateTourPage: React.FC = () => {
                 selected={selectedDifficulty}
                 onChange={handleDifficultySelect}
               />
+              {formErrors.selectedDifficulty && <span className={styles.formError}>{formErrors.selectedDifficulty}</span>}
             </div>
             
             <div className={styles.inputContainer}>
@@ -402,6 +500,7 @@ export const CreateTourPage: React.FC = () => {
                 selected={selectedActivity}
                 onChange={handleActivitySelect}
               />
+              {formErrors.selectedActivity && <span className={styles.formError}>{formErrors.selectedActivity}</span>}
             </div>
 
             <div className={styles.inputContainer}>
@@ -413,6 +512,7 @@ export const CreateTourPage: React.FC = () => {
                 selected={selectedRouteType}
                 onChange={handleRouteTypeSelect}
               />
+              {formErrors.selectedRouteType && <span className={styles.formError}>{formErrors.selectedRouteType}</span>}
             </div>
           </div>
 
@@ -428,10 +528,9 @@ export const CreateTourPage: React.FC = () => {
                   name="length"
                   value={length !== null ? length : ''}
                   onChange={handleInputChange}
-                  aria-invalid={error ? 'true' : 'false'}
-                  aria-describedby="lengthError"
                 />
               </div>
+              {formErrors.length && <span className={styles.formError}>{formErrors.length}</span>}
             </div>
             
             <div className={styles.inputContainer}>
@@ -445,10 +544,9 @@ export const CreateTourPage: React.FC = () => {
                   name="elevation"
                   value={elevation !== null ? elevation : ''}
                   onChange={handleInputChange}
-                  aria-invalid={error ? 'true' : 'false'}
-                  aria-describedby="elevationError"
                 />
               </div>
+              {formErrors.elevation && <span className={styles.formError}>{formErrors.elevation}</span>}
             </div>
 
             <div className={styles.inputContainer}>
@@ -462,10 +560,9 @@ export const CreateTourPage: React.FC = () => {
                   name="duration"
                   value={duration !== null ? duration : ''}
                   onChange={handleInputChange}
-                  aria-invalid={error ? 'true' : 'false'}
-                  aria-describedby="durationError"
                 />
               </div>
+              {formErrors.duration && <span className={styles.formError}>{formErrors.duration}</span>}
             </div>
           </div>
 
@@ -479,12 +576,11 @@ export const CreateTourPage: React.FC = () => {
               value={description}
               onChange={handleTextAreaChange}
               maxLength={500}
-              aria-invalid={error ? 'true' : 'false'}
-              aria-describedby="descriptionError"
             />
             <div className={styles.textareaCharCounter}>
               {description.length}/500
             </div>
+            {formErrors.description && <span className={styles.formError}>{formErrors.description}</span>}
           </div>
 
           <div className={styles.inputImageContainer}>
@@ -520,6 +616,7 @@ export const CreateTourPage: React.FC = () => {
                 </button>
               </div>
             )}
+            {formErrors.mainImage && <span className={styles.formError}>{formErrors.mainImage}</span>}
           </div>
 
           <div className={styles.inputImageContainer}>
@@ -559,6 +656,7 @@ export const CreateTourPage: React.FC = () => {
                 ))}
               </div>
             )}
+            {formErrors.additionalImages && <span className={styles.formError}>{formErrors.additionalImages}</span>}
           </div>
 
           <div className={styles.inputContainer}>
@@ -572,13 +670,9 @@ export const CreateTourPage: React.FC = () => {
                 name="map"
                 value={mapLink}
                 onChange={handleInputChange}
-                aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="mapLinkError"
               />
             </div>
-
-
-            {/* <GoogleMap /> */}
+            {formErrors.map && <span className={styles.formError}>{formErrors.map}</span>}
           </div>
 
           <div className={styles.buttonContainer}>
@@ -592,7 +686,7 @@ export const CreateTourPage: React.FC = () => {
             <button 
               className={styles.buttonSave}
               type="submit"
-              // disabled={isLoading}
+              disabled={isLoading}
             >
               Save
             </button>

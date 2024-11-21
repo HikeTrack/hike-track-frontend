@@ -20,7 +20,6 @@ export const TourDetailsPage: React.FC = () => {
   const [suggestedTours, setSuggestedTours] = useState<Tour[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const countryName = countryOptions.find(option => option.value === tourDetails?.countryId)?.label || 'Unknown country';
   
   useEffect(() => {
@@ -353,7 +352,7 @@ export const TourDetailsPage: React.FC = () => {
         </div>
 
         <div className={styles.tourSuggestions}>
-          <h4 className={styles.title}>{`Other tours in ${Countries[tourDetails.countryId]}`}</h4>
+          <h4 className={styles.title}>{`Other tours in ${countryName}`}</h4>
 
           {isLoading ? (
             <div className={styles.loaderWrapper}>

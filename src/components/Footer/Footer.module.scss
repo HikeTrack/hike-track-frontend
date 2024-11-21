@@ -23,14 +23,22 @@
   max-width: 1920px;
   margin: 0 auto;
 
-  @media (min-width: 1280px) and (max-width: 1919px) {
-    width: 1280px;
-    margin: 0 auto;
+  // @media (min-width: 1280px) and (max-width: 1919px) {
+  //   width: 1280px;
+  //   margin: 0 auto;
+  // }
+
+  // @media (min-width: 1920px) {
+  //   width: 1920px;
+  //   margin: 0 auto;
+  // }
+
+  @include on-desktop {
+    padding-inline: 32px;
   }
 
-  @media (min-width: 1920px) {
-    width: 1920px;
-    margin: 0 auto;
+  @include on-desktop-wide {
+    padding-inline: 200px;
   }
 }
 
