@@ -353,7 +353,7 @@ export const CreateTourPage: React.FC = () => {
         date: preparedDate,
         difficulty: selectedDifficulty,
         countryId: countryId,
-        details: {
+        detailsRequestDto: {
           elevationGain: elevationGainInMetres,
           routeType: selectedRouteType,
           duration: durationInMinutes,

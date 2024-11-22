@@ -88,6 +88,7 @@
 }
 
 .smallCardSlider {
+  position: relative;
   grid-column: 1 / -1;
 
   @include grid;
@@ -102,9 +103,17 @@
   display: flex;
   overflow: hidden;
   margin-block: 16px;
+
+  @include on-desktop {
+    gap: 31px;
+  }
+
+  @include on-desktop-wide {
+    gap: 27px;
+  }
 }
 
-.smallCardMobile {
+.smallCard {
   position: relative;
   cursor: pointer;
 
@@ -120,14 +129,16 @@
   height: 126px;
   width: 166px;
   border-radius: 16px;
-}
 
-.buttonsSmallWrapper {
-  position: absolute;
-  top: 280px;
+  @include on-desktop {
+    height: 188px;
+    width: 176px;
+  }
 
-  display: flex;
-  gap: 10px;
+  @include on-desktop-wide {
+    height: 242px;
+    width: 194px;
+  }
 }
 
 .buttonSmall {
