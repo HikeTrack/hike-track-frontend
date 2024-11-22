@@ -15,7 +15,9 @@ type Props = {
 export const PopularTours: React.FC<Props> = ({ tours, countries }) => {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [smallCardIndex, setSmallCardIndex] = useState(0);
-  // const [smallCardsCount, setSmallCardsCount] = useState(2);
+  const [smallCardsCount, setSmallCardsCount] = useState(2);
+  const [smallCardWidth, setSmallCardWidth] = useState(166);
+  const [smallCardGap, setSmallCardGap] = useState(8)
 
   const [bigCardIndex, setBigCardIndex] = useState(0);
   const [bigCardsCount, setBigCardsCount] = useState(1);
@@ -30,14 +32,26 @@ export const PopularTours: React.FC<Props> = ({ tours, countries }) => {
       setBigCardsCount(1);
       setBigCardWidth(343);
       setBigCardGap(16);
+
+      setSmallCardsCount(2);
+      setSmallCardWidth(166);
+      setSmallCardGap(8);
     } else if (newScreenWidth >= 1280 && newScreenWidth < 1920) {
       setBigCardsCount(3);
       setBigCardWidth(384);
       setBigCardGap(32);
+
+      setSmallCardsCount(6);
+      setSmallCardWidth(176);
+      setSmallCardGap(8);
     } else if (newScreenWidth >= 1920) {
       setBigCardsCount(3);
       setBigCardWidth(493);
       setBigCardGap(20);
+
+      setSmallCardsCount(7);
+      setSmallCardWidth(194);
+      setSmallCardGap(8);
     }
   }
 
@@ -52,18 +66,18 @@ export const PopularTours: React.FC<Props> = ({ tours, countries }) => {
 
   const handleRightClickForSmall = () => {
     setSmallCardIndex(prevIndex => {
-      if (prevIndex === tours.length - 2) {
+      if (prevIndex === countries.length - 2) {
         return 0;
       }
       
-      return Math.min(prevIndex + 1, tours.length - 2);
+      return Math.min(prevIndex + 1, countries.length - 2);
     });
   };
 
   const handleLeftClickForSmall = () => {
     setSmallCardIndex(currIndex => {
       if (currIndex === 0) {
-        return tours.length - 2;
+        return countries.length - 2;
       }
       return Math.max(currIndex - 1, 0);
     });
@@ -121,9 +135,9 @@ export const PopularTours: React.FC<Props> = ({ tours, countries }) => {
           <div className={styles.sliderContainerSmall}>
             {countries.map(countryCard => (
               <div 
-                className={styles.smallCardMobile} 
+                className={styles.smallCard} 
                 key={countryCard.id}
-                style={{ transform: `translateX(-${smallCardIndex * 177}px` }}
+                style={{ transform: `translateX(-${smallCardIndex * (smallCardWidth + smallCardGap)}px` }}
               >
                 <Link to={"/toursByCountry/:countryId"}>
                   <img 
@@ -138,7 +152,7 @@ export const PopularTours: React.FC<Props> = ({ tours, countries }) => {
             ))}
           </div>
 
-          <div className={styles.buttonsSmallWrapper}>
+          <div className={styles.buttonsWrapper}>
             <button
               className={styles.buttonSmall}
               onClick={handleLeftClickForSmall}
