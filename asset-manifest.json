@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/hike-track-frontend/static/css/main.7d4e1d03.css",
-    "main.js": "/hike-track-frontend/static/js/main.932063af.js",
+    "main.js": "/hike-track-frontend/static/js/main.70777413.js",
     "static/media/authorisation.png": "/hike-track-frontend/static/media/authorisation.42dc274ecb8fbb5796a3.png",
     "static/media/not-found.png": "/hike-track-frontend/static/media/not-found.1a18bc7c403ee4fcd855.png",
     "static/media/popular-tours.png": "/hike-track-frontend/static/media/popular-tours.8988529a59430dc9f56e.png",
@@ -21,10 +21,10 @@
     "static/media/star-yellow.svg": "/hike-track-frontend/static/media/star-yellow.e2f5371d18cb9fa907d6.svg",
     "index.html": "/hike-track-frontend/index.html",
     "main.7d4e1d03.css.map": "/hike-track-frontend/static/css/main.7d4e1d03.css.map",
-    "main.932063af.js.map": "/hike-track-frontend/static/js/main.932063af.js.map"
+    "main.70777413.js.map": "/hike-track-frontend/static/js/main.70777413.js.map"
   },
   "entrypoints": [
     "static/css/main.7d4e1d03.css",
-    "static/js/main.932063af.js"
+    "static/js/main.70777413.js"
   ]
 }
