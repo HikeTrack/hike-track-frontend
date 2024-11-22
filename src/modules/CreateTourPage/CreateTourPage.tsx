@@ -5,11 +5,11 @@ import { TourDropdown } from "../../components/TourDropdown/TourDropodown";
 import { UserCard } from "../../components/UserCard/UserCard";
 import { getRemoveIcon, getSmallCameraIcon } from "../../utils/getIcons";
 import { axiosToken } from "../../utils/axios";
-import { convertHoursToMinutes, convertKilometresToMetres, prepareDateString, validateDateString } from "../../utils/InputCheckAndPreparation";
-import styles from './CreateTourPage.module.scss';
+import { convertHoursToMinutes, convertKilometresToMetres, prepareDateString, validateDateString, validateField } from "../../utils/InputCheckAndPreparation";
 import { getCountries } from "../../utils/fetchData";
 import { CountryOption } from "../../types/Country";
 import { useNavigate } from "react-router-dom";
+import styles from './CreateTourPage.module.scss';
 
 export const CreateTourPage: React.FC = () => {
   const navigate = useNavigate();
@@ -18,7 +18,6 @@ export const CreateTourPage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   
   const [mainImage, setMainImage] = useState<File | null>(null);
   const [previewMainImgUrl, setPreviewMainImgUrl] = useState('');
@@ -41,6 +40,8 @@ export const CreateTourPage: React.FC = () => {
   const [duration, setDuration] = useState<number | null>(null);
   const [mapLink, setMapLink] = useState('');
   const [price, setPrice] = useState<number | null>(null);
+
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -76,6 +77,8 @@ export const CreateTourPage: React.FC = () => {
   }));
 
   const handleCountryIdSelect = (value: string | null) => {
+    console.log('handleCountryIdSelect', value);
+    
     if (!value) {
       return;
     }
