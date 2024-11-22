@@ -1,4 +1,3 @@
-import { isValid } from 'date-fns';
 import { DateTime } from 'luxon';
 
 export const prepareInputString = (input: string) => {
@@ -22,7 +21,7 @@ export const convertHoursToMinutes = (input: number) => {
 export const validateDateString = (input: string): boolean => {
   const dateRegex = /^\d{4}\.\d{2}\.\d{2}$/;
 
-  if (dateRegex.test(input)) {
+  if (!dateRegex.test(input)) {
     return false;
   }
 
@@ -34,7 +33,18 @@ export const validateDateString = (input: string): boolean => {
     && month >= 1 && month <= 12
     && day >= 1 && day <= new Date(year, month, 0). getDate();
 
-  return isValidDate;
+  if (!isValidDate) {
+    return false;
+  }
+
+  const inputDate = DateTime.fromObject({ year, month, day });
+  const today = DateTime.now().startOf('day');
+
+  if (inputDate < today) {
+    return false;
+  }
+
+  return true;
 }
 
 export const prepareDateString = (input: string): string => {
@@ -54,3 +64,16 @@ export const prepareDateString = (input: string): string => {
 
   return dateTime.toISO() + `[${userTimeZone}]`;
 }
+
+export const validateField = (
+  errors: Record<string, string>,
+  touchedFields: Record<string, boolean>,
+  fieldName: string, 
+  condition: boolean, 
+  errorMessage: string
+): void => {
+  if (condition) {
+    errors[fieldName] = errorMessage;
+    touchedFields[fieldName] = true;
+  }
+};

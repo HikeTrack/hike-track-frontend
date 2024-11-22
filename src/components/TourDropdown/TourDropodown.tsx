@@ -17,7 +17,7 @@ export const TourDropdown: React.FC<Props> = ({
   options,
   selected,
   onChange,
-  label
+  label,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -45,7 +45,7 @@ export const TourDropdown: React.FC<Props> = ({
 
   return (
     <div className={styles.dropdown} ref={dropdownRef}>
-      <button className={styles.dropdownButton} onClick={handleToggle}>
+      <button type="button" className={styles.dropdownButton} onClick={handleToggle}>
         {options.find(option => option.value === selected)?.label || 'Options'}
       </button>
       {isOpen && (
