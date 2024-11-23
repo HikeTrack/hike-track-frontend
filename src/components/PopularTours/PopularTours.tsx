@@ -35,7 +35,7 @@ export const PopularTours: React.FC<Props> = ({ tours, countries }) => {
 
       setSmallCardsCount(2);
       setSmallCardWidth(166);
-      setSmallCardGap(8);
+      setSmallCardGap(11);
     } else if (newScreenWidth >= 1280 && newScreenWidth < 1920) {
       setBigCardsCount(3);
       setBigCardWidth(384);
@@ -43,7 +43,7 @@ export const PopularTours: React.FC<Props> = ({ tours, countries }) => {
 
       setSmallCardsCount(6);
       setSmallCardWidth(176);
-      setSmallCardGap(8);
+      setSmallCardGap(31);
     } else if (newScreenWidth >= 1920) {
       setBigCardsCount(3);
       setBigCardWidth(493);
@@ -51,7 +51,7 @@ export const PopularTours: React.FC<Props> = ({ tours, countries }) => {
 
       setSmallCardsCount(7);
       setSmallCardWidth(194);
-      setSmallCardGap(8);
+      setSmallCardGap(27);
     }
   }
 
@@ -104,7 +104,7 @@ export const PopularTours: React.FC<Props> = ({ tours, countries }) => {
   };
 
   const isLeftSmallDisabled = smallCardIndex === 0;
-  const isRightSmallDisabled = smallCardIndex === tours.length - 2;
+  const isRightSmallDisabled = smallCardIndex === countries.length - smallCardsCount;
 
   const isLeftBigDisabled = bigCardIndex === 0;
   const isRightBigDisabled = bigCardIndex === tours.length - bigCardsCount;
@@ -152,7 +152,7 @@ export const PopularTours: React.FC<Props> = ({ tours, countries }) => {
             ))}
           </div>
 
-          <div className={styles.buttonsWrapper}>
+          <div className={styles.buttonsWrapperSmall}>
             <button
               className={styles.buttonSmall}
               onClick={handleLeftClickForSmall}
@@ -208,7 +208,7 @@ export const PopularTours: React.FC<Props> = ({ tours, countries }) => {
             ))}
           </div>
 
-          <div className={styles.buttonsWrapper}>
+          <div className={styles.buttonsWrapperBig}>
             <button
               className={styles.button}
               onClick={handleLeftClickForBig}

@@ -2,6 +2,7 @@ import { Country } from "../types/Country";
 import { PopularTour } from "../types/PopularTour";
 import { Tour } from "../types/Tour";
 import { TourDetails } from "../types/TourDetails";
+import { UserProfilePuplic } from "../types/UserProfilePublic";
 import { BASE_URL } from "./constants";
 import { getRandomTours } from "./getRandomTours";
 
@@ -47,4 +48,8 @@ export const getRandomToursByCountry = async (countryName: string) => {
 
 export const getToursByGuideId = async (guideId: number) => {
   return getData<Tour[]>(`/tours/guide/${guideId}`);
+}
+
+export const getUserProfile = async (userId: number) => {
+  return getData<UserProfilePuplic>(`/users/${userId}`);
 }

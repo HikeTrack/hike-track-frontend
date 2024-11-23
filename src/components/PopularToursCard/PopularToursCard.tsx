@@ -13,6 +13,7 @@ import { Countries } from "../../enums/Countries";
 import styles from './PopularToursCard.module.scss';
 import { formatDate, formatDistance } from "../../utils/formatFunctions";
 import { useNavigate } from "react-router-dom";
+import { getUserProfile } from "../../utils/fetchData";
 
 type Props = {
   tour: PopularTour;
@@ -30,6 +31,23 @@ export const PopularToursCard: React.FC<Props> = ({ tour }) => {
   const lengthIcon = getLengthIcon();
   const dateIcon = getDateIcon();
   const priceIcon = getPriceIcon();
+  const [guidePhoto, setGuidePhoto] = useState<string>('');
+  
+  useEffect(() => {
+    const fetchGuidePhoto = async () => {
+      try {
+        const guide = await getUserProfile(tour.guideId);
+  
+        setGuidePhoto(guide.photo);
+      } catch (error) {
+        console.error("Error fetching guide photo:", error);
+      }
+    };
+  
+    if (tour.guideId) {
+      fetchGuidePhoto();
+    }
+  }, [tour.guideId]);
 
   const handleCardClick = () => {
     navigate(`/toursByCountry/${tour.countryId}/${tour.id}`);

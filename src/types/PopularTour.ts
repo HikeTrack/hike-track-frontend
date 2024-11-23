@@ -1,13 +1,3 @@
-export type PopularTourDetails = {
-  id: number;
-  photo: string;
-  elevationGain: number;
-  routeType: string;
-  duration: number;
-  map: string;
-  activity: string;
-} | null;
-
 export type PopularTour = {
   id: number;
   name: string;
@@ -17,5 +7,7 @@ export type PopularTour = {
   difficulty: string;
   countryId: number;
   mainPhoto: string;
-  details: PopularTourDetails;
+  guideId: number;
+  averageRating: number;
+  totalAmountOfMarks: number;
 };
