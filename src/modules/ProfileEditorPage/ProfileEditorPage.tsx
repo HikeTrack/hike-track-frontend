@@ -25,7 +25,7 @@ export const ProfileEditorPage: React.FC = () => {
       city: user?.userProfileRespondDto.city || '',
       phoneNumber: user?.userProfileRespondDto.phoneNumber || '',
       aboutMe: user?.userProfileRespondDto.aboutMe || '',
-      profilePhoto: user?.userProfileRespondDto.profilePhoto || '',
+      photo: user?.userProfileRespondDto.photo || '',
     }
   });
 
@@ -44,7 +44,7 @@ export const ProfileEditorPage: React.FC = () => {
         city: user?.userProfileRespondDto?.city || '',
         phoneNumber: user?.userProfileRespondDto?.phoneNumber || '',
         aboutMe: user?.userProfileRespondDto?.aboutMe || '',
-        profilePhoto: user?.userProfileRespondDto?.profilePhoto || '',
+        photo: user?.userProfileRespondDto?.photo || '',
       }
     });
   }, [user]);
@@ -116,7 +116,7 @@ export const ProfileEditorPage: React.FC = () => {
           city: state.userProfileRespondDto.city || null,
           phoneNumber: state.userProfileRespondDto.phoneNumber || null,
           aboutMe: state.userProfileRespondDto.aboutMe || null,
-          profilePhoto: state.userProfileRespondDto.profilePhoto || null,
+          profilePhoto: state.userProfileRespondDto.photo || null,
         }
       );
 
@@ -147,7 +147,7 @@ export const ProfileEditorPage: React.FC = () => {
         city: user?.userProfileRespondDto.city || '',
         phoneNumber: user?.userProfileRespondDto.phoneNumber || '',
         aboutMe: user?.userProfileRespondDto.aboutMe || '',
-        profilePhoto: user?.userProfileRespondDto.profilePhoto || '',
+        photo: user?.userProfileRespondDto.photo || '',
       }
     });
     setPasswordData({ password: '', repeatPassword: '' });
