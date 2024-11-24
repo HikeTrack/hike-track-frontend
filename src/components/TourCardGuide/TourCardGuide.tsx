@@ -1,14 +1,14 @@
 import { format, formatDate } from "date-fns";
 import { formatDistance } from "../../utils/formatFunctions";
 import React from "react";
-import { Link } from "react-router-dom";
-import { Tour } from "../../types/Tour";
+import { TourCard } from "../../types/TourCard";
 import { Countries } from "../../enums/Countries";
 import { getDifficultyGreenIcon, getPriceIcon } from "../../utils/getIcons";
 import styles from './TourCardGuide.module.scss';
 
+
 type Props = {
-  tour: Tour,
+  tour: TourCard,
   onRemove: () => void;
 }
 

@@ -167,8 +167,13 @@
   align-items: center;
 }
 
-.profileAvatar {
+.avatar {
   height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .userCard {

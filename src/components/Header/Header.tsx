@@ -116,11 +116,11 @@ export const Header: React.FC = () => {
           >
             <span>{user.firstName}</span>
 
-            <img 
-              src={defaultAvatarIcon} 
-              alt="Avatar" 
-              className={styles.profileAvatar}
-            />
+            <div
+              className={styles.avatar}
+              style={{ backgroundImage: `url(${user?.userProfileRespondDto.photo})` }}
+            >
+            </div>
           </button>
 
           {isUserClicked && (
@@ -130,11 +130,11 @@ export const Header: React.FC = () => {
                 className={styles.cardTop}
                 onClick={closeUserCard}
               >
-                <img 
-                  src={defaultAvatarIcon} 
-                  alt="Avatar" 
-                  className={styles.profileAvatar}
-                />
+                <div
+                  className={styles.avatar}
+                  style={{ backgroundImage: `url(${user?.userProfileRespondDto.photo})` }}
+                >
+                </div>
 
                 <div className={styles.userNameWrapper}>
                   <span className={styles.userName}>{user?.firstName}</span>

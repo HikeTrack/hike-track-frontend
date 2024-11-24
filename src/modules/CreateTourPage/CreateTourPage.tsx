@@ -5,7 +5,7 @@ import { TourDropdown } from "../../components/TourDropdown/TourDropodown";
 import { UserCard } from "../../components/UserCard/UserCard";
 import { getRemoveIcon, getSmallCameraIcon } from "../../utils/getIcons";
 import { axiosToken } from "../../utils/axios";
-import { convertHoursToMinutes, convertKilometresToMetres, prepareDateString, validateDateString, validateField } from "../../utils/InputCheckAndPreparation";
+import { convertHoursToMinutes, convertKilometresToMetres, prepareDateString, validateDateString } from "../../utils/InputCheckAndPreparation";
 import { getCountries } from "../../utils/fetchData";
 import { CountryOption } from "../../types/Country";
 import { useNavigate } from "react-router-dom";
@@ -77,8 +77,6 @@ export const CreateTourPage: React.FC = () => {
   }));
 
   const handleCountryIdSelect = (value: string | null) => {
-    console.log('handleCountryIdSelect', value);
-    
     if (!value) {
       return;
     }

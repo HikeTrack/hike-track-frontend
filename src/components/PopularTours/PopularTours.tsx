@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { PopularTour } from "../../types/PopularTour";
+import { TourCard } from "../../types/TourCard";
 import { PopularToursCard } from '../PopularToursCard/PopularToursCard';
 import { useSwipeable } from "react-swipeable";
 import { Link } from "react-router-dom";
@@ -8,7 +8,7 @@ import { Country } from "../../types/Country";
 import styles from './PopularTours.module.scss';
 
 type Props = {
-  tours: PopularTour[];
+  tours: TourCard[];
   countries: Country[];
 }
 

@@ -19,6 +19,15 @@
   align-items: center;
 }
 
+.avatar {
+  height: 69px;
+  width: 69px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
 .nameWrapper {
   display: flex;
   flex-direction: column;

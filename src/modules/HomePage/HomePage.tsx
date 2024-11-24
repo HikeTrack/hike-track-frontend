@@ -5,13 +5,13 @@ import { OurMission } from "../../components/OurMission/OurMission";
 import { PopularTours } from "../../components/PopularTours/PopularTours";
 import { TravelStories } from "../../components/TravelStories/TravelStories";
 import { Country } from "../../types/Country";
-import { PopularTour } from "../../types/PopularTour";
+import { TourCard } from "../../types/TourCard";
 import { getPopularTours, getRandom10Countries } from "../../utils/fetchData";
 import styles from './HomePage.module.scss';
 
 export const HomePage = () => {
   const [randomCountries, setRandomCountries] = useState<Country[]>([]);
-  const [popularTours, setPopularTours] = useState<PopularTour[]>([]);
+  const [popularTours, setPopularTours] = useState<TourCard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 

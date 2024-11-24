@@ -17,17 +17,5 @@ export type TourDetails = {
     duration: number,
     map: string,
     activity: string,
-  },
-  // reviews: [
-  //   {
-  //     id: number,
-  //     userProfileId: null,
-  //     content: string,
-  //     tourId: null,
-  //     dateCreated: string,
-  //   }
-  // ],
-  // currentReviewPage: number,
-  // totalReviewPages: number,
-  // totalReviewElements: number,
+  }
 }

@@ -1,5 +1,5 @@
 import { Country } from "../types/Country";
-import { PopularTour } from "../types/PopularTour";
+import { TourCard } from "../types/TourCard";
 import { Tour } from "../types/Tour";
 import { TourDetails } from "../types/TourDetails";
 import { UserProfilePuplic } from "../types/UserProfilePublic";
@@ -16,8 +16,8 @@ export function getData<T>(url: string): Promise<T> {
   });
 }
 
-export const getPopularTours = (): Promise<PopularTour[]> => {
-  return getData<PopularTour[]>('/tours/popular');
+export const getPopularTours = (): Promise<TourCard[]> => {
+  return getData<TourCard[]>('/tours/popular');
 };
 
 export const getCountries = (): Promise<Country[]> => {
@@ -47,7 +47,7 @@ export const getRandomToursByCountry = async (countryName: string) => {
 }
 
 export const getToursByGuideId = async (guideId: number) => {
-  return getData<Tour[]>(`/tours/guide/${guideId}`);
+  return getData<TourCard[]>(`/tours/guide/${guideId}`);
 }
 
 export const getUserProfile = async (userId: number) => {

@@ -25,18 +25,18 @@ type AuthContextType = {
   sendGuideApplication: (email: string) => Promise<boolean>;
   removeTour: (tourId: number, userId: number) => Promise<boolean>;
   deleteUserAccount: (userId: number) => Promise<boolean>;
-  updateUserProfile: (
-    email: string,
-    firstName: string,
-    lastName: string,
-    userProfileRespondDto: {
-      country: string | null;
-      city: string | null;
-      phoneNumber: string | null;
-      aboutMe: string | null;
-      profilePhoto: string | null;
-    }
-  ) => Promise<boolean>;
+  // updateUserProfile: (
+  //   email: string,
+  //   firstName: string,
+  //   lastName: string,
+  //   userProfileRespondDto: {
+  //     country: string | null;
+  //     city: string | null;
+  //     phoneNumber: string | null;
+  //     dateOfBirth: string;
+  //     aboutMe: string | null;
+  //   }
+  // ) => Promise<boolean>;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -52,7 +52,7 @@ const AuthContext = createContext<AuthContextType>({
   sendEmailForNewPassword: async () => false,
   resetPassword: async () => false,
   sendGuideApplication: async () => false,
-  updateUserProfile: async () => false,
+  // updateUserProfile: async () => false,
   removeTour: async () => false,
   deleteUserAccount: async () => false,
 });
@@ -300,10 +300,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     }
   }, [setToken, setUser, setError]);
 
-  // useEffect(() => {
-  //   setLogoutUserRef(logoutUser);
-  // }, [logoutUser]);
-
   const sendEmailForNewPassword = useCallback(async (email: string): Promise<boolean> => {
     setIsLoading(true);
     setError('');
@@ -382,65 +378,66 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     }
   }, [setError, setIsLoading]);
 
-  const updateUserProfile = useCallback(async (
-    email: string,
-    firstName: string,
-    lastName: string,
-    userProfileRespondDto: {
-      country: string | null,
-      city: string | null,
-      phoneNumber: string | null,
-      aboutMe: string | null,
-      profilePhoto: string | null,
-    }
-  ): Promise<boolean> => {
-    setIsLoading(true);
-    setError('');
+  // const updateUserProfile = useCallback(async (
+  //   email: string,
+  //   firstName: string,
+  //   lastName: string,
+  //   userProfileRespondDto: {
+  //     country: string | null,
+  //     city: string | null,
+  //     phoneNumber: string | null,
+  //     dateOfBirth: string;
+  //     aboutMe: string | null,
+  //     profilePhoto: string | null,
+  //   }
+  // ): Promise<boolean> => {
+  //   setIsLoading(true);
+  //   setError('');
 
-    const payload = {
-      email,
-      firstName,
-      lastName,
-      ...userProfileRespondDto
-    };
+  //   const payload = {
+  //     email,
+  //     firstName,
+  //     lastName,
+  //     ...userProfileRespondDto
+  //   };
 
-    console.log(payload);
+  //   console.log(payload);
 
-    try {
-      const response = await axiosToken.patch(`/users/${user?.id}`);
+  //   try {
+  //     const response = await axiosToken.patch(`/users/${user?.id}`);
 
-      if (response.status === 200) {
-        setUser(prevUser => {
+  //     if (response.status === 200) {
+  //       setUser(prevUser => {
 
-          if (!prevUser) {
-            return null;
-          }
+  //         if (!prevUser) {
+  //           return null;
+  //         }
 
-          return {
-            ...prevUser,
-            email,
-            firstName,
-            lastName,
-            userProfileRespondDto: {
-              ...prevUser.userProfileRespondDto,
-              country: userProfileRespondDto.country,
-              city: userProfileRespondDto.city,
-              phoneNumber: userProfileRespondDto.phoneNumber,
-              aboutMe: userProfileRespondDto.aboutMe,
-              userPhoto: userProfileRespondDto.profilePhoto
-          }
-        };
-      });
-        return true;
-      } else {
-        setError('Failed to update profile');
-        return false;
-      }
-    } catch {
-      setError('Something went wrong, please try again');
-      return false;
-    }
-  }, [setUser, setError, setIsLoading, user, token ]);
+  //         return {
+  //           ...prevUser,
+  //           email,
+  //           firstName,
+  //           lastName,
+  //           userProfileRespondDto: {
+  //             ...prevUser.userProfileRespondDto,
+  //             country: userProfileRespondDto.country,
+  //             city: userProfileRespondDto.city,
+  //             phoneNumber: userProfileRespondDto.phoneNumber,
+  //             aboutMe: userProfileRespondDto.aboutMe,
+  //             userPhoto: userProfileRespondDto.profilePhoto
+  //         }
+  //       };
+  //     });
+  //       return true;
+  //     } else {
+  //       setError('Failed to update profile');
+  //       return false;
+  //     }
+  //   } catch {
+  //     setError('Something went wrong, please try again');
+  //     return false;
+  //   }
+  // }, [setUser, setError, setIsLoading, user, token ]);
 
   const sendGuideApplication = useCallback(async (email: string): Promise<boolean> => {
     setIsLoading(true);
@@ -530,7 +527,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         sendEmailForNewPassword,
         resetPassword,
         sendGuideApplication,
-        updateUserProfile,
+        // updateUserProfile,
         removeTour,
         deleteUserAccount
       }}

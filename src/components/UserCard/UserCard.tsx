@@ -21,7 +21,11 @@ export const UserCard: React.FC = () => {
   return (
     <div className={styles.userCard}>
       <div className={styles.topContainer}>
-        <img src={defaultAvatarIcon} alt="Avatar" />
+        <div 
+          className={styles.avatar}
+          style={{ backgroundImage: `url(${user?.userProfileRespondDto.photo})` }}
+        ></div>
+        {/* <img src={defaultAvatarIcon} alt="Avatar" /> */}
 
         <div className={styles.nameWrapper}>
           <p className={styles.textName}>{`${user?.firstName} ${user?.lastName}`}</p>
@@ -60,7 +64,7 @@ export const UserCard: React.FC = () => {
 
         <div className={styles.userDataWrapper}>
           <img src={birthdayIcon} alt="birthday" />
-          <p className={styles.textGrey}>YYYY/MM/DD</p>
+          <p className={styles.textGrey}>{user?.userProfileRespondDto.dateOfBirth}</p>
         </div>
 
         <div className={styles.userDataWrapperAbout}>

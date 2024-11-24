@@ -1,20 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Months } from "../../enums/Months";
-import { getDefaultAvatarIcon } from "../../utils/getIcons";
+import { axiosToken } from "../../utils/axios";
+import { EMAIL_REGEX, PHONE_REGEX } from "../../utils/constants";
+import { isDateInPast } from "../../utils/InputCheckAndPreparation";
 import styles from './ProfileEditorPage.module.scss';
 
 export const ProfileEditorPage: React.FC = () => {
   const navigate = useNavigate();
-  const { user, token, updateUserProfile, resetPassword } = useAuth();
-  const defaultAvatar = getDefaultAvatarIcon();
+  // const fileInputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const { user, token, resetPassword } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState<Months | null>(null);
-  const [selectedDay, setSelectedDay] = useState('');
-  const [selectedYear, setSelectedYear] = useState('');
+  const [birthDay, setBirthDay] = useState('');
+  const [birthYear, setBirthYear] = useState('');
+  const [avatar, setAvatar] = useState<File | string>(user?.userProfileRespondDto.photo || '');
+
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
   const [state, setState] = useState({
     firstName: user?.firstName,
@@ -24,8 +30,8 @@ export const ProfileEditorPage: React.FC = () => {
       country: user?.userProfileRespondDto.country || '',
       city: user?.userProfileRespondDto.city || '',
       phoneNumber: user?.userProfileRespondDto.phoneNumber || '',
+      dateOfBirth: user?.userProfileRespondDto.dateOfBirth || '',
       aboutMe: user?.userProfileRespondDto.aboutMe || '',
-      photo: user?.userProfileRespondDto.photo || '',
     }
   });
 
@@ -34,34 +40,33 @@ export const ProfileEditorPage: React.FC = () => {
     repeatPassword: ''
   });
 
-  useEffect(() => {
-    setState({
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
-      email: user?.email || '',
-      userProfileRespondDto: {
-        country: user?.userProfileRespondDto?.country || '',
-        city: user?.userProfileRespondDto?.city || '',
-        phoneNumber: user?.userProfileRespondDto?.phoneNumber || '',
-        aboutMe: user?.userProfileRespondDto?.aboutMe || '',
-        photo: user?.userProfileRespondDto?.photo || '',
-      }
-    });
-  }, [user]);
-
-  const monthsOptions = Object.values(Months).map(month => ({
-    value: month,
-    label: month,
+  const monthsOptions = Object.entries(Months).map(([name, value]) => ({
+    label: name,
+    value: value,
   }));
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, []);
 
   const handleToggle = () => setIsOpen(!isOpen);
 
-  const handleSelectMonth = (value: string | null) => {
-    if (typeof value === 'string') {
-      setSelectedMonth(value as Months);
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    
+    if (file) {
+      setAvatar(file);
     }
-
-    setIsOpen(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -85,57 +90,112 @@ export const ProfileEditorPage: React.FC = () => {
     });
   }
 
-  const handleSubmitClick = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { value } = e.target;
+    
+    setState(prevState => ({
+      ...prevState,
+      userProfileRespondDto: {
+          ...prevState.userProfileRespondDto,
+          aboutMe: value.slice(0, 500),
+      },
+    }));
+  };
 
-    console.log("Token before API calls:", token);
-
-    // if (!passwordData.password || !passwordData.repeatPassword) {
-    //   setError('Please type in correct password')
-    //   return;
-    // }
-
-    if (!state.firstName || !state.lastName || !state.email) {
-      setError('Please fill in all the necessary fields')
+  const handleSelectMonth = (value: string | null) => {
+    if (!value) {
       return;
     }
 
-    if (token) {
-      // const isSuccessPassword = await resetPassword(
-      //   passwordData.password,
-      //   passwordData.repeatPassword,
-      //   token
-      // );
-
-      const isSuccessProfileInfo = await updateUserProfile(
-        state.firstName,
-        state.lastName,
-        state.email,
-        {
-          country: state.userProfileRespondDto.country || null,
-          city: state.userProfileRespondDto.city || null,
-          phoneNumber: state.userProfileRespondDto.phoneNumber || null,
-          aboutMe: state.userProfileRespondDto.aboutMe || null,
-          profilePhoto: state.userProfileRespondDto.photo || null,
-        }
-      );
-
-      if (isSuccessProfileInfo) {
-        navigate('/profile');
-      }
-    } else {
-      setError('Something went wrong. Please try again')
-    }
+    setSelectedMonth(value as Months);
+    setIsOpen(false);
   };
 
-  const handlePasswordDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const handleBirthDayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBirthDay(e.target.value);
+  };
+  
+  const handleBirthYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBirthYear(e.target.value);
+  };
+  
 
-    setPasswordData(prevData => ({
-      ...prevData,
-      [name]: value,
-    }))
-  }
+  const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    let errors: Record<string, string> = {};
+
+    const preparedDateOfBirth = `${birthYear}-${selectedMonth}-${birthDay}`;
+
+    if (!state.firstName) {
+      errors.firstName = 'First name is required';
+    }
+    if (!state.lastName) {
+      errors.lastName = 'Last name is required';
+    }
+    if (!state.email || !EMAIL_REGEX.test(state.email)) {
+      errors.email = 'Valid email is required';
+    }
+    if (!isDateInPast(preparedDateOfBirth)) {
+      errors.dateOfBirth = 'Valid date of birth is required';
+    }
+    if (!PHONE_REGEX.test(state.userProfileRespondDto.phoneNumber)) {
+      errors.phoneNumber = 'Valid phone number is required';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      
+      const data = {
+        firstName: state.firstName,
+        lastName: state.lastName,
+        email: state.email,
+        userProfileRespondDto: {
+          country: state.userProfileRespondDto.country,
+          city: state.userProfileRespondDto.city,
+          phoneNumber: state.userProfileRespondDto.phoneNumber,
+          dateOfBirth: preparedDateOfBirth,
+          aboutMe: state.userProfileRespondDto.aboutMe,
+        }
+      };
+
+      formData.append('data', JSON.stringify(data));
+
+      if (avatar && typeof avatar !== 'string') {
+        formData.append('photo', avatar);
+      }
+
+      console.log(formData);
+
+      const response = await axiosToken.patch(`/users/${user?.id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    } catch (error) {
+      setError('An error occured while submitting the form. Please try again');
+    } finally {
+      setState({
+        firstName: user?.firstName,
+        lastName: user?.lastName,
+        email: user?.email,
+        userProfileRespondDto: {
+          country: user?.userProfileRespondDto.country || '',
+          city: user?.userProfileRespondDto.city || '',
+          phoneNumber: user?.userProfileRespondDto.phoneNumber || '',
+          dateOfBirth: user?.userProfileRespondDto.dateOfBirth || '',
+          aboutMe: user?.userProfileRespondDto.aboutMe || '',
+        }
+      });
+
+      navigate('/profile');
+    }
+  };
 
   const handleInputReset = () => {
     setState({
@@ -146,12 +206,14 @@ export const ProfileEditorPage: React.FC = () => {
         country: user?.userProfileRespondDto.country || '',
         city: user?.userProfileRespondDto.city || '',
         phoneNumber: user?.userProfileRespondDto.phoneNumber || '',
+        dateOfBirth: user?.userProfileRespondDto.dateOfBirth || '',
         aboutMe: user?.userProfileRespondDto.aboutMe || '',
-        photo: user?.userProfileRespondDto.photo || '',
       }
     });
-    setPasswordData({ password: '', repeatPassword: '' });
+    // setPasswordData({ password: '', repeatPassword: '' });
     setSelectedMonth(null);
+
+    navigate('/profile');
   }
   
   return (
@@ -160,16 +222,27 @@ export const ProfileEditorPage: React.FC = () => {
         <h1 className={styles.title}>Edit profile</h1>
 
         <div className={styles.avatarContainer}>
-          <img 
-            src={defaultAvatar} 
-            alt="Avatar" 
+          <div
+            style={{ backgroundImage: `url(${typeof avatar === 'string' ? avatar : URL.createObjectURL(avatar)})` }}
             className={styles.avatar}
-          />
+          >
+          </div>
+          
+          <label htmlFor="avatar" className={styles.avatarButton}>
+            Change photo
+          </label>
 
-          <button className={styles.avatarButton}>Change photo</button>
+          <input 
+            className={styles.inputImageHidden}
+            type="file" 
+            id="avatar"
+            accept="image/*"
+            onChange={handleAvatarChange}
+            // ref={fileInputRef}
+          />
         </div>
 
-        <form className={styles.form} onSubmit={handleSubmitClick}>
+        <form className={styles.form} onSubmit={handleFormSubmit}>
           <div className={styles.inputContainer}>
             <label htmlFor="firstName" className={styles.inputLabel}>First name:</label>
             
@@ -181,11 +254,9 @@ export const ProfileEditorPage: React.FC = () => {
                 name="firstName"
                 value={state.firstName}
                 onChange={handleInputChange}
-                aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="firstNameError"
               />
             </div>
-            {error && <span id="firstNameError" className={styles.errorMessage}>{error}</span>}
+            {formErrors.firstName && <span className={styles.formError}>{formErrors.firstName}</span>}
           </div>
         
           <div className={styles.inputContainer}>
@@ -199,11 +270,9 @@ export const ProfileEditorPage: React.FC = () => {
                 name="lastName"
                 value={state.lastName}
                 onChange={handleInputChange}
-                aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="lastNameError"
               />
             </div>
-            {error && <span id="lastNameError" className={styles.errorMessage}>{error}</span>}
+            {formErrors.lastName && <span className={styles.formError}>{formErrors.lastName}</span>}
           </div>
 
           <div className={styles.inputContainer}>
@@ -217,11 +286,9 @@ export const ProfileEditorPage: React.FC = () => {
                 name="email"
                 value={state.email}
                 onChange={handleInputChange}
-                aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="emailError"
               />
             </div>
-            {error && <span id="emailError" className={styles.errorMessage}>{error}</span>}
+            {formErrors.email && <span className={styles.formError}>{formErrors.email}</span>}
           </div>
 
           <div className={styles.inputContainer}>
@@ -235,11 +302,9 @@ export const ProfileEditorPage: React.FC = () => {
                 name="phoneNumber"
                 value={state.userProfileRespondDto.phoneNumber}
                 onChange={handleInputChange}
-                aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="phoneError"
               />
             </div>
-            {error && <span id="phoneError" className={styles.errorMessage}>{error}</span>}
+            {formErrors.phoneNumber && <span id="phoneError" className={styles.errorMessage}>{formErrors.phoneNumber}</span>}
           </div>
 
           <div className={styles.inputContainer}>
@@ -289,7 +354,7 @@ export const ProfileEditorPage: React.FC = () => {
                 name="password"
                 placeholder="Leave empty to keep current password"
                 value={passwordData.password}
-                onChange={handlePasswordDataChange}
+                // onChange={handlePasswordDataChange}
                 aria-invalid={error ? 'true' : 'false'}
                 aria-describedby="passError"
               />
@@ -308,7 +373,7 @@ export const ProfileEditorPage: React.FC = () => {
                 name="repeatPassword"
                 placeholder="Leave empty to keep current password"
                 value={passwordData.repeatPassword}
-                onChange={handlePasswordDataChange}
+                // onChange={handlePasswordDataChange}
                 aria-invalid={error ? 'true' : 'false'}
                 aria-describedby="confirmPassError"
               />
@@ -320,8 +385,8 @@ export const ProfileEditorPage: React.FC = () => {
             <label htmlFor="birth-day" className={styles.inputLabel}>Birtday:</label>
             
             <div className={styles.birthdayMobile}>
-              <div className={styles.dropdown}>
-                <button className={styles.dropdownButton} onClick={handleToggle}>
+              <div className={styles.dropdown} ref={dropdownRef}>
+                <button type="button" className={styles.dropdownButton} onClick={handleToggle}>
                   {monthsOptions.find(month => month.value === selectedMonth)?.label || 'Month'}
                 </button>
                 {isOpen && (
@@ -342,26 +407,22 @@ export const ProfileEditorPage: React.FC = () => {
               <div className={styles.inputWrapper}>
                 <input 
                   className={styles.input}
-                  type="text" 
+                  type="number" 
                   id="birthDay"
-                  // value={state.password}
-                  // onChange={handleInputChange}
+                  value={birthDay}
+                  onChange={handleBirthDayChange}
                   placeholder="Day"
-                  aria-invalid={error ? 'true' : 'false'}
-                  aria-describedby="birthdateError"
                 />
               </div>
 
               <div className={styles.inputWrapper}>
                 <input 
                   className={styles.input}
-                  type="text" 
+                  type="number" 
                   id="birthYear"
-                  // value={state.password}
-                  // onChange={handleInputChange}
+                  value={birthYear}
+                  onChange={handleBirthYearChange}
                   placeholder="Year"
-                  aria-invalid={error ? 'true' : 'false'}
-                  aria-describedby="birthdateError"
                 />
               </div>
             </div>
@@ -377,9 +438,7 @@ export const ProfileEditorPage: React.FC = () => {
               id="aboutMe"
               name="aboutMe"
               value={state.userProfileRespondDto.aboutMe}
-              onChange={handleInputChange}
-              aria-invalid={error ? 'true' : 'false'}
-              aria-describedby="aboutMeError"
+              onChange={handleTextAreaChange}
             />
 
             {error && <span id="aboutMeError" className={styles.errorMessage}>{error}</span>}

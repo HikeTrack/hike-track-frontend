@@ -13,6 +13,7 @@ export type User = {
     phoneNumber: string | null;
     aboutMe: string | null;
     registrationDate: string;
+    dateOfBirth: string;
     photo: string | null;
   }
 }
