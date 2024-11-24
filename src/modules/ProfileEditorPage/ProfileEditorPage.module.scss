@@ -49,13 +49,22 @@
 }
 
 .avatar {
-
+  height: 112px;
+  width: 112px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .avatarButton {
   background-color: transparent;
   border: none;
   cursor: pointer;
+}
+
+.inputImageHidden {
+  display: none;
 }
 
 .form {

@@ -1,4 +1,4 @@
-export type PopularTour = {
+export type TourCard = {
   id: number;
   name: string;
   length: number;
@@ -8,6 +8,4 @@ export type PopularTour = {
   countryId: number;
   mainPhoto: string;
   guideId: number;
-  averageRating: number;
-  totalAmountOfMarks: number;
 };

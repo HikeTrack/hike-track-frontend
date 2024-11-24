@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PopularTour } from "../../types/PopularTour";
+import { TourCard } from "../../types/TourCard";
 import { 
   getDifficultyGreenIcon, 
   getDifficultyRedIcon, 
@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { getUserProfile } from "../../utils/fetchData";
 
 type Props = {
-  tour: PopularTour;
+  tour: TourCard;
 }
 
 const difficultyIcons: { [key: string]: string } = {

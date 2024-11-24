@@ -65,15 +65,22 @@ export const prepareDateString = (input: string): string => {
   return dateTime.toISO() + `[${userTimeZone}]`;
 }
 
-export const validateField = (
-  errors: Record<string, string>,
-  touchedFields: Record<string, boolean>,
-  fieldName: string, 
-  condition: boolean, 
-  errorMessage: string
-): void => {
-  if (condition) {
-    errors[fieldName] = errorMessage;
-    touchedFields[fieldName] = true;
-  }
-};
+// export const validateField = (
+//   errors: Record<string, string>,
+//   touchedFields: Record<string, boolean>,
+//   fieldName: string, 
+//   condition: boolean, 
+//   errorMessage: string
+// ): void => {
+//   if (condition) {
+//     errors[fieldName] = errorMessage;
+//     touchedFields[fieldName] = true;
+//   }
+// };
+
+export const isDateInPast = (date: string): boolean => {
+  const today = new Date();
+  const inputDate = new Date(date);
+
+  return inputDate < today;
+}

@@ -1,22 +1,22 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { Tour } from "../../types/Tour";
 import { getToursByGuideId } from "../../utils/fetchData";
 import { getSearchIcon } from "../../utils/getIcons";
 import { Loader } from "../../components/Loader/Loader";
 import { TourCardGuide } from "../../components/TourCardGuide/TourCardGuide";
 import debounce from "lodash/debounce";
-import styles from './MyToursPage.module.scss';
 import { UserCard } from "../../components/UserCard/UserCard";
+import { TourCard } from "../../types/TourCard";
+import styles from './MyToursPage.module.scss';
 
 export const MyToursPage: React.FC = () => {
   const { user, removeTour } = useAuth();
   const searchIcon = getSearchIcon();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [tours, setTours] = useState<Tour[]>([]);
-  const [filteredTours, setFilteredTours] = useState<Tour[]>([]);
+  const [tours, setTours] = useState<TourCard[]>([]);
+  const [filteredTours, setFilteredTours] = useState<TourCard[]>([]);
 
   useEffect(() => {
     if (user?.id) {
@@ -24,7 +24,7 @@ export const MyToursPage: React.FC = () => {
       
       const fetchTours = async () => {
         setIsLoading(true);
-        
+         
         try {
           const tourData = await getToursByGuideId(guideId);
 
