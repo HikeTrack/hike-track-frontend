@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { User } from "../../types/User";
 import { getAboutMeIcon, getBirthdayIcon, getBookmarkIcon, getDefaultAvatarIcon, getEmailIcon, getGoNextGreyIcon, getGoNextWhiteIcon, getLocationIcon, getMyToursIcon, getPencilIcon, getPhoneIcon } from "../../utils/getIcons";
 import styles from './UserCard.module.scss';
 
@@ -17,6 +16,19 @@ export const UserCard: React.FC = () => {
   const aboutMeIcon = getAboutMeIcon();
   const goNextGrey = getGoNextGreyIcon();
   const goNextWhite = getGoNextWhiteIcon();
+
+  const preparedDateOfBirth = user?.userProfileRespondDto.dateOfBirth
+    .replace(/\-/g, '.')
+    .split('.')
+    .reverse()
+    .join('.')
+  ;
+
+  const [aboutMeVisible, setAboutMeVisible] = useState(false);
+
+  const toggleVisibility = () => {
+    setAboutMeVisible(prev => !prev);
+  }
   
   return (
     <div className={styles.userCard}>
@@ -25,7 +37,6 @@ export const UserCard: React.FC = () => {
           className={styles.avatar}
           style={{ backgroundImage: `url(${user?.userProfileRespondDto.photo})` }}
         ></div>
-        {/* <img src={defaultAvatarIcon} alt="Avatar" /> */}
 
         <div className={styles.nameWrapper}>
           <p className={styles.textName}>{`${user?.firstName} ${user?.lastName}`}</p>
@@ -46,7 +57,7 @@ export const UserCard: React.FC = () => {
         {user?.userProfileRespondDto.phoneNumber && (
           <div className={styles.userDataWrapper}>
             <img src={phoneIcon} alt="phone" />
-            <p className={styles.textGrey}>{user?.userProfileRespondDto.phoneNumber}</p>
+            <p className={styles.textGrey}>{`+${user?.userProfileRespondDto.phoneNumber}`}</p>
           </div>
         )}
 
@@ -62,19 +73,27 @@ export const UserCard: React.FC = () => {
           </div>
         )}
 
-        <div className={styles.userDataWrapper}>
-          <img src={birthdayIcon} alt="birthday" />
-          <p className={styles.textGrey}>{user?.userProfileRespondDto.dateOfBirth}</p>
-        </div>
-
-        <div className={styles.userDataWrapperAbout}>
-          <div className={styles.textWrapper}>
-            <img src={aboutMeIcon} alt="about" />
-            <p className={styles.textGrey}>About me</p>
+        {user?.userProfileRespondDto.dateOfBirth && (
+          <div className={styles.userDataWrapper}>
+            <img src={birthdayIcon} alt="birthday" />
+            <p className={styles.textGrey}>{preparedDateOfBirth}</p>
           </div>
-          
-          <img src={goNextGrey} alt="arrow" />
-        </div>
+        )}
+
+        {user?.userProfileRespondDto.aboutMe && (
+          <>
+          <button className={styles.userDataWrapperAbout} onClick={toggleVisibility}>
+            <div className={styles.textWrapper}>
+              <img src={aboutMeIcon} alt="about" />
+              <p className={styles.textGrey}>About me</p>
+            </div>
+            
+            <img src={goNextGrey} alt="arrow" />
+          </button>
+
+          {aboutMeVisible && <p className={styles.text}>{user?.userProfileRespondDto.aboutMe}</p>}
+          </>
+        )}
 
         {user?.role.includes('ROLE_GUIDE') && (
           <Link to="/my-tours" className={styles.userDataWrapperBlack}>

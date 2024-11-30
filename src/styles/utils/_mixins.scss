@@ -84,3 +84,8 @@
     border: 1px solid $color-primary-disabled;
   }
 }
+
+@mixin error-notification {
+  font-size: 10px;
+  color: $color-system-error;
+}
