@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Loader } from "../../components/Loader/Loader";
 import { TourCard } from "../../components/TourCard/TourCard";
-import { Countries } from "../../enums/Countries";
 import { CountryOption } from "../../types/Country";
 import { Tour } from "../../types/Tour";
 import { TourDetails } from "../../types/TourDetails";
@@ -61,35 +60,6 @@ export const TourDetailsPage: React.FC = () => {
     }
 
     fetchData();
-    
-    // if (tourId) {
-    //   const id = Number(tourId);
-  
-    //   const fetchTourDetailsAndSuggestedTours = async () => {
-    //     setIsLoading(true);
-  
-    //     try {
-    //       const tourDetailsData = await getTourById(id);
-    //       setTourDetails(tourDetailsData);
-  
-    //       if (tourDetailsData && tourDetailsData.countryId) {
-    //         const coutryName = Countries[tourDetailsData.countryId];
-
-    //         if (coutryName) {
-    //           const randomTours = await getRandomToursByCountry(coutryName);
-    //           const filteredTours = randomTours.filter(tour => tour.id !== id);
-    //           setSuggestedTours(filteredTours);
-    //         }
-    //       }
-    //     } catch (error) {
-    //       setError('Failed to load tours. Please try again later.');
-    //     } finally {
-    //       setIsLoading(false);
-    //     }
-    //   };
-  
-    //   fetchTourDetailsAndSuggestedTours();
-    // }
   }, [tourId]);  
 
   if (!tourDetails) {
@@ -223,16 +193,7 @@ export const TourDetailsPage: React.FC = () => {
               </p>
             </div>
 
-            <p className={styles.infoDescription}>
-              Discover the Ararat Mountain trail, a challenging 14 km route that ascends to the peak 
-              of this iconic volcano located near Doğubayazıt, Turkey. Generally considered a difficult 
-              climb due to its high altitude and varying weather conditions, the ascent usually takes 
-              around 8 to 10 hours, depending on pace and conditions. This trail is popular among 
-              experienced hikers and mountaineers, and you'll likely encounter other adventurers seeking 
-              to conquer the summit. The best times to visit Ararat are from July through September 
-              when the weather is most favorable and the snow has mostly melted, offering a clearer 
-              and safer path to the top.
-            </p>
+            <p className={styles.infoDescription}>{tourDetails.details?.description}</p>
 
             <div className={styles.infoTags}>
               <div className={styles.tag}>
@@ -242,7 +203,7 @@ export const TourDetailsPage: React.FC = () => {
           </div>
 
           <div className={styles.mapWrapper}>
-            <img src={mapImg} alt="Map" />
+            <img className={styles.mapImg} src={tourDetails.details.map} alt="Map" />
 
             <a className={styles.mapLink} href="#">look at the map</a>
           </div>

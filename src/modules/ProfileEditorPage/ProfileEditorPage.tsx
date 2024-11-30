@@ -1,176 +1,65 @@
-import React, { FormEvent, useEffect, useRef, useState } from "react";
+import React from "react";
+import { useForm, Controller } from 'react-hook-form';
+import { DevTool } from '@hookform/devtools';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { Months } from "../../enums/Months";
 import { axiosToken } from "../../utils/axios";
-import { EMAIL_REGEX, PHONE_REGEX } from "../../utils/constants";
+import { DATE_REGEX, EMAIL_REGEX, PHONE_REGEX } from "../../utils/constants";
 import { isDateInPast } from "../../utils/InputCheckAndPreparation";
 import styles from './ProfileEditorPage.module.scss';
 
+type FormValues = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  userProfileRequestDto: {
+    country: string;
+    city: string;
+    phoneNumber: string;
+    dateOfBirth: string;
+    aboutMe: string;
+  };
+  photo: File | string;
+}
+
 export const ProfileEditorPage: React.FC = () => {
   const navigate = useNavigate();
-  // const fileInputRef = useRef<HTMLInputElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const { user, token, resetPassword } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedMonth, setSelectedMonth] = useState<Months | null>(null);
-  const [birthDay, setBirthDay] = useState('');
-  const [birthYear, setBirthYear] = useState('');
-  const [avatar, setAvatar] = useState<File | string>(user?.userProfileRespondDto.photo || '');
+  const { user } = useAuth();
 
-  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
-
-  const [state, setState] = useState({
-    firstName: user?.firstName,
-    lastName: user?.lastName,
-    email: user?.email,
-    userProfileRespondDto: {
-      country: user?.userProfileRespondDto.country || '',
-      city: user?.userProfileRespondDto.city || '',
-      phoneNumber: user?.userProfileRespondDto.phoneNumber || '',
-      dateOfBirth: user?.userProfileRespondDto.dateOfBirth || '',
-      aboutMe: user?.userProfileRespondDto.aboutMe || '',
-    }
-  });
-
-  const [passwordData, setPasswordData] = useState({
-    password: '',
-    repeatPassword: ''
-  });
-
-  const monthsOptions = Object.entries(Months).map(([name, value]) => ({
-    label: name,
-    value: value,
-  }));
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, []);
-
-  const handleToggle = () => setIsOpen(!isOpen);
-
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    
-    if (file) {
-      setAvatar(file);
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-
-    setState(prevState => {
-      if (name in prevState.userProfileRespondDto) {
-        return {
-          ...prevState,
-          userProfileRespondDto: {
-            ...prevState.userProfileRespondDto,
-            [name]: value,
-          },
-        };
-      } else {
-        return {
-          ...prevState,
-          [name]: value,
-        };
-      }
-    });
-  }
-
-  const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { value } = e.target;
-    
-    setState(prevState => ({
-      ...prevState,
-      userProfileRespondDto: {
-          ...prevState.userProfileRespondDto,
-          aboutMe: value.slice(0, 500),
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    setValue,
+    reset,
+    watch
+  } = useForm<FormValues>({
+    defaultValues: {
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+      email: user?.email,
+      userProfileRequestDto: {
+        country: user?.userProfileRespondDto.country || '',
+        city: user?.userProfileRespondDto.city || '',
+        phoneNumber: user?.userProfileRespondDto.phoneNumber || '',
+        dateOfBirth: user?.userProfileRespondDto.dateOfBirth || '',
+        aboutMe: user?.userProfileRespondDto.aboutMe || '',
       },
-    }));
-  };
-
-  const handleSelectMonth = (value: string | null) => {
-    if (!value) {
-      return;
+      photo: user?.userProfileRespondDto.photo || '',
     }
+  });
 
-    setSelectedMonth(value as Months);
-    setIsOpen(false);
-  };
+  const photo = watch('photo');
 
-  const handleBirthDayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBirthDay(e.target.value);
-  };
-  
-  const handleBirthYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBirthYear(e.target.value);
-  };
-  
-
-  const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    let errors: Record<string, string> = {};
-
-    const preparedDateOfBirth = `${birthYear}-${selectedMonth}-${birthDay}`;
-
-    if (!state.firstName) {
-      errors.firstName = 'First name is required';
-    }
-    if (!state.lastName) {
-      errors.lastName = 'Last name is required';
-    }
-    if (!state.email || !EMAIL_REGEX.test(state.email)) {
-      errors.email = 'Valid email is required';
-    }
-    if (!isDateInPast(preparedDateOfBirth)) {
-      errors.dateOfBirth = 'Valid date of birth is required';
-    }
-    if (!PHONE_REGEX.test(state.userProfileRespondDto.phoneNumber)) {
-      errors.phoneNumber = 'Valid phone number is required';
-    }
-
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-      return;
-    }
-
+  const onSubmit = async (data: FormValues) => {
     try {
       const formData = new FormData();
-      
-      const data = {
-        firstName: state.firstName,
-        lastName: state.lastName,
-        email: state.email,
-        userProfileRespondDto: {
-          country: state.userProfileRespondDto.country,
-          city: state.userProfileRespondDto.city,
-          phoneNumber: state.userProfileRespondDto.phoneNumber,
-          dateOfBirth: preparedDateOfBirth,
-          aboutMe: state.userProfileRespondDto.aboutMe,
-        }
-      };
-
       formData.append('data', JSON.stringify(data));
 
-      if (avatar && typeof avatar !== 'string') {
-        formData.append('photo', avatar);
+      if (data.photo && typeof data.photo !== 'string') {
+        formData.append('photo', data.photo)
       }
-
-      console.log(formData);
 
       const response = await axiosToken.patch(`/users/${user?.id}`, formData, {
         headers: {
@@ -178,41 +67,41 @@ export const ProfileEditorPage: React.FC = () => {
         },
       });
     } catch (error) {
-      setError('An error occured while submitting the form. Please try again');
+      console.error('Error updating profile', error);
     } finally {
-      setState({
-        firstName: user?.firstName,
-        lastName: user?.lastName,
-        email: user?.email,
-        userProfileRespondDto: {
-          country: user?.userProfileRespondDto.country || '',
-          city: user?.userProfileRespondDto.city || '',
-          phoneNumber: user?.userProfileRespondDto.phoneNumber || '',
-          dateOfBirth: user?.userProfileRespondDto.dateOfBirth || '',
-          aboutMe: user?.userProfileRespondDto.aboutMe || '',
-        }
+      reset({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        userProfileRequestDto: {
+          country: data.userProfileRequestDto.country,
+          city: data.userProfileRequestDto.city,
+          phoneNumber: data.userProfileRequestDto.phoneNumber,
+          dateOfBirth: data.userProfileRequestDto.dateOfBirth,
+          aboutMe: data.userProfileRequestDto.aboutMe,
+        },
+        photo: data.photo,
       });
 
       navigate('/profile');
     }
-  };
+  }
 
-  const handleInputReset = () => {
-    setState({
+  const handleCancel = () => {
+    reset({
       firstName: user?.firstName,
       lastName: user?.lastName,
       email: user?.email,
-      userProfileRespondDto: {
+      userProfileRequestDto: {
         country: user?.userProfileRespondDto.country || '',
         city: user?.userProfileRespondDto.city || '',
         phoneNumber: user?.userProfileRespondDto.phoneNumber || '',
         dateOfBirth: user?.userProfileRespondDto.dateOfBirth || '',
         aboutMe: user?.userProfileRespondDto.aboutMe || '',
-      }
+      },
+      photo: user?.userProfileRespondDto.photo || '',
     });
-    // setPasswordData({ password: '', repeatPassword: '' });
-    setSelectedMonth(null);
-
+    
     navigate('/profile');
   }
   
@@ -221,245 +110,216 @@ export const ProfileEditorPage: React.FC = () => {
       <div className={styles.container}>
         <h1 className={styles.title}>Edit profile</h1>
 
-        <div className={styles.avatarContainer}>
-          <div
-            style={{ backgroundImage: `url(${typeof avatar === 'string' ? avatar : URL.createObjectURL(avatar)})` }}
-            className={styles.avatar}
-          >
+        <form className={styles.form} onSubmit={handleSubmit(onSubmit)} noValidate>
+          <div className={styles.wrapper}>
+            <div className={styles.photoContainer}>
+              <div
+                style={{ 
+                  backgroundImage: `url(${typeof photo === 'string' ? photo : URL.createObjectURL(photo)})`
+                }}
+                className={styles.photo}
+              >
+              </div>
+              
+              <label htmlFor="photo" className={styles.photoButton}>
+                Change photo
+              </label>
+
+              <input 
+                className={styles.inputImageHidden}
+                type="file" 
+                id="photo"
+                accept="image/*"
+                onChange={e => {
+                  const file = e.target.files?.[0];
+                  
+                  if (file) {
+                    setValue('photo', file);
+                  }
+                }}
+              />
+            </div>
           </div>
           
-          <label htmlFor="avatar" className={styles.avatarButton}>
-            Change photo
-          </label>
-
-          <input 
-            className={styles.inputImageHidden}
-            type="file" 
-            id="avatar"
-            accept="image/*"
-            onChange={handleAvatarChange}
-            // ref={fileInputRef}
-          />
-        </div>
-
-        <form className={styles.form} onSubmit={handleFormSubmit}>
-          <div className={styles.inputContainer}>
-            <label htmlFor="firstName" className={styles.inputLabel}>First name:</label>
-            
-            <div className={styles.inputWrapper}>
-              <input 
-                className={styles.input}
-                type="text" 
-                id="firstName"
-                name="firstName"
-                value={state.firstName}
-                onChange={handleInputChange}
-              />
-            </div>
-            {formErrors.firstName && <span className={styles.formError}>{formErrors.firstName}</span>}
-          </div>
-        
-          <div className={styles.inputContainer}>
-            <label htmlFor="lastName" className={styles.inputLabel}>Last name:</label>
-            
-            <div className={styles.inputWrapper}>
-              <input 
-                className={styles.input}
-                type="text" 
-                id="lastName"
-                name="lastName"
-                value={state.lastName}
-                onChange={handleInputChange}
-              />
-            </div>
-            {formErrors.lastName && <span className={styles.formError}>{formErrors.lastName}</span>}
-          </div>
-
-          <div className={styles.inputContainer}>
-            <label htmlFor="email" className={styles.inputLabel}>Email address:</label>
-            
-            <div className={styles.inputWrapper}>
-              <input 
-                className={styles.input}
-                type="email" 
-                id="email"
-                name="email"
-                value={state.email}
-                onChange={handleInputChange}
-              />
-            </div>
-            {formErrors.email && <span className={styles.formError}>{formErrors.email}</span>}
-          </div>
-
-          <div className={styles.inputContainer}>
-            <label htmlFor="phone" className={styles.inputLabel}>Phone number:</label>
-            
-            <div className={styles.inputWrapper}>
-              <input 
-                className={styles.input}
-                type="phone" 
-                id="phone"
-                name="phoneNumber"
-                value={state.userProfileRespondDto.phoneNumber}
-                onChange={handleInputChange}
-              />
-            </div>
-            {formErrors.phoneNumber && <span id="phoneError" className={styles.errorMessage}>{formErrors.phoneNumber}</span>}
-          </div>
-
-          <div className={styles.inputContainer}>
-            <label htmlFor="city" className={styles.inputLabel}>City:</label>
-            
-            <div className={styles.inputWrapper}>
-              <input 
-                className={styles.input}
-                type="text" 
-                id="city"
-                name="city"
-                value={state.userProfileRespondDto.city}
-                onChange={handleInputChange}
-                aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="cityError"
-              />
-            </div>
-            {error && <span id="cityError" className={styles.errorMessage}>{error}</span>}
-          </div>
-
-          <div className={styles.inputContainer}>
-            <label htmlFor="country" className={styles.inputLabel}>Country:</label>
-            
-            <div className={styles.inputWrapper}>
-              <input 
-                className={styles.input}
-                type="text" 
-                id="country"
-                name="country"
-                value={state.userProfileRespondDto.country}
-                onChange={handleInputChange}
-                aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="countryError"
-              />
-            </div>
-            {error && <span id="countryError" className={styles.errorMessage}>{error}</span>}
-          </div>
-
-          <div className={styles.inputContainer}>
-            <label htmlFor="password" className={styles.inputLabel}>Set a new password:</label>
-            
-            <div className={styles.inputWrapper}>
-              <input 
-                className={styles.input}
-                type="password" 
-                id="password"
-                name="password"
-                placeholder="Leave empty to keep current password"
-                value={passwordData.password}
-                // onChange={handlePasswordDataChange}
-                aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="passError"
-              />
-            </div>
-            {error && <span id="passError" className={styles.errorMessage}>{error}</span>}
-          </div>
-
-          <div className={styles.inputContainer}>
-            <label htmlFor="confirm-password" className={styles.inputLabel}>Confirm password:</label>
-            
-            <div className={styles.inputWrapper}>
-              <input 
-                className={styles.input}
-                type="password" 
-                id="repeatPassword"
-                name="repeatPassword"
-                placeholder="Leave empty to keep current password"
-                value={passwordData.repeatPassword}
-                // onChange={handlePasswordDataChange}
-                aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="confirmPassError"
-              />
-            </div>
-            {error && <span id="repeatPassError" className={styles.errorMessage}>{error}</span>}
-          </div>
-
-          <div className={styles.inputContainer}>
-            <label htmlFor="birth-day" className={styles.inputLabel}>Birtday:</label>
-            
-            <div className={styles.birthdayMobile}>
-              <div className={styles.dropdown} ref={dropdownRef}>
-                <button type="button" className={styles.dropdownButton} onClick={handleToggle}>
-                  {monthsOptions.find(month => month.value === selectedMonth)?.label || 'Month'}
-                </button>
-                {isOpen && (
-                  <ul className={styles.dropdownList}>
-                    {monthsOptions.map(option => (
-                      <li 
-                        className={styles.dropdownItem}
-                        key={option.value}
-                        onClick={() => handleSelectMonth(option.value)}
-                      >
-                        {option.label}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+          <div className={styles.wrapper}>
+            <div className={styles.inputContainer}>
+              <label htmlFor="firstName" className={styles.inputLabel}>First name:</label>
+              
+              <div className={styles.inputWrapper}>
+                <input 
+                  className={styles.input}
+                  type="text" 
+                  id="firstName"
+                  {...register('firstName', {
+                    required: 'First name is required',
+                    minLength: {
+                      value: 2,
+                      message: 'First name must be at least 2 characters long',
+                    }
+                  })}
+                />
               </div>
 
+              <span className={styles.error}>{errors.firstName?.message}</span>
+            </div>
+
+            <div className={styles.inputContainer}>
+              <label htmlFor="lastName" className={styles.inputLabel}>Last name:</label>
+            
+              <div className={styles.inputWrapper}>
+                <input 
+                  className={styles.input}
+                  type="text" 
+                  id="lastName"
+                  {...register('lastName', {
+                    required: 'Last name is required',
+                    minLength: {
+                      value: 1,
+                      message: 'Last name must be at least 1 character long',
+                    }
+                  })}
+                />
+              </div>
+
+              <span className={styles.error}>{errors.lastName?.message}</span>
+            </div>
+          </div>
+                    
+          <div className={styles.wrapper}>
+            <div className={styles.inputContainer}>
+              <label htmlFor="email" className={styles.inputLabel}>Email address:</label>
+              
+              <div className={styles.inputWrapper}>
+                <input 
+                  className={styles.input}
+                  type="email" 
+                  id="email"
+                  {...register('email', {
+                    required: 'Email is required',
+                    pattern: {
+                      value: EMAIL_REGEX,
+                      message: 'Invalid email format',  
+                    }
+                  })}
+                />
+              </div>
+
+              <span className={styles.error}>{errors.email?.message}</span>
+            </div>
+
+            <div className={styles.inputContainer}>
+              <label htmlFor="phone" className={styles.inputLabel}>Phone number:</label>
+              
               <div className={styles.inputWrapper}>
                 <input 
                   className={styles.input}
                   type="number" 
-                  id="birthDay"
-                  value={birthDay}
-                  onChange={handleBirthDayChange}
-                  placeholder="Day"
+                  id="phoneNumber"
+                  {...register('userProfileRequestDto.phoneNumber', {
+                    pattern: {
+                      value: PHONE_REGEX,
+                      message: 'Invalid phone format',
+                    }
+                  })}
                 />
               </div>
 
+              <span className={styles.error}>{errors.userProfileRequestDto?.phoneNumber?.message}</span>
+            </div>
+          </div>
+          
+          <div className={styles.wrapper}>
+            <div className={styles.inputContainer}>
+              <label htmlFor="city" className={styles.inputLabel}>City:</label>
+              
               <div className={styles.inputWrapper}>
                 <input 
                   className={styles.input}
-                  type="number" 
-                  id="birthYear"
-                  value={birthYear}
-                  onChange={handleBirthYearChange}
-                  placeholder="Year"
+                  type="text" 
+                  id="city"
+                  {...register('userProfileRequestDto.city')}
                 />
               </div>
             </div>
-            
-            {error && <span id="birthdateError" className={styles.errorMessage}>{error}</span>}
+
+            <div className={styles.inputContainer}>
+              <label htmlFor="country" className={styles.inputLabel}>Country:</label>
+              
+              <div className={styles.inputWrapper}>
+                <input 
+                  className={styles.input}
+                  type="text" 
+                  id="country"
+                  {...register('userProfileRequestDto.country')}
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div className={styles.wrapper}>
+            <div className={styles.inputContainer}>
+              <label htmlFor="about-me" className={styles.inputLabel}>About me:</label>
+
+              <textarea 
+                className={styles.textarea}
+                id="aboutMe"
+                {...register('userProfileRequestDto.aboutMe', {
+                  maxLength: {
+                    value: 300,
+                    message: 'Text must not exceed 300 characters'
+                  }
+                })}
+              />
+
+              <span className={styles.textareaCharCounter}>
+                ({(watch('userProfileRequestDto.aboutMe')?.length || 0)}/300)
+              </span>
+            </div>
+
+            <div className={styles.inputContainer}>
+              <label htmlFor="dateOfBirth" className={styles.inputLabel}>Date of birth:</label>
+              
+              <div className={styles.inputWrapper}>
+                <input 
+                  className={styles.input}
+                  type="text" 
+                  id="dateOfBirth"
+                  placeholder="YYYY-MM-DD"
+                  {...register('userProfileRequestDto.dateOfBirth', {
+                    pattern: {
+                      value: DATE_REGEX,
+                      message: 'Please use YYYY-MM-DD format',
+                    },
+                    validate: {
+                      isDateInPast: value => isDateInPast(value) || 'Date must be in the past',
+                    },
+                    onChange:(e) => {
+                      e.target.value = e.target.value.replace(/\./g, '-');
+                    }
+                  })}
+                />
+              </div>
+
+              <span className={styles.error}>{errors.userProfileRequestDto?.dateOfBirth?.message}</span>
+            </div>
           </div>
 
-          <div className={styles.inputContainer}>
-            <label htmlFor="about-me" className={styles.inputLabel}>About me:</label>
-
-            <textarea 
-              className={styles.textarea}
-              id="aboutMe"
-              name="aboutMe"
-              value={state.userProfileRespondDto.aboutMe}
-              onChange={handleTextAreaChange}
-            />
-
-            {error && <span id="aboutMeError" className={styles.errorMessage}>{error}</span>}
-          </div>
-
-          <div className={styles.buttonContainer}>
-            <button 
-              className={styles.buttonCancel}
-              onClick={handleInputReset}
-            >
-              Cancel
-            </button>
-            <button 
-              className={styles.buttonSave}
-              type="submit"
-              disabled={isLoading || !state.firstName || !state.lastName || !state.email}
-            >
-              Save
-            </button>
+          <div className={styles.wrapper}>
+            <div className={styles.buttonContainer}>
+              <button 
+                className={styles.buttonCancel}
+                type="button"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+              
+              <button className={styles.buttonSave}>Save</button>
+            </div>
           </div>
         </form>
+
+        {/* <DevTool control={control}/> */}
       </div>
     </div>
   )

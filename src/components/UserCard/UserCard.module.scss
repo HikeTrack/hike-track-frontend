@@ -66,7 +66,10 @@
 }
 
 .userDataWrapperAbout {
-  // padding: 8px;
+  @include main-web;
+
+  border: none;
+  background-color: transparent;
   padding: 12px;
   display: flex;
   justify-content: space-between;
@@ -87,3 +90,8 @@
   display: flex;
   gap: 16px;
 } 
+
+.text {
+  color: $color-grey-500;
+  padding-inline: 48px;
+}
