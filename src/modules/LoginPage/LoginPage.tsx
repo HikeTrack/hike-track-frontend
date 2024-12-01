@@ -1,45 +1,46 @@
-import axios from 'axios';
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { BASE_URL } from '../../utils/constants';
+import { EMAIL_REGEX, PASSWORD_REGEX } from '../../utils/constants';
 import { getLogoIcon, getRegistrationAppleIcon, getRegistrationFacebookIcon, getRegistrationGoogleIcon } from '../../utils/getIcons';
 import styles from './LoginPage.module.scss';
 
+const logoIcon = getLogoIcon();
+const googleIcon = getRegistrationGoogleIcon();
+const facebookIcon = getRegistrationFacebookIcon();
+const appleIcon = getRegistrationAppleIcon();
+
+type FormValues = {
+  email: string;
+  password: string;
+}
+
 export const LoginPage: React.FC = () => {
-  const { loginUser, setUser } = useAuth();
+  const { loginUser } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const logoIcon = getLogoIcon();
-  const googleIcon = getRegistrationGoogleIcon();
-  const facebookIcon = getRegistrationFacebookIcon();
-  const appleIcon = getRegistrationAppleIcon();
-  
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FormValues>();
 
-    if (id === 'email') {
-      setEmail(value);
-    } else if (id === 'password') {
-      setPassword(value);
-    }
-  };
-
-  const handleSubmitClick = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (data: FormValues) => {
     setIsLoading(true);
-
+    
     try {
-      const isSuccess = await loginUser(email, password);
-
+      const isSuccess = await loginUser(
+        data.email,
+        data.password
+      );
+  
       if (isSuccess) {
         navigate('/profile');
       } else {
-        setError('Login failed. Please try again'); 
+        setError('Login failed. Please try again');
       }
     } catch (error) {
       setError('Login failed. Please try again');
@@ -64,33 +65,46 @@ export const LoginPage: React.FC = () => {
           Log in and start exploring
         </h1>
 
-        <form className={styles.form} onSubmit={handleSubmitClick}>
+        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.inputWrapper}>
             <input 
               className={styles.input}
               type="email" 
               id="email"
               placeholder="Email address"
-              value={email}
-              onChange={handleInputChange}
-              required
+              {...register('email', {
+                required: 'Email is required',
+                pattern: {
+                  value: EMAIL_REGEX,
+                  message: 'Invalid email format'
+                }
+              })}
             />
           </div>
+
+          {errors.email && (
+            <span className={styles.errorMessage}>{errors.email.message}</span>
+          )}
 
           <div className={styles.inputWrapper}>
             <input 
               className={styles.input}
               type="password" 
               id="password"
-              name="password"
               placeholder="Password"
-              value={password}
-              onChange={handleInputChange}
-              required
+              {...register('password', {
+                required: 'Password is required',
+                pattern: {
+                  value: PASSWORD_REGEX,
+                  message: 'Invalid password'
+                }
+              })}
             />
           </div>
 
-          {error && <p className={styles.errorMessage}>{error}</p>}
+          {errors.email && (
+            <span className={styles.errorMessage}>{errors.email.message}</span>
+          )}
 
           <button type="submit" className={styles.button}>Log in</button>
 

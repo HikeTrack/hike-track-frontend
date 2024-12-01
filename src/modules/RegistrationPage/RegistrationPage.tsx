@@ -1,79 +1,68 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getLogoIcon, getRegistrationAppleIcon, getRegistrationFacebookIcon, getRegistrationGoogleIcon } from "../../utils/getIcons";
-import styles from './RegistrationPage.module.scss';
 import { useAuth } from "../../context/AuthContext";
+import { DevTool } from '@hookform/devtools';
+import { Controller, useForm } from "react-hook-form";
+import { EMAIL_REGEX, PASSWORD_REGEX } from "../../utils/constants";
+import styles from './RegistrationPage.module.scss';
 
 const logoIcon = getLogoIcon();
 const googleIcon = getRegistrationGoogleIcon();
 const facebookIcon = getRegistrationFacebookIcon();
 const appleIcon = getRegistrationAppleIcon();
 
+type FormValues = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  repeatPassword: string;
+  isGuide: boolean;
+}
+
 export const RegistrationPage: React.FC = () => {
   const navigate = useNavigate();
   const { registerUser } = useAuth();
   const [isCreateAccountClicked, setIsCreateAccountClicked] = useState(false);
-  const [isGuideButtonChecked, setIsGuideButtonChecked] = useState(false);
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const [state, setState] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    repeatPassword: '',
-  });
  
   const handleCreateAccountClick = () => {
     setIsCreateAccountClicked(true);
   }
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsGuideButtonChecked(e.target.checked);
-  }
+  const {
+    handleSubmit,
+    register,
+    control,
+    formState: { errors },
+    watch,
+  } = useForm<FormValues>();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setState(prevState => ({
-      ...prevState,
-      [id]: value,
-    }))
-  };
+  const password = watch('password');
 
-  const handleSubmitClick = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsFormSubmitted(true);
-
-    if (!state.firstName 
-      || !state.lastName
-      || !state.email
-      || !state.password
-      || !state.repeatPassword
-    ) {
-      return;
-    }
-    
+  const onSubmit = async (data: FormValues) => {
     const isSuccess = await registerUser(
-      state.firstName,
-      state.lastName,
-      state.email,
-      state.password,
-      state.repeatPassword
+      data.firstName,
+      data.lastName,
+      data.email,
+      data.password,
+      data.repeatPassword
     );
-    
+
     if (isSuccess) {
-      if (isGuideButtonChecked) {
-        navigate('/guide-application', { 
-          state: { 
-            firstName: state.firstName,
-            lastName: state.lastName,
-            email: state.email,
-          } 
+      if (data.isGuide) {
+        navigate('/guide-application', {
+          state: {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+          },
         });
       } else {
         navigate('/');
       }
     }
-  }
+  };
   
   return (
     <div className={styles.page}>
@@ -151,23 +140,20 @@ export const RegistrationPage: React.FC = () => {
             Sign up today to start planning your next adventure
           </h1>
 
-          <form className={styles.form} onSubmit={handleSubmitClick}>
+          <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.inputWrapper}>
               <input 
                 className={styles.input}
                 type="text" 
                 id="firstName"
-                value={state.firstName}
-                onChange={handleInputChange}
                 placeholder="First name"
-                aria-invalid={isFormSubmitted && !state.firstName ? 'true' : 'false'}
-                aria-describedby="firstNameError"
+                {...register('firstName', {
+                  required: 'First name is required'
+                })}
               />
             </div>
-            {isFormSubmitted && !state.firstName && (
-              <span id="firstNameError" className={styles.errorMessage}>
-                First name is required
-              </span>
+            {errors.firstName && (
+              <span className={styles.errorMessage}>{errors.firstName.message}</span>
             )}
 
             <div className={styles.inputWrapper}>
@@ -175,17 +161,14 @@ export const RegistrationPage: React.FC = () => {
                 className={styles.input}
                 type="text" 
                 id="lastName"
-                value={state.lastName}
-                onChange={handleInputChange}
                 placeholder="Last name"
-                aria-invalid={isFormSubmitted && !state.lastName ? 'true' : 'false'}
-                aria-describedby="lastNameError"
+                {...register('lastName', {
+                  required: 'Last name is required'
+                })}
               />
             </div>
-            {isFormSubmitted && !state.lastName && (
-              <span id="lastNameError" className={styles.errorMessage}>
-                Last name is required
-              </span>
+            {errors.lastName && (
+              <span className={styles.errorMessage}>{errors.lastName.message}</span>
             )}
 
             <div className={styles.inputWrapper}>
@@ -193,17 +176,18 @@ export const RegistrationPage: React.FC = () => {
                 className={styles.input}
                 type="email" 
                 id="email"
-                value={state.email}
-                onChange={handleInputChange}
                 placeholder="Email address"
-                aria-invalid={isFormSubmitted && !state.email ? 'true' : 'false'}
-                aria-describedby="emailError"
+                {...register('email', {
+                  required: 'Email is required',
+                  pattern: {
+                    value: EMAIL_REGEX,
+                    message: 'Invalid format',
+                  }
+                })}
               />
             </div>
-            {isFormSubmitted && !state.email && (
-              <span id="emailError" className={styles.errorMessage}>
-                Email is required
-              </span>
+            {errors.email && (
+              <span className={styles.errorMessage}>{errors.email.message}</span>
             )}
 
             <div className={styles.inputWrapper}>
@@ -211,17 +195,18 @@ export const RegistrationPage: React.FC = () => {
                 className={styles.input}
                 type="password" 
                 id="password"
-                value={state.password}
-                onChange={handleInputChange}
                 placeholder="Password"
-                aria-invalid={isFormSubmitted && !state.password ? 'true' : 'false'}
-                aria-describedby="passwordError"
+                {...register('password', {
+                  required: 'Password is required',
+                  pattern: {
+                    value: PASSWORD_REGEX,
+                    message: 'Password must include at least 1 uppercase letter, 1 lowercase letter, 1 number, 1 symbol, and be at least 8 characters long'
+                  },
+                })}
               />
             </div>
-            {isFormSubmitted && !state.email && (
-              <span id="passwordError" className={styles.errorMessage}>
-                Password is required
-              </span>
+            {errors.password && (
+              <span className={styles.errorMessage}>{errors.password.message}</span>
             )}
 
             <div className={styles.inputWrapper}>
@@ -229,25 +214,30 @@ export const RegistrationPage: React.FC = () => {
                 className={styles.input}
                 type="password" 
                 id="repeatPassword"
-                value={state.repeatPassword}
-                onChange={handleInputChange}
                 placeholder="Repeat password"
-                aria-invalid={isFormSubmitted && !state.repeatPassword ? 'true' : 'false'}
-                aria-describedby="repeatPasswordError"
+                {...register('repeatPassword', {
+                  required: 'Repeating password is required',
+                  validate: (value) => 
+                    value === password || 'Passwords do not match',
+                })}
               />
             </div>
-            {isFormSubmitted && !state.repeatPassword && (
-              <span id="passwordError" className={styles.errorMessage}>
-                Repeating password is required
-              </span>
+            {errors.repeatPassword && (
+              <span className={styles.errorMessage}>{errors.repeatPassword.message}</span>
             )}
 
             <div className={styles.checkboxContainer}>
-              <input 
-                className={styles.checkbox} 
-                type="checkbox"
-                checked={isGuideButtonChecked}
-                onChange={handleCheckboxChange}
+              <Controller
+                control={control}
+                name="isGuide"
+                render={({ field }) => (
+                  <input 
+                    className={styles.checkbox} 
+                    type="checkbox"
+                    checked={field.value}
+                    onChange={(e) => field.onChange(e.target)}
+                  />
+                )}
               />
 
               <label className={styles.checkboxLabel}>I want to become a guide!</label>
