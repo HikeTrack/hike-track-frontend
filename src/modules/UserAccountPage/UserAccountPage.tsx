@@ -231,8 +231,6 @@ export const UserAccountPage: React.FC = () => {
         </div>
       )} */}
 
-      
-
       {user?.role.includes('ROLE_ADMIN') && (
         <div className={styles.guideContainer}>
           <form className={styles.form} onSubmit={submitGuidePromotion}>

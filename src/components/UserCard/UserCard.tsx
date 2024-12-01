@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { getAboutMeIcon, getBirthdayIcon, getBookmarkIcon, getDefaultAvatarIcon, getEmailIcon, getGoNextGreyIcon, getGoNextWhiteIcon, getLocationIcon, getMyToursIcon, getPencilIcon, getPhoneIcon } from "../../utils/getIcons";
+import { getAboutMeIcon, getBirthdayIcon, getEmailIcon, getGoNextGreyIcon, getGoNextWhiteIcon, getLocationIcon, getMyToursIcon, getPencilIcon, getPhoneIcon } from "../../utils/getIcons";
 import styles from './UserCard.module.scss';
 
 export const UserCard: React.FC = () => {
   const { user } = useAuth();
-  const defaultAvatarIcon = getDefaultAvatarIcon();
   const pencilIcon = getPencilIcon();
   const myToursIcon = getMyToursIcon();
   const phoneIcon = getPhoneIcon();
@@ -18,11 +17,12 @@ export const UserCard: React.FC = () => {
   const goNextWhite = getGoNextWhiteIcon();
 
   const preparedDateOfBirth = user?.userProfileRespondDto.dateOfBirth
-    .replace(/\-/g, '.')
-    .split('.')
-    .reverse()
-    .join('.')
-  ;
+    ? user.userProfileRespondDto.dateOfBirth
+        .replace(/\-/g, '.')
+        .split('.')
+        .reverse()
+        .join('.')
+    : '';
 
   const [aboutMeVisible, setAboutMeVisible] = useState(false);
 
