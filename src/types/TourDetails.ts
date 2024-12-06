@@ -11,7 +11,7 @@ export type TourDetails = {
   mainPhoto: string,
   details: {
     id: number,
-    additionalPhotos: string[],
+    additionalPhotos: number[],
     elevationGain: number,
     routeType: string,
     duration: number,

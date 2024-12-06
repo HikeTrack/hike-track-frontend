@@ -3,19 +3,32 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Loader } from "../../components/Loader/Loader";
 import { TourCard } from "../../components/TourCard/TourCard";
 import { CountryOption } from "../../types/Country";
+import { Photo } from "../../types/Photo";
 import { Tour } from "../../types/Tour";
 import { TourDetails } from "../../types/TourDetails";
-import { getCountries, getRandomToursByCountry, getTourById } from "../../utils/fetchData";
+import { getCountries, getRandomToursByCountry, getTourBackgroundPhoto, getTourById } from "../../utils/fetchData";
 import { formatDate, formatDistance } from "../../utils/formatFunctions";
 import { getArrowBackIcon, getArrowNextIcon, getBookmarkIcon, getCameraIcon, getCarIcon, getPrinterIcon, getShareIcon, getShareSocialsIcon, getStarIcon, getThumbsUpIcon } from "../../utils/getIcons";
 import { getMapImg, getUserContent1, getUserContent2, getUserContent3, getUserImg } from "../../utils/getImages";
 import styles from './TourDetailsPage.module.scss';
+
+const arrowBackIcon = getArrowBackIcon();
+const starIcon = getStarIcon();
+const bookmarkIcon = getBookmarkIcon();
+const cameraIcon = getCameraIcon();
+const carIcon = getCarIcon();
+const printerIcon = getPrinterIcon();
+const shareIcon = getShareIcon();
+const arrowNextIcon = getArrowNextIcon();
+const thumbsUpIcon = getThumbsUpIcon();
+const shareSocialsIcon = getShareSocialsIcon();
 
 export const TourDetailsPage: React.FC = () => {
   const { tourId } = useParams<{ tourId: string }>();
   const navigate = useNavigate();
   const [countryOptions, setCountryOptions] = useState<CountryOption[]>([]);
   const [tourDetails, setTourDetails] = useState<TourDetails>();
+  const [backgroundPhoto, setBackgroundPhoto] = useState<Photo | null>(null);
   const [suggestedTours, setSuggestedTours] = useState<Tour[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -62,30 +75,37 @@ export const TourDetailsPage: React.FC = () => {
     fetchData();
   }, [tourId]);  
 
+  useEffect(() => {
+    const fetchBackgroundPhoto = async () => {
+      if (tourDetails?.details.additionalPhotos.length) {
+        try {
+          const firstPhotoId = tourDetails.details.additionalPhotos[0];
+          const photo = await getTourBackgroundPhoto(firstPhotoId);
+          setBackgroundPhoto(photo);
+        } catch (error) {
+          console.error('Error fetchung background photo:',error);
+        }
+      }
+    };
+
+    fetchBackgroundPhoto();
+  }, [tourDetails]);
+
   if (!tourDetails) {
     return <h2>This tour isn't available.</h2>
   }
-  
-  const arrowBackIcon = getArrowBackIcon();
-  const starIcon = getStarIcon();
-  const bookmarkIcon = getBookmarkIcon();
-  const cameraIcon = getCameraIcon();
-  const carIcon = getCarIcon();
-  const printerIcon = getPrinterIcon();
-  const shareIcon = getShareIcon();
-  const arrowNextIcon = getArrowNextIcon();
-  const thumbsUpIcon = getThumbsUpIcon();
-  const shareSocialsIcon = getShareSocialsIcon();
 
-  const mapImg = getMapImg();
   const userImg = getUserImg();
   const userContent1 = getUserContent1();
   const userContent2 = getUserContent2();
   const userContent3 = getUserContent3();
   
   return ( 
-    <div className={styles.tourDetailsPage}>
-      <div className={styles.containerTop}>
+    <div className={styles.page}>
+      <div 
+        className={styles.containerTop} 
+        style={{ backgroundImage: `url(${backgroundPhoto?.fileUrl})` }}
+      >
         <button className={styles.backButton}>
           <img src={arrowBackIcon} alt="Arrow back"/>
           <p className={styles.buttonLabel} onClick={() => navigate(-1)}>Go back</p>

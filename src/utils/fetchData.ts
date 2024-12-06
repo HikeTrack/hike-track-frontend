@@ -5,6 +5,7 @@ import { TourDetails } from "../types/TourDetails";
 import { UserProfilePuplic } from "../types/UserProfilePublic";
 import { BASE_URL } from "./constants";
 import { getRandomTours } from "./getRandomTours";
+import { Photo } from "../types/Photo";
 
 export function getData<T>(url: string): Promise<T> {
   return fetch(BASE_URL + url).then(response => {
@@ -52,4 +53,8 @@ export const getToursByGuideId = async (guideId: number) => {
 
 export const getUserProfile = async (userId: number) => {
   return getData<UserProfilePuplic>(`/users/${userId}`);
+}
+
+export const getTourBackgroundPhoto = async (photoId: number) => {
+  return getData<Photo>(`/tour_details/photo/${photoId}`);
 }
