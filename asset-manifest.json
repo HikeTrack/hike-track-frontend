@@ -1,14 +1,13 @@
 {
   "files": {
-    "main.css": "/hike-track-frontend/static/css/main.e2fee8da.css",
-    "main.js": "/hike-track-frontend/static/js/main.19673b1a.js",
+    "main.css": "/hike-track-frontend/static/css/main.f49c1ff7.css",
+    "main.js": "/hike-track-frontend/static/js/main.bfc1e252.js",
     "static/media/authorisation.png": "/hike-track-frontend/static/media/authorisation.42dc274ecb8fbb5796a3.png",
     "static/media/not-found.png": "/hike-track-frontend/static/media/not-found.1a18bc7c403ee4fcd855.png",
     "static/media/popular-tours.png": "/hike-track-frontend/static/media/popular-tours.8988529a59430dc9f56e.png",
     "static/media/about-us.png": "/hike-track-frontend/static/media/about-us.d12c8d12f43229347755.png",
     "static/media/search-page.png": "/hike-track-frontend/static/media/search-page.eade1c5b3832537dd879.png",
     "static/media/our-mission.png": "/hike-track-frontend/static/media/our-mission.21215bd94d79299b97dd.png",
-    "static/media/bg-ararat.png": "/hike-track-frontend/static/media/bg-ararat.640883ac929aeadf87d0.png",
     "static/media/about-us-mobile.png": "/hike-track-frontend/static/media/about-us-mobile.59c4d9fa852210ce3a5b.png",
     "static/media/our-mission-mobile.png": "/hike-track-frontend/static/media/our-mission-mobile.185dc52c37fbbc34f6db.png",
     "static/media/conditions-2.png": "/hike-track-frontend/static/media/conditions-2.30e9d327d6af3f9b8e6a.png",
@@ -20,11 +19,11 @@
     "static/media/conditions-3.png": "/hike-track-frontend/static/media/conditions-3.9b631b92f9f27b95888f.png",
     "static/media/star-yellow.svg": "/hike-track-frontend/static/media/star-yellow.e2f5371d18cb9fa907d6.svg",
     "index.html": "/hike-track-frontend/index.html",
-    "main.e2fee8da.css.map": "/hike-track-frontend/static/css/main.e2fee8da.css.map",
-    "main.19673b1a.js.map": "/hike-track-frontend/static/js/main.19673b1a.js.map"
+    "main.f49c1ff7.css.map": "/hike-track-frontend/static/css/main.f49c1ff7.css.map",
+    "main.bfc1e252.js.map": "/hike-track-frontend/static/js/main.bfc1e252.js.map"
   },
   "entrypoints": [
-    "static/css/main.e2fee8da.css",
-    "static/js/main.19673b1a.js"
+    "static/css/main.f49c1ff7.css",
+    "static/js/main.bfc1e252.js"
   ]
 }
