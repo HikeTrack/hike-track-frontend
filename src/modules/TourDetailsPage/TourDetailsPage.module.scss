@@ -1,6 +1,6 @@
 @import '../../styles/all';
 
-.tourDetailsPage {
+.page {
 
 }
 
@@ -9,7 +9,10 @@
 
   height: 585px;
   padding-inline: 16px;
-  background: url('../../../public/img/page-bg/bg-ararat.png');
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
 
   @include on-desktop {

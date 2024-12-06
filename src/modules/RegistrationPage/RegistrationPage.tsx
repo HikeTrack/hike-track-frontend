@@ -20,7 +20,7 @@ type FormValues = {
   repeatPassword: string;
   isGuide: boolean;
 }
-
+ 
 export const RegistrationPage: React.FC = () => {
   const navigate = useNavigate();
   const { registerUser } = useAuth();

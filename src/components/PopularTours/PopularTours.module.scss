@@ -8,12 +8,10 @@
 
   @include on-desktop {
     height: 966px;
-    // padding-inline: 32px;
   }
 
   @include on-desktop-wide {
     height: 1076px;
-    // padding-inline: 200px;
   }
 }
 
@@ -24,15 +22,18 @@
 
   padding-inline: 16px;
   padding-block: 16px;
+  margin-inline: auto;
   
   @include on-desktop {
     padding-inline: 32px;
     padding-block: 20px;
+    max-width: 1280px;
   }
 
   @include on-desktop-wide {
     padding-block: 64px;
     padding-inline: 200px;
+    max-width: 1920px;
   }
 }
 

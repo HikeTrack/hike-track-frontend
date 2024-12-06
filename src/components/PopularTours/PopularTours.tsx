@@ -123,7 +123,7 @@ export const PopularTours: React.FC<Props> = ({ tours, countries }) => {
   const arrowLeftDisabledIcon = getArrowLeftDisabledIcon();
   const arrowRightActiveIcon = getArrowRightActiveIcon();
   const arrowRightDisabledIcon = getArrowRightDisabledIcon();
-  
+   
   return (
     <div className={styles.section}>
       <div className={styles.container}>
