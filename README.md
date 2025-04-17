@@ -37,13 +37,13 @@ Clicking on a tour card redirects the user to the "Tour Details" page with more 
 # User Features #
 A registered user can:
 
-Sign up with an email address
+- Sign up with an email address
 
-Log in and log out
+- Log in and log out
 
-Delete their account
+- Delete their account
 
-Submit an application to become a guide
+- Submit an application to become a guide
 
 # API Usage #
 fetch API – Used for retrieving tour and country data.
