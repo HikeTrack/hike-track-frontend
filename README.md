@@ -16,23 +16,23 @@ On the Search page:
 
 Users can filter the country list by region.
 
-Clicking a country takes the user to the Tours by Country page, displaying a catalog of available tours.
+Clicking a country takes the user to the "Tours by Country" page, displaying a catalog of available tours.
 
 Users can filter tours by:
 
-Date
+- Date
 
-Difficulty
+- Difficulty
 
-Length
+- Length
 
-Activity
+- Activity
 
-Price
+- Price
 
 Users can also change the selected country directly from this page.
 
-Clicking on a tour card redirects the user to the Tour Details page with more information about the selected tour.
+Clicking on a tour card redirects the user to the "Tour Details" page with more information about the selected tour.
 
 # User Features #
 A registered user can:
@@ -50,12 +50,12 @@ fetch API – Used for retrieving tour and country data.
 
 axios – Used for handling user actions:
 
-Registration
+- Registration
 
-Logging in/out
+- Logging in/out
 
-Password reset
+- Password reset
 
-Guide application submission
+- Guide application submission
 
-Account deletion
+- Account deletion
