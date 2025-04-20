@@ -1,5 +1,5 @@
 // export const BASE_URL = 'http://localhost:8081';
-export const BASE_URL = 'https://d1nowvq6z1vs0.cloudfront.net';
+export const BASE_URL = 'https://d1nowvq6z1vs0.cloudfront.net'; 
 
 export const ACCESS_TOKEN = 'user_access_token'; 
 
