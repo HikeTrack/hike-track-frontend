@@ -1,5 +1,8 @@
 # HIKE TRACK WEB APP #
 
+Draft version: https://hiketrack.github.io/hike-track-frontend/#/
+Unfortunately, server is disabled.
+
 # General Overview #
 HIKE TRACK is a web application that allows users to discover and book private hiking tours around the world.
 
